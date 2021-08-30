@@ -63,7 +63,8 @@ class Kernel extends HttpKernel
         'signed' => \Illuminate\Routing\Middleware\ValidateSignature::class,
         'throttle' => \Illuminate\Routing\Middleware\ThrottleRequests::class,
         'verified' => \Illuminate\Auth\Middleware\EnsureEmailIsVerified::class,
-        'hashids' => \App\Http\Middleware\HashIds::class,
-        'manage.log' => \App\Http\Middleware\ManageLog::class,
+        'hashids' => \App\Http\Middleware\HashIds::class,//ids 解码
+        'manage.log' => \App\Http\Middleware\ManageLog::class,//后台操作日志
+        'manage.auth' => \App\Http\Middleware\ManageApiJwtAuth::class,//后台登录
     ];
 }

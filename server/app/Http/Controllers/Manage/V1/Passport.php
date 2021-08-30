@@ -1,0 +1,135 @@
+<?php
+
+
+namespace App\Http\Controllers\Manage\V1;
+
+
+use App\Http\Controllers\Controller;
+use App\Http\ResponseCode;
+use App\Services\Contracts\Captcha;
+use App\Services\Repositories\Manage\Interfaces\IManage;
+use App\Support\Password;
+use App\Validators\Passport\ManageLoginValidator;
+use Illuminate\Http\Request;
+use Illuminate\Support\Arr;
+use JoyceZ\LaravelLib\Helpers\ResultHelper;
+use Tymon\JWTAuth\Exceptions\JWTException;
+use Tymon\JWTAuth\Exceptions\TokenInvalidException;
+use Tymon\JWTAuth\Facades\JWTAuth;
+use Tymon\JWTAuth\Facades\JWTFactory;
+
+/**
+ * 登录相关
+ * Class Passport
+ * @package App\Http\Controllers\Manage\V1
+ */
+class Passport extends Controller
+{
+
+    /**
+     * 获取图形验证码
+     * @param Captcha $captchaRepo
+     * @return array
+     */
+    public function captcha(Captcha $captchaRepo)
+    {
+        $captcha = $captchaRepo->makeCode()->get();
+        $captchaImg = Arr::get($captcha, 'image', '');
+        $captchaUniqid = Arr::get($captcha, 'uniq', '');
+        return ResultHelper::returnFormat('success', ResponseCode::SUCCESS, [
+            'captcha' => $captchaImg,
+            config('laraveladmin.passport.check_captcha_cache_key') => $captchaUniqid
+        ]);
+    }
+
+    /**
+     * 管理员登陆
+     * @param Request $request
+     * @param ManageLoginValidator $validator
+     * @param Captcha $captchaRepo
+     * @param IManage $manageRepo
+     * @return array
+     */
+    public function login(Request $request, ManageLoginValidator $validator, Captcha $captchaRepo, IManage $manageRepo)
+    {
+        $params = $request->all();
+        //表单校验
+        $error = $validator->make($params)->errors();
+        if ($error->count() > 0) {
+            return ResultHelper::returnFormat($error->first(), ResponseCode::ERROR);
+        }
+        //图形验证码校验
+//        $captchaUniq = $params[config('laraveladmin.passport.check_captcha_cache_key')];
+//        if (!$captchaRepo->check($params['captcha'], $captchaUniq)) {
+//            return ResultHelper::returnFormat('验证码错误', ResponseCode::ERROR);
+//        }
+        $manage = $manageRepo->getInfoByUsername(trim($params['username']));
+        if (!$manage) {
+            return ResultHelper::returnFormat('账号不存在', ResponseCode::ERROR);
+        }
+        $manageInfo = $manage->makeVisible(['password', 'pwd_salt'])->toArray();
+        //密码验证
+        $pwdFlag = (new Password())
+            ->withSalt(config('laraveladmin.passport.password_salt'))
+            ->check($manageInfo['password'], $params['password'], $manageInfo['pwd_salt']);
+        if (!$pwdFlag) {
+            return ResultHelper::returnFormat('账号密码错误', ResponseCode::ERROR);
+        }
+        if (intval($manageInfo['manage_status']) != 1) {
+            return ResultHelper::returnFormat('用户已被禁用', ResponseCode::ERROR);
+        }
+        $token = JWTAuth::fromUser($manage);
+        return ResultHelper::returnFormat('登录成功', ResponseCode::SUCCESS, [
+            'access_token' => $token,
+            'token_type' => 'bearer',
+            'expires_in' => JWTFactory::getTTL() * 60
+        ]);
+    }
+
+    /**
+     * 刷新令牌
+     * https://www.yangpanyao.com/archives/81.html
+     * https://zhuanlan.zhihu.com/p/80352766
+     * https://github.com/tymondesigns/jwt-auth/issues?q=refresh
+     * https://jwt-auth.readthedocs.io/en/develop/search.html?q=expires_in
+     * @param IManage $manageRepo
+     * @return array
+     */
+    public function refreshToken(IManage $manageRepo)
+    {
+        try {
+            $user = JWTAuth::parseToken()->touser();
+            $manage = $manageRepo->getByPkId($user->manage_id);
+            if (!$manage) {
+                return ResultHelper::returnFormat('账号不存在', ResponseCode::ERROR);
+            }
+            if (intval($manage->manage_status) != 1) {
+                return ResultHelper::returnFormat('用户已被禁用', ResponseCode::ERROR);
+            }
+            $token = JWTAuth::parseToken()->refresh();
+            return ResultHelper::returnFormat('登录成功', ResponseCode::SUCCESS, [
+                'access_token' => $token,
+                'token_type' => 'bearer',
+                'expires_in' => JWTFactory::getTTL() * 60
+            ]);
+        } catch (JWTException $e) {
+            return ResultHelper::returnFormat('无法刷新令牌', ResponseCode::ERROR);
+        }
+    }
+
+    /**
+     * 退出登录
+     * @return array
+     */
+    public function logout()
+    {
+        try {
+            JWTAuth::parseToken()->invalidate();//退出
+            return ResultHelper::returnFormat('登出成功', ResponseCode::SUCCESS);
+        } catch (TokenInvalidException $e) {
+            return ResultHelper::returnFormat('token 无效', ResponseCode::SUCCESS);
+        }
+    }
+
+
+}

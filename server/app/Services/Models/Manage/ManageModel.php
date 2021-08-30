@@ -1,0 +1,188 @@
+<?php
+
+
+namespace App\Services\Models\Manage;
+
+
+use App\Services\Enums\Common\YesOrNoEnum;
+use App\Services\Enums\Manage\ManageStatusEnum;
+use Illuminate\Foundation\Auth\User as Authenticatable;
+use Illuminate\Notifications\Notifiable;
+use Tymon\JWTAuth\Contracts\JWTSubject;
+
+/**
+ * 管理员
+ *
+ * @author joyecZhang <zhangwei762@163.com>
+ *
+ * Class ManageModel
+ * @package App\Services\Models\Manage
+ */
+class ManageModel extends Authenticatable implements JWTSubject
+{
+    use Notifiable;
+
+    /**
+     * 表名
+     * @var string
+     */
+    protected $table = 'sys_manage';
+
+    /**
+     * 主键字段
+     * @var string
+     */
+    protected $primaryKey = 'manage_id';
+
+    const CREATED_AT = 'reg_date'; //创建时间，注册时间
+    const UPDATED_AT = 'updated_at'; //修改时间
+
+    /**
+     * 指示是否自动维护时间戳
+     * @var bool
+     */
+    public $timestamps = true;
+
+    /**
+     * 黑名单
+     *
+     * @var array
+     */
+    protected $guarded = [
+        'is_super'
+    ];
+
+    /**
+     * 模型日期列的存储格式。
+     * @var string
+     */
+    protected $dateFormat = 'U';
+
+    protected $fillable = [
+        'manage_id',
+        'username',
+        'nickname',
+        'realname',
+        'dept_id',
+        'password',
+        'pwd_salt',
+        'phone',
+        'avatar',
+        'api_token',
+        'reg_date',
+        'reg_ip',
+        'last_login_ip',
+        'last_login_time',
+        'manage_status'
+    ];
+
+    /**
+     * 隐藏字段
+     * @var array
+     */
+    protected $hidden = [
+        'password', 'pwd_salt'
+    ];
+
+    /**
+     * Eloquent 的 属性类型转换
+     * @var array
+     */
+    protected $casts = [
+        'reg_date' => 'datetime:Y-m-d H:i:s',
+    ];
+
+    /**
+     * 最后登录时间
+     * @return false|string
+     */
+    public function getLastLoginTimeAttribute()
+    {
+        return $this->attributes['last_login_time'] > 0 ? date('Y-m-d H:i:s', $this->attributes['last_login_time']) : '-';
+    }
+
+    /**
+     * 注册ip地址
+     * @return string
+     */
+    public function getRegIpAttribute()
+    {
+        return $this->attributes['reg_ip'] > 0 ? long2ip($this->attributes['reg_ip']) : '-';
+    }
+
+    /**
+     * 最后登录ip地址
+     * @return string
+     */
+    public function getLastLoginIpAttribute()
+    {
+        return $this->attributes['last_login_ip'] > 0 ? long2ip($this->attributes['last_login_ip']) : '-';
+    }
+
+    /**
+     * 管理员状态值说明
+     * @return mixed|string
+     */
+    public function getManageStatusTxtAttribute()
+    {
+        $status = ManageStatusEnum::getMap();
+        return isset($status[$this->attributes['manage_status']]) ? $status[$this->attributes['manage_status']] : '';
+    }
+
+    /**
+     * 管理员状态值说明
+     * @return mixed|string
+     */
+    public function getIsSuperTxtAttribute()
+    {
+        $super = YesOrNoEnum::getMap();
+        return isset($super[$this->attributes['is_super']]) ? $super[$this->attributes['is_super']] : '';
+    }
+
+    /**
+     * 关联用户下多个角色
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
+     */
+    public function roles()
+    {
+        return $this->belongsToMany(RoleModel::class, 'sys_manage_has_role', 'manage_id', 'role_id');
+    }
+
+    /**
+     * 所属部门
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
+    public function department()
+    {
+        return $this->belongsTo(DepartmentModel::class, 'dept_id', 'dept_id');
+    }
+
+    /**
+     * 某个用户下的所有操作日志
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function logs()
+    {
+        return $this->hasMany(LogModel::class, 'manage_id', 'manage_id');
+    }
+
+    /**
+     * 获取存储在 JWT 申明的标识
+     * @return mixed
+     */
+    public function getJWTIdentifier()
+    {
+        return $this->getKey();
+    }
+
+    /**
+     * 返回 JWT
+     * @return array
+     */
+    public function getJWTCustomClaims()
+    {
+        return [];
+    }
+
+
+}

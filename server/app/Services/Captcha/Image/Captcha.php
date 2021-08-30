@@ -185,7 +185,7 @@ class Captcha implements CaptchaContract
      * @param string $uniqid 验证码编号
      * @return bool|mixed
      */
-    public function check(string $code, $uniqid = ''): Boolean
+    public function check(string $code, $uniqid = ''): bool
     {
         if (empty($uniqid)) {
             return false;

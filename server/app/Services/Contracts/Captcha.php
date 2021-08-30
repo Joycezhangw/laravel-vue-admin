@@ -50,5 +50,5 @@ interface Captcha
      * @param string $uniqid 验证码编码
      * @return mixed
      */
-    public function check(string $code, $uniqid = ''): Boolean;
+    public function check(string $code, $uniqid = ''): bool;
 }

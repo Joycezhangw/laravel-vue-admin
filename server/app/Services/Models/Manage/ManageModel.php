@@ -69,10 +69,13 @@ class ManageModel extends Authenticatable implements JWTSubject
         'phone',
         'avatar',
         'api_token',
+        'introduce',
         'reg_date',
         'reg_ip',
         'last_login_ip',
         'last_login_time',
+        'refresh_ip',
+        'refresh_time',
         'manage_status'
     ];
 
@@ -81,7 +84,7 @@ class ManageModel extends Authenticatable implements JWTSubject
      * @var array
      */
     protected $hidden = [
-        'password', 'pwd_salt'
+        'password', 'pwd_salt', 'pivot'
     ];
 
     /**
@@ -102,12 +105,30 @@ class ManageModel extends Authenticatable implements JWTSubject
     }
 
     /**
+     * 最后刷新token时间
+     * @return false|string
+     */
+    public function getRefreshTimeAttribute()
+    {
+        return $this->attributes['refresh_time'] > 0 ? date('Y-m-d H:i:s', $this->attributes['refresh_time']) : '-';
+    }
+
+    /**
      * 注册ip地址
      * @return string
      */
     public function getRegIpAttribute()
     {
         return $this->attributes['reg_ip'] > 0 ? long2ip($this->attributes['reg_ip']) : '-';
+    }
+
+    /**
+     * 最后刷新 token ip
+     * @return string
+     */
+    public function getRefreshIpAttribute()
+    {
+        return $this->attributes['refresh_ip'] > 0 ? long2ip($this->attributes['refresh_ip']) : '-';
     }
 
     /**
@@ -145,7 +166,8 @@ class ManageModel extends Authenticatable implements JWTSubject
      */
     public function roles()
     {
-        return $this->belongsToMany(RoleModel::class, 'sys_manage_has_role', 'manage_id', 'role_id');
+        return $this->belongsToMany(RoleModel::class, 'sys_manage_has_role', 'manage_id', 'role_id')
+            ->select('sys_manage_role.role_id', 'sys_manage_role.role_name');
     }
 
     /**
@@ -154,7 +176,8 @@ class ManageModel extends Authenticatable implements JWTSubject
      */
     public function department()
     {
-        return $this->belongsTo(DepartmentModel::class, 'dept_id', 'dept_id');
+        return $this->belongsTo(DepartmentModel::class, 'dept_id', 'dept_id')
+            ->select('sys_manage_department.dept_id', 'sys_manage_department.dept_name');
     }
 
     /**

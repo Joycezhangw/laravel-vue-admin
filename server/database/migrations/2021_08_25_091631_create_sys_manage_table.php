@@ -23,6 +23,7 @@ class CreateSysManageTable extends Migration
             $table->char('password',32)->default('')->comment('密码');
             $table->char('pwd_salt', 6)->default('')->comment('密码加密盐');
             $table->string('avatar', 256)->default('')->comment('头像');
+            $table->string('introduce',500)->default('')->comment('个人简介');
             $table->unsignedTinyInteger('is_super')->default(0)->comment('是否超级管理员[1 是 0 否]');
             $table->unsignedInteger('reg_date')->default(0)->index('idx_manage_reg_date')->comment('注册时间');
             $table->unsignedBigInteger('reg_ip')->default(0)->comment('注册时ip');

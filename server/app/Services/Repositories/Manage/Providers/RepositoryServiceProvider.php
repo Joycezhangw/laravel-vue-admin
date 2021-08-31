@@ -6,8 +6,10 @@ namespace App\Services\Repositories\Manage\Providers;
 
 use App\Services\Repositories\Manage\Interfaces\ILog;
 use App\Services\Repositories\Manage\Interfaces\IManage;
+use App\Services\Repositories\Manage\Interfaces\IMenu;
 use App\Services\Repositories\Manage\LogRepo;
 use App\Services\Repositories\Manage\ManageRepo;
+use App\Services\Repositories\Manage\MenuRepo;
 use Illuminate\Foundation\Support\Providers\EventServiceProvider as ServiceProvider;
 
 /**
@@ -27,6 +29,7 @@ class RepositoryServiceProvider extends ServiceProvider
     {
         $this->app->bind(IManage::class, ManageRepo::class);
         $this->app->bind(ILog::class, LogRepo::class);
+        $this->app->bind(IMenu::class, MenuRepo::class);
 
     }
 

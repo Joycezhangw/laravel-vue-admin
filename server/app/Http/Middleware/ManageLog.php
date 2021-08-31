@@ -1,11 +1,13 @@
 <?php
-declare (strict_types = 1);
+declare (strict_types=1);
 
 namespace App\Http\Middleware;
 
 use App\Services\Repositories\Manage\Interfaces\ILog;
 use Closure;
 use Illuminate\Http\Request;
+use Tymon\JWTAuth\Exceptions\JWTException;
+use Tymon\JWTAuth\Facades\JWTAuth;
 
 /**
  * 后台操作日志
@@ -23,9 +25,14 @@ class ManageLog
      */
     public function handle(Request $request, Closure $next)
     {
-        $manageInfo = [];
+        try {
+            //获取用户信息，不存在抛出异常并赋空值
+            $manageInfo = JWTAuth::parseToken()->touser()->toArray();
+        } catch (JWTException $e) {
+            $manageInfo = [];
+        }
         //去掉关键字段
-        $input=$request->except([
+        $input = $request->except([
             'password',
             'oldpassword',
             'newpassword',
@@ -33,9 +40,9 @@ class ManageLog
         ]);
         $manageLogRepo = app(ILog::class);
         $manageLogRepo->record([
-            'manage_id'=>$manageInfo['manage_id'] ?? 0,
-            'manage_username'=>$manageInfo['username'] ?? '',
-            'log_params'=>$input
+            'manage_id' => $manageInfo['manage_id'] ?? 0,
+            'manage_username' => $manageInfo['username'] ?? '',
+            'log_params' => $input
         ]);
         return $next($request);
     }

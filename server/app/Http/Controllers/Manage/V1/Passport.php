@@ -1,9 +1,12 @@
 <?php
 
+declare (strict_types=1);
 
 namespace App\Http\Controllers\Manage\V1;
 
 
+use App\Events\PassportManageLoginAfterEvent;
+use App\Events\PassportManageRefreshTokenEvent;
 use App\Http\Controllers\Controller;
 use App\Http\ResponseCode;
 use App\Services\Contracts\Captcha;
@@ -70,7 +73,7 @@ class Passport extends Controller
         $manageInfo = $manage->makeVisible(['password', 'pwd_salt'])->toArray();
         //密码验证
         $pwdFlag = (new Password())
-            ->withSalt(config('laraveladmin.passport.password_salt'))
+            ->withSalt((string)config('laraveladmin.passport.password_salt'))
             ->check($manageInfo['password'], $params['password'], $manageInfo['pwd_salt']);
         if (!$pwdFlag) {
             return ResultHelper::returnFormat('账号密码错误', ResponseCode::ERROR);
@@ -79,11 +82,13 @@ class Passport extends Controller
             return ResultHelper::returnFormat('用户已被禁用', ResponseCode::ERROR);
         }
         $token = JWTAuth::fromUser($manage);
-        return ResultHelper::returnFormat('登录成功', ResponseCode::SUCCESS, [
+        $jwt = [
             'access_token' => $token,
             'token_type' => 'bearer',
             'expires_in' => JWTFactory::getTTL() * 60
-        ]);
+        ];
+        event(new PassportManageLoginAfterEvent($manage, $jwt));
+        return ResultHelper::returnFormat('登录成功', ResponseCode::SUCCESS, $jwt);
     }
 
     /**
@@ -107,11 +112,13 @@ class Passport extends Controller
                 return ResultHelper::returnFormat('用户已被禁用', ResponseCode::ERROR);
             }
             $token = JWTAuth::parseToken()->refresh();
-            return ResultHelper::returnFormat('登录成功', ResponseCode::SUCCESS, [
+            $jwt = [
                 'access_token' => $token,
                 'token_type' => 'bearer',
                 'expires_in' => JWTFactory::getTTL() * 60
-            ]);
+            ];
+            event(new PassportManageRefreshTokenEvent($manage, $jwt));
+            return ResultHelper::returnFormat('登录成功', ResponseCode::SUCCESS, $jwt);
         } catch (JWTException $e) {
             return ResultHelper::returnFormat('无法刷新令牌', ResponseCode::ERROR);
         }
@@ -124,6 +131,8 @@ class Passport extends Controller
     public function logout()
     {
         try {
+            $user = JWTAuth::parseToken()->touser();
+            event(new PassportManageRefreshTokenEvent($user, []));
             JWTAuth::parseToken()->invalidate();//退出
             return ResultHelper::returnFormat('登出成功', ResponseCode::SUCCESS);
         } catch (TokenInvalidException $e) {

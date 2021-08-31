@@ -24,8 +24,23 @@ class ManageRepo extends BaseRepository implements IManage
         parent::__construct($model);
     }
 
+    /**
+     * 解析数据
+     * @param array $row
+     * @return array
+     */
     public function parseDataRow(array $row): array
     {
+        //解析管理员关联角色数据
+        if (isset($row['roles']) && is_array($row['roles']) && count($row['roles']) > 0) {
+            foreach ($row['roles'] as $key => $item) {
+                $row['roles'][$key] = (new HashIdsSup())->encode($item);
+            }
+        }
+        //解析管理员关联部门信息
+        if (isset($row['department']) && is_array($row['department'])) {
+            $row['department'] = (new HashIdsSup())->encode($row['department']);
+        }
         return (new HashIdsSup())->encode($row);
     }
 

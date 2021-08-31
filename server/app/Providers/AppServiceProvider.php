@@ -2,10 +2,12 @@
 
 namespace App\Providers;
 
+use App\Traits\ValidatorTrait;
 use Illuminate\Support\ServiceProvider;
 
 class AppServiceProvider extends ServiceProvider
 {
+    use ValidatorTrait;
     /**
      * Register any application services.
      *
@@ -23,6 +25,7 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot()
     {
-        //
+        //注册自定义表单验证规则
+        $this->validatorBoot();
     }
 }

@@ -1,4 +1,5 @@
 <?php
+declare (strict_types = 1);
 
 namespace App\Http\Middleware;
 
@@ -6,6 +7,11 @@ use App\Services\Repositories\Manage\Interfaces\ILog;
 use Closure;
 use Illuminate\Http\Request;
 
+/**
+ * 后台操作日志
+ * Class ManageLog
+ * @package App\Http\Middleware
+ */
 class ManageLog
 {
     /**
@@ -18,6 +24,7 @@ class ManageLog
     public function handle(Request $request, Closure $next)
     {
         $manageInfo = [];
+        //去掉关键字段
         $input=$request->except([
             'password',
             'oldpassword',

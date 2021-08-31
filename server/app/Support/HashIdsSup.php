@@ -10,6 +10,8 @@ use Vinkla\Hashids\Facades\Hashids;
  * 对数据 ids 进行加密
  *
  * Class HashIdsSup
+ *
+ * @author joyecZhang <zhangwei762@163.com>
  * @package App\Support
  */
 class HashIdsSup

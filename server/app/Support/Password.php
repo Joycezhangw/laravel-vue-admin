@@ -9,6 +9,8 @@ use Illuminate\Support\Str;
 /**
  * 密码操作
  * Class Password
+ *
+ * @author joyecZhang <zhangwei762@163.com>
  * @package App\Support
  */
 class Password

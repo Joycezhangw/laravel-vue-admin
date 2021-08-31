@@ -1,5 +1,5 @@
 <?php
-
+declare (strict_types=1);
 
 namespace App\Validators\Passport;
 
@@ -9,6 +9,8 @@ use JoyceZ\LaravelLib\Validation\AbstractValidator;
 /**
  * 系统用户登录表单验证
  * Class ManageLoginValidator
+ *
+ * @author joyecZhang <zhangwei762@163.com>
  * @package App\Validators\Passport
  */
 class ManageLoginValidator extends AbstractValidator

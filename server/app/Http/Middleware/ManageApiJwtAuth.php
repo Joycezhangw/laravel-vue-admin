@@ -1,5 +1,7 @@
 <?php
 
+declare (strict_types = 1);
+
 namespace App\Http\Middleware;
 
 use App\Http\ResponseCode;
@@ -11,6 +13,11 @@ use Tymon\JWTAuth\Exceptions\TokenExpiredException;
 use Tymon\JWTAuth\Exceptions\TokenInvalidException;
 use Tymon\JWTAuth\Facades\JWTAuth;
 
+/**
+ * jwt 后台中间件
+ * Class ManageApiJwtAuth
+ * @package App\Http\Middleware
+ */
 class ManageApiJwtAuth
 {
     /**

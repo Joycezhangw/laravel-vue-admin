@@ -139,7 +139,16 @@ export default {
       isLock: true,
       captchaImg: "",
       saving: false,
+      redirect: undefined,
     };
+  },
+  watch: {
+    $route: {
+      handler: function (route) {
+        this.redirect = route.query && route.query.redirect;
+      },
+      immediate: true,
+    },
   },
   created() {
     this.loginVerify();
@@ -168,19 +177,19 @@ export default {
         if (valid) {
           this.saving = true;
           try {
-            console.log(this.$store);
             //登录
             await this.$store.dispatch("user/LoginIn", this.loginForm);
             //用户信息
             await this.$store.dispatch("user/GetUserInfo");
             //用户权限菜单
-            let [first] = await this.$store.dispatch("permission/premRules");
+            let [first] = await this.$store.dispatch("router/premRules");
             //左侧菜单组不存在，代表没有权限
             if (!first) {
               this.$message.error("该账号没有权限");
             } else {
               this.$router.push("/");
             }
+            this.$router.push({ path: this.redirect || "/" }).catch(() => {}); // eslint-disable-line
           } catch (err) {
             this.$message.error(err);
             this.loginVerify();

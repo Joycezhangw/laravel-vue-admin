@@ -1,7 +1,10 @@
 <template>
   <div class="app-topbar">
     <div class="app-topbar__collapse" @click="collapse">
-      <i :class="[menuCollapse ? 'el-icon-s-fold' : 'el-icon-s-unfold']"></i>
+      <i
+        :class="[menuCollapse ? 'el-icon-s-unfold' : 'el-icon-s-fold']"
+        :title="menuCollapse ? '展开' : '折叠'"
+      ></i>
     </div>
     <!--面包屑-->
     <div class="app-topbar__breadcrumb">

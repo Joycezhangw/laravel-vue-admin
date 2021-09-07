@@ -12,7 +12,6 @@ store.dispatch("app/appLoad", store.getters);
 
 import '@/permission'
 // 注册全局过滤器
-console.log(filters)
 Object.keys(filters).forEach(key => {
   Vue.filter(key, filters[key])
 })

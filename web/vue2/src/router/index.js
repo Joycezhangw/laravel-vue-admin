@@ -21,7 +21,7 @@ const constantRoutes = [
                 path: "/init",
                 name: "Init",
                 meta: {
-                    title: '首页'
+                    title: '数据统计'
                 },
                 component: () => import("@/view/index/index.vue")
             },

@@ -25,6 +25,14 @@ const mutations = {
 }
 
 const actions = {
+    appLoad({ dispatch }, getters) {
+        //重新加载路由权限，否则刷新页面异步路由挂载失败
+        if (getters.token) {
+            // 第三个参数必须申明，表示不是当前模块
+            dispatch('router/premRules', {}, { root: true });
+            dispatch('user/GetUserInfo', {}, { root: true })
+        }
+    }
 }
 
 export default {

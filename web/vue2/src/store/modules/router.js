@@ -2,8 +2,9 @@ import profileApi from '@/api/profile';
 import { isArray, deepTree } from '@/library/utils';
 import { Message } from 'element-ui';
 import storage from '@/library/utils/storage';
-import Router from '@/router';
-console.log(Router)
+// import { asyncRouterHandle } from '@/library/utils/asyncRouter'
+import router from '@/router'
+
 const state = {
     //路由 type=1
     routes: storage.get('viewRoutes') || [],
@@ -14,7 +15,7 @@ const state = {
 const mutations = {
     //设置视图路由
     SET_VIEW_ROUTES(state, list) {
-        Router.$plugin.addViews(list);
+        router.$plugin.addViews(list);
         state.routes = list;
         storage.set('viewRoutes', list)
     },
@@ -41,13 +42,14 @@ const actions = {
                     res.power = [];
                 }
                 const menuGroup = deepTree(res.menus);
+                let asyncRouter = res.menus.filter(e => e.menuType == 1);
+
                 //设置权限
                 commit('SET_PERMIESSION', res.power);
                 //设置菜单组
                 commit('SET_MENU_GROUP', menuGroup);
-                //设置路由
-                commit('SET_VIEW_ROUTES', res.menus.filter(e => e.menuType == 1));
-                resolve(menuGroup)
+                commit('SET_VIEW_ROUTES', asyncRouter);
+                resolve(asyncRouter)
             }
             //获取菜单、权限
             profileApi.getPermRules().then(res => {

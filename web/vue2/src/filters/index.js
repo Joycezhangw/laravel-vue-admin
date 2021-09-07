@@ -8,7 +8,7 @@ export function defaultAvatar(url) {
         return require('@/assets/img/default-avatar.png')
     }
     return url;
-};
+}
 /**
  * 默认昵称
  * @param {string} name 昵称
@@ -19,7 +19,7 @@ export function defaultName(name) {
         return "可爱的你^-^"
     }
     return name;
-};
+}
 /**
  * 金额格式化
  * 10000 => "10,000"

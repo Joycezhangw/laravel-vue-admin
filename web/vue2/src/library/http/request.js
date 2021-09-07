@@ -1,5 +1,6 @@
 import axios from 'axios'
 import store from '@/store'
+import { href } from "@/library/utils";
 import NProgress from "nprogress";
 import "nprogress/nprogress.css";
 const isDev = process.env.NODE_ENV == "development";
@@ -49,30 +50,34 @@ service.interceptors.response.use(
     response => {
         NProgress.done();
         const { code, message } = response.data;
-        if (code === -1) {
+        if (code === -1 || code === -403) {
             return Promise.reject(message)
         }
         return response.data
     },
-    error => {
+    async error => {
         NProgress.done();
         if (error.response) {
             const { status, config } = error.response
-            console.log('http.error===>>>', status)
             switch (status) {
                 case 401:
                     //删除用户信息，返回登录页面
-
+                    await store.dispatch("user/removeLoginUser");
+                    href("/login");
                     break;
                 case 403:
                     console.error(`${config.url} 无权限访问！！`);
+                    href("/403")
                     break;
                 case 404:
+                    href("/404")
                     break;
                 case 500:
                     //错误页面
+                    href("/500")
                     break;
                 case 502:
+                    href("/500")
                     break
                 default:
                     console.error(status, config.url)

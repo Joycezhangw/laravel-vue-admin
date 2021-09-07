@@ -1,5 +1,5 @@
-
 import join from "path";
+import { routerMode } from "@/config/env";
 /**
  * 获取url参数
  * @param {*} name 
@@ -90,7 +90,7 @@ export function href(path, newWindow) {
 
     let url = "";
 
-    if (process.env.VUE_ROUTER_MODE == "history") {
+    if (routerMode == "history") {
         url = origin + join(process.env.BASE_URL, path)
     } else {
         url = href.substring(0, href.indexOf("#"));

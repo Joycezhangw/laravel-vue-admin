@@ -49,10 +49,10 @@ const actions = {
     //退出登录
     LoginOut({ dispatch }) {
         return new Promise(resolve => {
-            passportApi.logout().done(() => {
+            passportApi.logout().finally(() => {
                 dispatch("removeLoginUser").then(() => {
-                    resolve
-                })
+                    resolve();
+                });
             })
         });
     },

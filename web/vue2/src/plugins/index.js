@@ -1,4 +1,6 @@
-import permission from '@/library/core/permission'
-permission();
+//Promise  done finally 方法
+import '@/library/core/common'
+//elementUI
 import "./element"
+//注册全局组件
 import "./registerComponents.js"

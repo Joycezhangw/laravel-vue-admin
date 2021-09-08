@@ -1,7 +1,7 @@
 <template>
   <div class="app-result app-result-404">
     <div class="app-result-icon app-result-image">
-       <icon-svg name='icon-error-404' class="error-404"></icon-svg>
+       <icon-svg name='error-404' class="error-404"></icon-svg>
     </div>
     <div class="app-result-title">404</div>
     <div class="app-result-subtitle">抱歉，您访问的页面不存在。</div>

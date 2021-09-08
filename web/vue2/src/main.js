@@ -3,6 +3,7 @@ import App from './App.vue'
 import "@/assets/css/common.scss";
 
 import './plugins'
+import './directive'
 import * as filters from './filters'
 
 import router from '@/router/index'

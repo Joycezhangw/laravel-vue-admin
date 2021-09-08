@@ -46,7 +46,7 @@ export default {
           }
         };
         //首页不进行追查父菜单
-        if (route.path !== "/init") {
+        if (route.path !== "/init" && route.path !== "/") {
           this.list = _(this.menuGroup)
             .map(deep)
             .filter(Boolean)

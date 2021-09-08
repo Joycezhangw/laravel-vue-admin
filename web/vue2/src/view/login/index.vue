@@ -187,9 +187,10 @@ export default {
             if (!first) {
               this.$message.error("该账号没有权限");
             } else {
-              this.$router.push("/");
+              this.$router
+                .push({ path: this.redirect || "/init" })
+                .catch(() => {}); // eslint-disable-line
             }
-            this.$router.push({ path: this.redirect || "/" }).catch(() => {}); // eslint-disable-line
           } catch (err) {
             this.$message.error(err);
             this.loginVerify();

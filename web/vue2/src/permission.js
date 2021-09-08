@@ -12,7 +12,6 @@ router.$plugin = {
         if (!options) {
             options = {};
         }
-
         routeList.map(item => {
             let url = item.component;
             if (url) {
@@ -61,10 +60,8 @@ router.beforeEach(async (to, from, next) => {
         }
     } else {
         if (whiteList.indexOf(to.path) !== -1) {
-            console.log('router===5>>>', storage.hasExpired('token'))
             next()
         } else {
-            console.log('router===6>>>', storage.hasExpired('token'))
             next(`/login?redirect=${to.path}`)
         }
     }

@@ -1,6 +1,6 @@
 <?php
 
-declare (strict_types = 1);
+declare (strict_types=1);
 
 namespace App\Http;
 
@@ -17,12 +17,14 @@ class ResponseCode extends BaseEnum
 
     const SUCCESS = 200;
     const ERROR = -1;
+    const LOGIN_TOKEN_TIME_DIE = -401;
 
     public static function getMap(): array
     {
         return [
             self::SUCCESS => '操作成功',
-            self::ERROR => '操作失败'
+            self::ERROR => '操作失败',
+            self::LOGIN_TOKEN_TIME_DIE=>'token 过期'
         ];
     }
 

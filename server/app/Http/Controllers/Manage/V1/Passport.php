@@ -119,8 +119,10 @@ class Passport extends Controller
             ];
             event(new PassportManageRefreshTokenEvent($manage, $jwt));
             return ResultHelper::returnFormat('登录成功', ResponseCode::SUCCESS, $jwt);
+        }catch(TokenInvalidException $e){
+            return ResultHelper::returnFormat('无效token', ResponseCode::LOGIN_TOKEN_TIME_DIE);
         } catch (JWTException $e) {
-            return ResultHelper::returnFormat('无法刷新令牌', ResponseCode::ERROR);
+            return ResultHelper::returnFormat('无法刷新令牌', ResponseCode::LOGIN_TOKEN_TIME_DIE);
         }
     }
 
@@ -136,7 +138,7 @@ class Passport extends Controller
             JWTAuth::parseToken()->invalidate();//退出
             return ResultHelper::returnFormat('登出成功', ResponseCode::SUCCESS);
         } catch (TokenInvalidException $e) {
-            return ResultHelper::returnFormat('token 无效', ResponseCode::SUCCESS);
+            return ResultHelper::returnFormat('token 无效', ResponseCode::LOGIN_TOKEN_TIME_DIE);
         }
     }
 

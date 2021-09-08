@@ -52,11 +52,19 @@ return [
     'middleware' => [
         'open' => true,
         // 路由中需要被 decode 的 id
-        'route_parameters' => [],
+        'route_parameters' => [
+            'id'
+        ],
         // 请求参数需要被 decode 的 id
         'request_parameters' => [
+            'id',
             'manage_id',
-            'dept_id'
+            'dept_id',
+            'role_id',
+            'menu_id',
+            'parent_id',
+            'menuId',
+            'parentId'
         ]
     ]
 

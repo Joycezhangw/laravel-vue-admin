@@ -37,6 +37,60 @@ class MenuRepo extends BaseRepository implements IMenu
     }
 
     /**
+     * 获取全部菜单列表
+     * @param array $params
+     * @return array
+     */
+    public function getAllList(array $params): array
+    {
+        $menuList = $this->model->orderBy('menu_order', 'ASC')->get([
+            'menu_id',
+            'parent_id',
+            'menu_name',
+            'menu_title',
+            'menu_router',
+            'menu_type',
+            'menu_icon',
+            'menu_order',
+            'keep_alive',
+            'is_show',
+            'menu_component',
+            'api_method',
+            'api_path',
+            'updated_at'
+        ])->toArray();
+        return $this->buildMenu($menuList);
+    }
+
+    private function buildMenu(array $menuList): array
+    {
+        $list = [];
+        foreach ($menuList as $item) {
+            $list[] = [
+                'menuId' => $item['menu_id'],
+                'path' => $item['menu_router'],
+                'name' => $item['menu_name'],
+                'parentId' => $item['parent_id'],
+                'menuType' => $item['menu_type'],
+                'component' => $item['menu_component'],
+                'hidden' => !(boolean)$item['is_show'],
+                'menuOrder' => $item['menu_order'],
+                'apiMethod' => $item['api_method'],
+                'apiPath' => $item['api_path'],
+                'updatedAt' => $item['updated_at'],
+                'meta' => [
+                    'title' => $item['menu_title'],
+                    'icon' => $item['menu_icon'],
+                    'keepAlive' => (boolean)$item['keep_alive']
+                ],
+                'children' => []
+            ];
+        }
+        return $list;
+    }
+
+
+    /**
      * 获取角色对应 菜单和权限
      * @param array $roleIds 角色ids
      * @param bool $isSuper 是否超级管理员
@@ -67,25 +121,11 @@ class MenuRepo extends BaseRepository implements IMenu
             'is_show',
             'menu_component',
             'api_method',
-            'api_path'
+            'api_path',
+            'updated_at'
         ])->toArray();
-        $menuList = $menus = $power = [];
-        foreach ($menuListRet as $item) {
-            $menuList[] = [
-                'menuId' => $item['menu_id'],
-                'path' => $item['menu_router'],
-                'name' => $item['menu_name'],
-                'parentId' => $item['parent_id'],
-                'menuType' => $item['menu_type'],
-                'component' => $item['menu_component'],
-                'hidden' => !(boolean)$item['is_show'],
-                'meta' => [
-                    'title' => $item['menu_title'],
-                    'icon' => $item['menu_icon'],
-                    'keepAlive' => (boolean)$item['keep_alive']
-                ]
-            ];
-        }
+        $menus = $power = [];
+        $menuList = $this->buildMenu($menuListRet);
 
         foreach ($menuList as $item) {
             //目录和菜单
@@ -93,7 +133,7 @@ class MenuRepo extends BaseRepository implements IMenu
                 $menus[] = $item;
                 continue;
             } elseif ($item['menuType'] == MenuTypeEnum::MENU_TYPE_BUTTON) {//按钮权限
-                $power[] = $item;
+                $power[] = $item['apiPath'];//(new HashIdsSup())->encode($item)['menuId'];
                 continue;
             }
         }

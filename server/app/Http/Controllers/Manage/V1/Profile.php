@@ -34,7 +34,7 @@ class Profile extends Controller
         $user->roles;
         $user->department;
         $manage = $manageRepo->parseDataRow($user->toArray());
-        return ResultHelper::returnFormat('success', ResponseCode::SUCCESS, $manage);
+        return ResultHelper::returnFormat('success', ResponseCode::SUCCESS, ['userInfo' => $manage]);
     }
 
     /**
@@ -76,7 +76,7 @@ class Profile extends Controller
         }
         $ret = $menuRepo->generatePermission($roleIds, (boolean)$user->is_super);
         $menus = $menuRepo->parseDataRows($ret['menus']);
-        $power = $menuRepo->parseDataRows($ret['power']);
+        $power = $ret['power'];
         return ResultHelper::returnFormat('success', ResponseCode::SUCCESS, compact('menus', 'power'));
     }
 

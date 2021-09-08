@@ -67,5 +67,6 @@ class MenuModel extends Model
         'is_show' => 'boolean',
         'keep_alive' => 'boolean',
         'created_at' => 'datetime:Y-m-d H:i:s',
+        'updated_at' => 'datetime:Y-m-d H:i:s',
     ];
 }

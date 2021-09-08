@@ -24,4 +24,11 @@ interface IMenu extends BaseInterface
      */
     public function generatePermission(array $roleIds = [], $isSuper = false): array;
 
+    /**
+     * 获取全部菜单列表
+     * @param array $params
+     * @return array
+     */
+    public function getAllList(array $params): array;
+
 }

@@ -15,12 +15,19 @@
           size="mini"
           row-key="menuId"
         >
-          <el-table-column
-            label="名称"
-            align="left"
-            width="200"
-            prop="meta.title"
-          ></el-table-column>
+          <el-table-column label="名称" align="left" width="200">
+            <template slot-scope="scope">
+              <span>{{ scope.row.title }}</span>
+              <el-tag
+                size="mini"
+                class="ml10"
+                effect="dark"
+                type="danger"
+                v-if="scope.row.hidden"
+                >隐藏</el-tag
+              >
+            </template>
+          </el-table-column>
           <el-table-column label="图标" align="center" width="80">
             <template slot-scope="props">
               <icon-svg
@@ -79,8 +86,21 @@
             width="150"
             prop="updatedAt"
           ></el-table-column>
-          <el-table-column fixed="right" label="操作" width="120">
+          <el-table-column
+            fixed="right"
+            label="操作"
+            align="center"
+            width="120"
+          >
             <template slot-scope="scope">
+              <el-button
+                size="mini"
+                type="text"
+                v-if="scope.row.menuType != 2"
+                @click="handleRowAdd(scope.$index, scope.row)"
+                >新增</el-button
+              >
+
               <el-button
                 size="mini"
                 type="text"
@@ -99,18 +119,28 @@
         </el-table>
       </div>
     </el-row>
-    <el-dialog
-      v-dialogDrag
-      :title="dialogIsEdit ? '修改菜单' : '新增菜单'"
-      :visible.sync="dialogVisible"
-      width="30%"
-    >
-      <menu-form :is-Edit="dialogIsEdit" ref="menuForm" />
-      <div slot="footer" class="dialog-footer">
-        <el-button size="small">关闭</el-button>
-        <el-button type="primary" size="small">保存</el-button>
-      </div>
-    </el-dialog>
+    <div class="lv-dialog">
+      <el-dialog
+        v-dialogDrag
+        :title="dialogIsEdit ? '修改菜单' : '新增菜单'"
+        :visible.sync="dialogVisible"
+        width="40%"
+        :before-close="handleDialogClose"
+      >
+        <menu-form
+          :is-edit="dialogIsEdit"
+          :menu-data="menuData"
+          :parent-id="menuParentId"
+          ref="menuForm"
+        />
+        <div slot="footer" class="dialog-footer">
+          <el-button size="small" @click="handleDialogClose">关闭</el-button>
+          <el-button type="primary" size="small" @click="submitForm"
+            >保存</el-button
+          >
+        </div>
+      </el-dialog>
+    </div>
   </div>
 </template>
 <script>
@@ -129,6 +159,8 @@ export default {
       menuType: ["目录", "菜单", "权限"],
       dialogVisible: false,
       dialogIsEdit: false,
+      menuParentId: "",
+      menuData: {},
     };
   },
   mounted() {
@@ -151,16 +183,90 @@ export default {
       this.tableLoading = true;
       this.getList();
     },
+    handleRowAdd(index, row) {
+      this.dialogVisible = true;
+      this.dialogIsEdit = false;
+      this.menuParentId = row.menuId;
+      this.menuData = {};
+    },
     handleAdd() {
       this.dialogVisible = true;
       this.dialogIsEdit = false;
+      this.menuParentId = "";
+      this.menuData = {};
     },
     //修改
     handleEdit(index, row) {
-      console.log("修改", index, row);
+      this.dialogVisible = true;
+      this.dialogIsEdit = true;
+      this.menuParentId = "";
+      this.menuData = row;
     },
     handleDelete(index, row) {
       console.log("删除", index, row);
+      this.$confirm(`此操作将永久删除选中数据，是否继续？`, "提示", {
+        type: "warning",
+      })
+        .then((res) => {
+          if (res === "confirm") {
+            menuApi
+              .doDelete(row.menuId)
+              .then((res) => {
+                this.$message({
+                  message: res.message,
+                  type: "success",
+                  onClose: () => {
+                    this.refresh();
+                  },
+                });
+              })
+              .catch((err) => {
+                this.$message.error(err);
+              });
+          }
+        })
+        .catch(() => null);
+    },
+    handleDialogClose() {
+      this.dialogVisible = false;
+      this.dialogIsEdit = false;
+      this.menuParentId = "";
+      this.menuData = {};
+      //关闭dialog，清空表单。否则下次弹窗，表单数据还在
+      this.$refs.menuForm.$refs.form.resetFields();
+    },
+    submitForm() {
+      this.$refs.menuForm.$refs.form.validate((valid) => {
+        if (valid) {
+          this.submitData();
+        } else {
+          return false;
+        }
+      });
+    },
+    submitData() {
+      const formData = this.$refs.menuForm._data.menuForm;
+      if (this.dialogIsEdit && this.menuData.menuId) {
+        menuApi
+          .doUpdate(this.menuData.menuId, formData)
+          .then((res) => {
+            this.handleDialogClose();
+            this.refresh();
+          })
+          .catch((err) => {
+            this.$message.error(err);
+          });
+      } else {
+        menuApi
+          .doStore(formData)
+          .then((res) => {
+            this.handleDialogClose();
+            this.refresh();
+          })
+          .catch((err) => {
+            this.$message.error(err);
+          });
+      }
     },
   },
 };

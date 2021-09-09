@@ -1,4 +1,25 @@
 import Vue from "vue";
+
+Vue.directive('permission', {
+    bind(el, bind, vnode) {
+        const hasPermission = (permission) => {
+            const powerList = vnode.context.$store.getters.permission;
+            if (powerList.includes(permission)) {
+                return true;
+            }
+            return false;
+        }
+        //获取到 v-permission 值
+        if (!hasPermission(bind.value)) {
+            // 没有权限 移除Dom元素
+            if (!el.parentNode) {
+                el.style.display = 'none';
+            } else {
+                el.parentNode.removeChild(el);
+            }
+        }
+    }
+});
 /**
  * v-dialogDrag 弹窗拖拽
  */

@@ -2,7 +2,11 @@
   <div class="content-container">
     <el-row type="flex">
       <el-button size="mini" @click="refresh()">刷新</el-button>
-      <el-button type="primary" size="mini" @click="handleAdd()"
+      <el-button
+        type="primary"
+        v-permission="'manage.menu.store'"
+        size="mini"
+        @click="handleAdd()"
         >新增</el-button
       >
     </el-row>
@@ -96,6 +100,7 @@
               <el-button
                 size="mini"
                 type="text"
+                v-permission="'manage.menu.store'"
                 v-if="scope.row.menuType != 2"
                 @click="handleRowAdd(scope.$index, scope.row)"
                 >新增</el-button
@@ -104,6 +109,7 @@
               <el-button
                 size="mini"
                 type="text"
+                v-permission="'manage.menu.update'"
                 @click="handleEdit(scope.$index, scope.row)"
                 >修改</el-button
               >
@@ -111,6 +117,7 @@
                 size="mini"
                 type="text"
                 class="text-delete"
+                v-permission="'manage.menu.destroy'"
                 @click="handleDelete(scope.$index, scope.row)"
                 >删除</el-button
               >

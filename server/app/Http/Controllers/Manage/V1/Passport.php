@@ -119,7 +119,7 @@ class Passport extends Controller
             ];
             event(new PassportManageRefreshTokenEvent($manage, $jwt));
             return ResultHelper::returnFormat('登录成功', ResponseCode::SUCCESS, $jwt);
-        }catch(TokenInvalidException $e){
+        } catch (TokenInvalidException $e) {
             return ResultHelper::returnFormat('无效token', ResponseCode::LOGIN_TOKEN_TIME_DIE);
         } catch (JWTException $e) {
             return ResultHelper::returnFormat('无法刷新令牌', ResponseCode::LOGIN_TOKEN_TIME_DIE);

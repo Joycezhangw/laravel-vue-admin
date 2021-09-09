@@ -70,14 +70,18 @@ service.interceptors.response.use(
                     href("/403")
                     break;
                 case 404:
-                    href("/404")
+                    // href("/404")
                     break;
                 case 500:
                     //错误页面
-                    href("/500")
+                    if (!isDev) {
+						href("/500");
+					}
                     break;
                 case 502:
-                    href("/500")
+                    if (!isDev) {
+						href("/500");
+					}
                     break
                 default:
                     console.error(status, config.url)

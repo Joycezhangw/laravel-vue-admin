@@ -20,6 +20,7 @@ class ManageLoginValidator extends AbstractValidator
         'username' => 'required',
         'password' => 'required|min:8',
         'captcha' => 'required|size:4',
+        'captcha_uniqid'=>'required'
     ];
 
     protected $messages = [
@@ -28,6 +29,7 @@ class ManageLoginValidator extends AbstractValidator
         'password.min' => '密码最少要输入8个字符',
         'captcha.required' => '验证码不能为空',
         'captcha.size' => '验证码位数错误',
+        'captcha_uniqid.required' => '非法操作验证码',
     ];
 
 }

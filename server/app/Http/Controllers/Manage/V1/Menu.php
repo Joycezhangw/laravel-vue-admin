@@ -8,6 +8,7 @@ use App\Http\Controllers\Controller;
 use App\Http\ResponseCode;
 use App\Services\Repositories\Manage\Interfaces\IMenu;
 use Illuminate\Http\Request;
+use Illuminate\Support\Str;
 use JoyceZ\LaravelLib\Helpers\ResultHelper;
 
 /**
@@ -23,6 +24,24 @@ class Menu extends Controller
     {
         $menuList = $menuRepo->getAllList($request->all());
         return ResultHelper::returnFormat('success', ResponseCode::SUCCESS, $menuRepo->parseDataRows($menuList));
+    }
+
+    /**
+     * 获取可操作权限
+     * @return array
+     */
+    public function power()
+    {
+        $routes = app()->routes->getRoutes();
+        $arrRoute = [];
+        foreach ($routes as $route) {
+            if (isset($route->action['as'])) {
+                if (Str::is('manage.*', $route->action['as'])) {
+                    $arrRoute[] = $route->action['as'];
+                }
+            }
+        }
+        return ResultHelper::returnFormat('success', ResponseCode::SUCCESS, $arrRoute);
     }
 
     public function store()

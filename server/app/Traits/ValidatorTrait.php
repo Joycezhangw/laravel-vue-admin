@@ -38,6 +38,13 @@ trait ValidatorTrait
         Validator::replacer('chinese_name', function ($message, $attribute, $rule, $parameters) {
             return $message;
         });
+        //密码必须至少包含8个字符、至少含有一个数字、小写和大写字母以及特殊字符
+        Validator::extend('complex_pwd', function ($attribute, $value, $parameters, $validator) {
+            return 0 < preg_match("/^.*(?=.{8,})(?=.*[a-z])(?=.*[A-Z])(?=.*[@#$%^&+=])[a-zA-Z0-9@#$%^&+=]*$/", $value);
+        });
+        Validator::replacer('complex_pwd', function ($message, $attribute, $rule, $parameters) {
+            return $message;
+        });
     }
 
 }

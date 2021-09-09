@@ -1,4 +1,4 @@
-import join from "path";
+import { join } from 'path'
 import { routerMode } from "@/config/env";
 /**
  * 获取url参数

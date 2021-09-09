@@ -5,7 +5,8 @@ class Menu {
             getList: '/v1/menu',
             doUpdate: '/v1/menu/update',
             doStore: '/v1/menu/store',
-            doDelete: '/v1/menu/delete'
+            doDelete: '/v1/menu/delete',
+            getPower: '/v1/menu/power'
         }
     }
     /**
@@ -14,6 +15,14 @@ class Menu {
      */
     static getList() {
         return request.get(this.apiUrl.getList)
+    }
+
+    /**
+     * 获取权限规则
+     * @returns 
+     */
+    static getPower() {
+        return request.get(this.apiUrl.getPower)
     }
 
 
@@ -47,7 +56,7 @@ class Menu {
      */
     static doDelete(menuId) {
         return request({
-            url: `${this.apiUrl.doDelete}${menuId}`,
+            url: `${this.apiUrl.doDelete}/${menuId}`,
             method: 'delete',
         })
     }

@@ -188,7 +188,12 @@ export default {
               this.$message.error("该账号没有权限");
             } else {
               this.$router
-                .push({ path: this.redirect || "/init" })
+                .push({
+                  path:
+                    this.redirect == "" || this.redirect == "/"
+                      ? "/init"
+                      : this.redirect,
+                })
                 .catch(() => {}); // eslint-disable-line
             }
           } catch (err) {

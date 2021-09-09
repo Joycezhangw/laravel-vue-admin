@@ -70,6 +70,7 @@ class MenuRepo extends BaseRepository implements IMenu
                 'menuId' => $item['menu_id'],
                 'path' => $item['menu_router'],
                 'name' => $item['menu_name'],
+                'title' => $item['menu_title'],
                 'parentId' => $item['parent_id'],
                 'menuType' => $item['menu_type'],
                 'component' => $item['menu_component'],

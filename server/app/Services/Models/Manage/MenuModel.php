@@ -69,4 +69,13 @@ class MenuModel extends Model
         'created_at' => 'datetime:Y-m-d H:i:s',
         'updated_at' => 'datetime:Y-m-d H:i:s',
     ];
+
+    /**
+     * 角色绑定权限路由和按钮
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
+     */
+    public function roles()
+    {
+        return $this->belongsToMany(RoleModel::class, 'sys_manage_role_has_menu', 'menu_id', 'role_id');
+    }
 }

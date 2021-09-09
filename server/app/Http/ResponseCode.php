@@ -17,7 +17,7 @@ class ResponseCode extends BaseEnum
 
     const SUCCESS = 200;
     const ERROR = -1;
-    const LOGIN_TOKEN_TIME_DIE = -401;
+    const LOGIN_TOKEN_TIME_DIE = 401;
 
     public static function getMap(): array
     {

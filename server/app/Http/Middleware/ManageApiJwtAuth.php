@@ -35,11 +35,11 @@ class ManageApiJwtAuth
             }
             return $next($request);
         } catch (TokenExpiredException $e) {
-            return response()->json(ResultHelper::returnFormat('token 过期', ResponseCode::ERROR));
+            return response()->json(ResultHelper::returnFormat('token 过期', ResponseCode::LOGIN_TOKEN_TIME_DIE),ResponseCode::LOGIN_TOKEN_TIME_DIE);
         } catch (TokenInvalidException $e) {
-            return response()->json(ResultHelper::returnFormat('token 无效', ResponseCode::ERROR));
+            return response()->json(ResultHelper::returnFormat('token 无效', ResponseCode::LOGIN_TOKEN_TIME_DIE),ResponseCode::LOGIN_TOKEN_TIME_DIE);
         } catch (JWTException $e) {
-            return response()->json(ResultHelper::returnFormat('缺少 token', ResponseCode::ERROR));
+            return response()->json(ResultHelper::returnFormat('缺少 token', ResponseCode::LOGIN_TOKEN_TIME_DIE),ResponseCode::LOGIN_TOKEN_TIME_DIE);
         }
     }
 }

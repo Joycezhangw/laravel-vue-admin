@@ -41,6 +41,27 @@ class HashIdsSup
         return $row;
     }
 
+    /**
+     * 对加密的字符串数组进行加密
+     * @param array $rows
+     * @return array|string
+     */
+    public function decodeArray(array $rows)
+    {
+        if ($this->isOpenEncode()) {
+            $ids = [];
+            foreach ($rows as $key => $item) {
+                $ids[] = Hashids::decode($item)[0];
+            }
+            return $ids;
+        }
+        return $rows;
+    }
+
+    /**
+     * 是否开启加解密
+     * @return bool|\Illuminate\Config\Repository|mixed
+     */
     protected function isOpenEncode()
     {
         return config('hashids.middleware.open') ?? false;

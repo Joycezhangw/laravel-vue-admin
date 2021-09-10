@@ -118,7 +118,7 @@ class Passport extends Controller
                 'expires_in' => JWTFactory::getTTL() * 60
             ];
             event(new PassportManageRefreshTokenEvent($manage, $jwt));
-            return ResultHelper::returnFormat('登录成功', ResponseCode::SUCCESS, $jwt);
+            return ResultHelper::returnFormat('刷新成功', ResponseCode::SUCCESS, $jwt);
         } catch (TokenInvalidException $e) {
             return ResultHelper::returnFormat('无效token', ResponseCode::LOGIN_TOKEN_TIME_DIE);
         } catch (JWTException $e) {

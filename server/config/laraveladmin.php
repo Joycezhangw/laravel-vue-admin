@@ -14,4 +14,7 @@ return [
         'fontsize' => 20,
         'cachetime' => 300,
     ],
+    'paginate' => [
+        'page_size' => 20
+    ],
 ];

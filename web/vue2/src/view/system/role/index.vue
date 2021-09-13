@@ -100,6 +100,7 @@
         :visible.sync="dialogVisible"
         width="40%"
         :before-close="handleDialogClose"
+        :close-on-click-modal="false"
       >
         <role-form
           :is-edit="dialogIsEdit"

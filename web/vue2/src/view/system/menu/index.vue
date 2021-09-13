@@ -134,6 +134,7 @@
         :visible.sync="dialogVisible"
         width="40%"
         :before-close="handleDialogClose"
+        :close-on-click-modal="false"
       >
         <menu-form
           :is-edit="dialogIsEdit"

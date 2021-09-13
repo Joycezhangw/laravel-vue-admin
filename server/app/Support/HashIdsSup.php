@@ -42,6 +42,23 @@ class HashIdsSup
     }
 
     /**
+     * 对一维数字数组进行加密
+     * @param array $rows
+     * @return array|string
+     */
+    public function encodeArray(array $rows)
+    {
+        if ($this->isOpenEncode()) {
+            $ids = [];
+            foreach ($rows as $key => $item) {
+                $ids[] = Hashids::encode($item);
+            }
+            return $ids;
+        }
+        return $rows;
+    }
+
+    /**
      * 对加密的字符串数组进行加密
      * @param array $rows
      * @return array|string

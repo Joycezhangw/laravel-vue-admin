@@ -46,6 +46,22 @@ class Menu extends Controller
     }
 
     /**
+     * 获取详情
+     * @param int $id
+     * @param IMenu $menuRepo
+     * @return array
+     */
+    public function read(int $id, IMenu $menuRepo)
+    {
+        $menu = $menuRepo->getByPkId($id);
+        if (!$menu) {
+            return ResultHelper::returnFormat('菜单不存在', ResponseCode::ERROR);
+        }
+        return ResultHelper::returnFormat('success', ResponseCode::SUCCESS, $menuRepo->parseDataRow($menu->toArray()));
+    }
+
+
+    /**
      * 新增菜单
      * @param Request $request
      * @param MenuValidator $validator

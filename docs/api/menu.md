@@ -61,6 +61,35 @@ Response:{
 > 新建菜单
 
 ```
+POST:/manage/v1/menu/read/{menuId}
+
+
+Response:{
+    "code": 200,
+    "message": "success",
+    "data": {
+        "menu_id": "6vZjodnGwmEPMkarjlxlJXz5yW30Db4O",
+        "parent_id": "3vXAb8agzMlmO0kVA2WyJ5EoNjew9d1r",
+        "menu_name": "systemManage",
+        "menu_title": "系统管理",
+        "menu_router": "/sys",
+        "menu_type": 0,
+        "menu_icon": "icon-system",
+        "menu_order": 0,
+        "keep_alive": true,
+        "is_show": true,
+        "menu_component": "",
+        "api_method": "",
+        "api_path": "",
+        "created_at": "2021-08-31 07:05:33",
+        "updated_at": "2021-08-31 07:05:33"
+    }
+}
+```
+
+> 新建菜单
+
+```
 POST:/manage/v1/menu/store
 
 Request-params:{

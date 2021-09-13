@@ -3,6 +3,7 @@ class Menu {
     static get apiUrl() {
         return {
             getList: '/v1/menu',
+            getInfo: '/v1/role/read',
             doUpdate: '/v1/menu/update',
             doStore: '/v1/menu/store',
             doDelete: '/v1/menu/delete',
@@ -15,6 +16,15 @@ class Menu {
      */
     static getList() {
         return request.get(this.apiUrl.getList)
+    }
+
+    /**
+     * 详情
+     * @param {string} menuId 菜单id
+     * @returns 
+     */
+    static getInfo(menuId) {
+        return request.get(`${this.apiUrl.getInfo}/${menuId}`)
     }
 
     /**

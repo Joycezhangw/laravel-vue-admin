@@ -29,7 +29,7 @@ class Role extends Controller
     public function index(Request $request, IRole $roleRepo)
     {
         $params = $request->all();
-        $ret = $roleRepo->getList($params, $params['order'], $params['sort']);
+        $ret = $roleRepo->getList($params, $params['order'] ?? 'created_at', $params['sort'] ?? 'desc');
         $list = $roleRepo->parseDataRows($ret['data']);
         return ResultHelper::returnFormat('success', 200, [
             'pagination' => [

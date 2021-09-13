@@ -172,7 +172,7 @@ export default {
             parent_id: newVal.parentId,
             menu_name: newVal.name,
             is_show: !newVal.hidden,
-            keep_alive: newVal.keepAlive,
+            keep_alive: newVal.meta.keepAlive,
             menu_order: newVal.menuOrder,
             menu_router: newVal.path,
             menu_icon: newVal.meta.icon,

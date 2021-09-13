@@ -16,7 +16,7 @@
           :data="tableList"
           v-loading="tableLoading"
           :border="true"
-          size="mini"
+          size="small"
           row-key="menuId"
         >
           <el-table-column label="名称" align="left" width="200">
@@ -48,6 +48,7 @@
               }}</el-tag>
             </template>
           </el-table-column>
+          <el-table-column label="路由名" align="center" width="120" prop="name"></el-table-column>
           <el-table-column
             label="节点路由"
             align="center"

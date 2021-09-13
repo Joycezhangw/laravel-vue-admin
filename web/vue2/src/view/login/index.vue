@@ -7,8 +7,8 @@
             <div class="login-form-logo">
               <a href="/"
                 ><img
-                  src="https://gw.alipayobjects.com/mdn/prod_resource/afts/img/A*FsnmRIiTfe0AAAAAAAAAAABkARQnAQ"
-                  alt="[object Object]"
+                  src="@/assets/logo.png"
+                  alt=""
               /></a>
             </div>
             <div class="login-form-content">
@@ -190,7 +190,9 @@ export default {
               this.$router
                 .push({
                   path:
-                    this.redirect == "" || this.redirect == "/"
+                    this.redirect == undefined ||
+                    this.redirect == "" ||
+                    this.redirect == "/"
                       ? "/init"
                       : this.redirect,
                 })

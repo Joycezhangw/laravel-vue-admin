@@ -4,7 +4,7 @@
       <el-button size="mini" @click="refresh()">刷新</el-button>
       <el-button
         type="primary"
-        v-permission="'manage.menu.store'"
+        v-permission="'manage.role.store'"
         size="mini"
         @click="handleAdd()"
         >新增</el-button
@@ -62,6 +62,7 @@
                 <el-button
                   size="mini"
                   type="text"
+                  v-permission="'manage.role.update'"
                   @click="handleEdit(scope.$index, scope.row)"
                   >修改</el-button
                 >
@@ -69,6 +70,7 @@
                   size="mini"
                   type="text"
                   class="text-delete"
+                  v-permission="'manage.role.destroy'"
                   @click="handleDelete(scope.$index, scope.row)"
                   >删除</el-button
                 >

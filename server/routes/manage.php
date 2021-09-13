@@ -20,10 +20,18 @@ Route::group([
         $router->get('/profile/rules', 'Profile@rules')->name('manage.profile.rules');
 
         //以下路由需要另起一个中间件进行权限认证
+        //菜单
         $router->get('/menu', 'Menu@index')->name('manage.menu.index');//菜单权限列表
         $router->post('/menu/store', 'Menu@store')->name('manage.menu.store');//提交菜单数据
         $router->put('/menu/update/{id}', 'Menu@update')->name('manage.menu.update');//更新菜单
         $router->delete('/menu/delete/{id}', 'Menu@destroy')->name('manage.menu.destroy');//删除菜单
-        $router->get('/menu/power','Menu@power')->name('manage.menu.power');//获取route别名权限
+        $router->get('/menu/power', 'Menu@power')->name('manage.menu.power');//获取route别名权限
+        //角色
+        $router->get('/role', 'Role@index')->name('manage.role.index');//菜单权限列表
+        $router->get('/role/read/{id}', 'Role@read')->name('manage.role.read');//详情
+        $router->post('/role/store', 'Role@store')->name('manage.role.store');//提交菜单数据
+        $router->put('/role/update/{id}', 'Role@update')->name('manage.role.update');//更新菜单
+        $router->delete('/role/delete/{id}', 'Role@destroy')->name('manage.role.destroy');//删除菜单
+
     });
 });

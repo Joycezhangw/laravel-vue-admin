@@ -53,8 +53,13 @@ class Role extends Controller
         if (!$role) {
             return ResultHelper::returnFormat('角色不存在', ResponseCode::ERROR);
         }
-        $role->menus();
-        return ResultHelper::returnFormat('success', ResponseCode::SUCCESS, $roleRepo->parseDataRow($role->toArray()));
+        $menuIds = [];
+        foreach ($role->menus as $item) {
+            $menuIds[] = $item['menu_id'];
+        }
+        $roleData = $role->toArray();
+        $roleData['menus'] = $menuIds ? (new HashIdsSup())->encodeArray($menuIds) : [];
+        return ResultHelper::returnFormat('success', ResponseCode::SUCCESS, $roleRepo->parseDataRow($roleData));
     }
 
     /**
@@ -84,6 +89,39 @@ class Role extends Controller
                 $role->menus()->sync(array_filter(array_unique($ids)));
             }
             return ResultHelper::returnFormat('新建成功', ResponseCode::SUCCESS);
+        }
+        return ResultHelper::returnFormat('网络繁忙，请稍后再试...', ResponseCode::ERROR);
+    }
+
+    /**
+     * 更新角色
+     * @param int $roleId
+     * @param Request $request
+     * @param RoleValidator $validator
+     * @param IRole $roleRepo
+     * @return array
+     */
+    public function update(int $roleId, Request $request, RoleValidator $validator, IRole $roleRepo)
+    {
+        $params = $request->all();
+        //表单校验
+        $error = $validator->make($params)->errors();
+        if ($error->count() > 0) {
+            return ResultHelper::returnFormat($error->first(), ResponseCode::ERROR);
+        }
+        $role = $roleRepo->getByPkId($roleId);
+        if (!$role) {
+            return ResultHelper::returnFormat($error->first(), ResponseCode::ERROR);
+        }
+        $role->role_name = FiltersHelper::filterXSS(trim($params['role_name']));
+        $role->role_desc = FiltersHelper::filterXSS(trim($params['role_desc']));
+        if ($role->save()) {
+            if ($params['menus']) {
+                //对数据进行解密
+                $ids = (new HashIdsSup())->decodeArray($params['menus']);
+                $role->menus()->sync(array_filter(array_unique($ids)));
+            }
+            return ResultHelper::returnFormat('修改成功', ResponseCode::SUCCESS);
         }
         return ResultHelper::returnFormat('网络繁忙，请稍后再试...', ResponseCode::ERROR);
     }

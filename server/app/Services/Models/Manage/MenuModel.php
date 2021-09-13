@@ -70,6 +70,10 @@ class MenuModel extends Model
         'updated_at' => 'datetime:Y-m-d H:i:s',
     ];
 
+    protected $hidden=[
+        'pivot'
+    ];
+
     /**
      * 角色绑定权限路由和按钮
      * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany

@@ -37,6 +37,8 @@
           v-loading="tableLoading"
           :border="true"
           size="small"
+          @sort-change="onSortChange"
+          :default-sort="{ prop: 'updated_at', order: 'descending' }"
         >
           <el-table-column
             label="角色名"
@@ -49,6 +51,8 @@
             label="更新时间"
             align="center"
             width="150"
+            sortable="custom"
+            :sort-orders="['ascending', 'descending']"
             prop="updated_at"
           />
           <el-table-column
@@ -200,6 +204,23 @@ export default {
       this.roleData = {};
       //关闭dialog，清空表单。否则下次弹窗，表单数据还在
       this.$refs.roleForm.$refs.form.resetFields();
+    },
+    //排序
+    onSortChange({ prop, order }) {
+      console.log("changeSort===>>>", order, prop);
+      if (order === "descending") {
+        order = "desc";
+      }
+
+      if (order === "ascending") {
+        order = "asc";
+      }
+
+      if (order) {
+        this.pagination.page = 1;
+        this.sort.sort = order;
+        this.refresh();
+      }
     },
     async handleEdit(index, row) {
       await roleApi

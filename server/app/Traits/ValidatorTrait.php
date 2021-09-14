@@ -45,6 +45,13 @@ trait ValidatorTrait
         Validator::replacer('complex_pwd', function ($message, $attribute, $rule, $parameters) {
             return $message;
         });
+        //验证是否是非负数、非小数点数字。用于 数字 ID 验证
+        Validator::extend('positive_id', function ($attribute, $value, $parameters, $validator) {
+            return CustomValidator::isPositive($value);
+        });
+        Validator::replacer('positive_id', function ($message, $attribute, $rule, $parameters) {
+            return $message;
+        });
     }
 
 }

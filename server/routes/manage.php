@@ -33,6 +33,20 @@ Route::group([
         $router->post('/role/store', 'Role@store')->name('manage.role.store');//提交菜单数据
         $router->put('/role/update/{id}', 'Role@update')->name('manage.role.update');//更新菜单
         $router->delete('/role/delete/{id}', 'Role@destroy')->name('manage.role.destroy');//删除菜单
+        //部门
+        $router->get('/dept', 'Dept@index')->name('manage.dept.index');//用户列表
+        $router->get('/dept/read/{id}', 'Dept@read')->name('manage.dept.read');//详情
+        $router->post('/dept/store', 'Dept@store')->name('manage.dept.store');//新增用户
+        $router->put('/dept/update/{id}', 'Dept@update')->name('manage.dept.update');//更新用户
+        $router->delete('/dept/delete/{id}', 'Dept@destroy')->name('manage.dept.destroy');//删除
+        //后台用户
+        $router->get('/user', 'Manage@index')->name('manage.user.index');//用户列表
+        $router->get('/user/read/{id}', 'Manage@read')->name('manage.user.read');//详情
+        $router->post('/user/store', 'Manage@store')->name('manage.user.store');//新增用户
+        $router->put('/user/update/{id}', 'Manage@update')->name('manage.user.update');//更新用户
+        $router->delete('/user/delete/{id}', 'Manage@destroy')->name('manage.user.destroy');//删除
+        //前台用户
+//        $router->get('/member', 'Member@index')->name('manage.member.index');//前台用户列表
 
     });
 });

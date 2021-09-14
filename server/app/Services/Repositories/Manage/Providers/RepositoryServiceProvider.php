@@ -4,6 +4,8 @@ declare (strict_types=1);
 namespace App\Services\Repositories\Manage\Providers;
 
 
+use App\Services\Repositories\Manage\DepartmentRepo;
+use App\Services\Repositories\Manage\Interfaces\IDepartment;
 use App\Services\Repositories\Manage\Interfaces\ILog;
 use App\Services\Repositories\Manage\Interfaces\IManage;
 use App\Services\Repositories\Manage\Interfaces\IMenu;
@@ -33,7 +35,7 @@ class RepositoryServiceProvider extends ServiceProvider
         $this->app->bind(ILog::class, LogRepo::class);
         $this->app->bind(IMenu::class, MenuRepo::class);
         $this->app->bind(IRole::class, RoleRepo::class);
-
+        $this->app->bind(IDepartment::class, DepartmentRepo::class);
     }
 
 }

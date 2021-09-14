@@ -29,6 +29,8 @@ class CreateSysManageMenuTable extends Migration
             $table->string('api_path')->default('')->comment('api请求地址');
             $table->unsignedInteger('created_at')->default(0)->comment('创建时间');
             $table->unsignedInteger('updated_at')->default(0)->comment('更新时间');
+            //路由名唯一索引
+            $table->unique('menu_name', 'uk_manage_menu_name');
         });
         //表注释
         \Illuminate\Support\Facades\DB::statement("ALTER TABLE `sys_manage_menu` comment '前端管理菜单'");

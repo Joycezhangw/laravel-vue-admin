@@ -47,6 +47,7 @@
               <el-button
                 size="mini"
                 type="text"
+                v-permission="'manage.dept.store'"
                 @click="handleEdit(scope.$index, scope.row)"
                 >修改</el-button
               >
@@ -54,6 +55,7 @@
                 size="mini"
                 type="text"
                 class="text-delete"
+                v-permission="'manage.dept.destroy'"
                 @click="handleDelete(scope.$index, scope.row)"
                 >删除</el-button
               >

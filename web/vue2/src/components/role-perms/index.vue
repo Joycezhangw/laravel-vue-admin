@@ -96,8 +96,6 @@ export default {
       const checked = tree.getCheckedKeys();
       //半选中的节点
       const halfChecked = tree.getHalfCheckedKeys();
-      console.log('=============role-perms=================')
-      console.log('halfChecked', [...checked, ...halfChecked])
       this.$emit("input", [...checked, ...halfChecked]);
     },
   },

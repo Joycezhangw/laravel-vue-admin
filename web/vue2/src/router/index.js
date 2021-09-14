@@ -14,7 +14,7 @@ Vue.use(VueRouter)
 const constantRoutes = [
     {
         path: '/',
-        name: 'Index',
+        name: 'Layout',
         component: Layout,
         children: [
             {

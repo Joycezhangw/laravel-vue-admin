@@ -29,7 +29,7 @@ router.$plugin = {
         });
 
         routeList.forEach(item => {
-            router.addRoute('Index', item)
+            router.addRoute('Layout', item)
         });
     },
     to: url => {
@@ -43,7 +43,7 @@ router.beforeEach(async (to, from, next) => {
     const { token } = store.getters;
     if (token) {
         if (to.path === '/login') {
-            next({ path: '/' })
+            next({ path: '/init' })
         } else {
             //判断vuex中是否有对应的用户数据，如果没有，重新获取用户详情接口
             if (store.getters.userInfo.manage_id) {

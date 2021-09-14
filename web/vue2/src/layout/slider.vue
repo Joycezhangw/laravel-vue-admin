@@ -2,7 +2,7 @@
   <div class="app-slider">
     <div class="app-slider__logo">
       <img
-        src="https://gw.alipayobjects.com/mdn/prod_resource/afts/img/A*FsnmRIiTfe0AAAAAAAAAAABkARQnAQ"
+        src="@/assets/logo.png"
       />
       <span v-if="!menuCollapse || browser.isMini">{{ appInfo.name }}</span>
     </div>

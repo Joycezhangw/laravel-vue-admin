@@ -155,10 +155,8 @@ export default {
   },
   methods: {
     onSearch() {
-      if (this.search_text != "") {
-        this.pagination.page = 1;
-        this.getList();
-      }
+      this.pagination.page = 1;
+      this.getList();
     },
     refresh() {
       this.getList();
@@ -207,7 +205,6 @@ export default {
     },
     //排序
     onSortChange({ prop, order }) {
-      console.log("changeSort===>>>", order, prop);
       if (order === "descending") {
         order = "desc";
       }

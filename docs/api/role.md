@@ -44,6 +44,23 @@ Response:{
 }
 ```
 
+> 角色全部列表
+
+```
+GET:/manage/v1/list
+
+Response:{
+    "code": 200,
+    "message": "success",
+    "data":[
+        {
+            "role_id": "6vZjodnGwmEPMkarjlxlJXz5yW30Db4O",
+            "role_name": "超级管理员"
+        }
+    ]
+}
+```
+
 > 角色详情
 
 ```

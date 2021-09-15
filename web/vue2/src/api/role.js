@@ -3,6 +3,7 @@ class Role {
     static get apiUrl() {
         return {
             getList: '/v1/role',
+            getAllList: '/v1/role/list',
             getInfo: '/v1/role/read',
             doUpdate: '/v1/role/update',
             doStore: '/v1/role/store',
@@ -14,12 +15,19 @@ class Role {
      * @returns 
      */
     static getList(params) {
-        console.log('role.getList', params)
         return request({
             url: this.apiUrl.getList,
             method: 'get',
             params
         })
+    }
+
+    /**
+     * 获取全部角色
+     * @returns 
+     */
+    static getAllList() {
+        return request.get(this.apiUrl.getAllList)
     }
 
     /**

@@ -15,6 +15,7 @@ const constantRoutes = [
     {
         path: '/',
         name: 'Layout',
+        redirect: "/init",//layout布局，要重定向到 主页面
         component: Layout,
         children: [
             {
@@ -24,15 +25,7 @@ const constantRoutes = [
                     title: '数据统计'
                 },
                 component: () => import("@/view/index/index.vue")
-            },
-            // {
-            //     path:"/sys/menu",
-            //     name:'menuManage',
-            //     meta:{
-            //         title:'权限菜单',
-            //     },
-            //     component:()=>import('@/view/system/menu/index.vue')
-            // }
+            }
         ]
     },
     {
@@ -68,25 +61,12 @@ const constantRoutes = [
             meta: { title: "500" }
         }]
     },
-    {
+    {//通配，路由不存在跳转到404
         path: '*',
         redirect: '/404',
         hidden: true,
     }
 ];
-export const asyncRoutes = [{
-    path: '/layout',
-    name: 'layout',
-    component: Layout,
-    meta: {
-        title: '底层layout'
-    },
-    children: []
-}, {
-    path: '*',
-    redirect: '/404',
-    hidden: true,
-}];
 const router = new VueRouter({
     base: process.env.BASE_URL,
     mode: "history",

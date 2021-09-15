@@ -31,7 +31,7 @@ class Role extends Controller
         $params = $request->all();
         $ret = $roleRepo->getList($params, $params['order'] ?? 'created_at', $params['sort'] ?? 'desc');
         $list = $roleRepo->parseDataRows($ret['data']);
-        return ResultHelper::returnFormat('success', 200, [
+        return ResultHelper::returnFormat('success', ResponseCode::SUCCESS, [
             'pagination' => [
                 'total' => $ret['total'],
                 'page_size' => $ret['per_page'],
@@ -39,6 +39,17 @@ class Role extends Controller
             ],
             'list' => $list
         ]);
+    }
+
+    /**
+     * 获取全部角色
+     * @param IRole $roleRepo
+     * @return array
+     */
+    public function lists(IRole $roleRepo)
+    {
+        $lists = $roleRepo->all([], ['role_id', 'role_name']);
+        return ResultHelper::returnFormat('success', ResponseCode::SUCCESS,$roleRepo->parseDataRows($lists->toArray()));
     }
 
     /**

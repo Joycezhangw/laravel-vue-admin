@@ -30,6 +30,7 @@ Route::group([
         //角色
         $router->get('/role', 'Role@index')->name('manage.role.index');//菜单权限列表
         $router->get('/role/read/{id}', 'Role@read')->name('manage.role.read');//详情
+        $router->get('/role/list', 'Role@lists')->name('manage.role.list');//列表
         $router->post('/role/store', 'Role@store')->name('manage.role.store');//提交菜单数据
         $router->put('/role/update/{id}', 'Role@update')->name('manage.role.update');//更新菜单
         $router->delete('/role/delete/{id}', 'Role@destroy')->name('manage.role.destroy');//删除菜单

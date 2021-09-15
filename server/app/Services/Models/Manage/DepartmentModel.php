@@ -55,6 +55,10 @@ class DepartmentModel extends Model
         'updated_at' => 'datetime:Y-m-d H:i:s',
     ];
 
+    protected $hidden=[
+        'pivot'
+    ];
+
 
     /**
      * 关联用户下多个角色

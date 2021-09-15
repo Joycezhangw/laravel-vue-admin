@@ -27,8 +27,8 @@ export default {
   },
   watch: {
     value() {
-      //值更改，重新获取数据
-      this.getList();
+      // 值更改，重新获取数据
+      this.renderTree();
     },
   },
   data() {
@@ -56,24 +56,32 @@ export default {
           //一维数组转树形数据
           this.list = deepTree(res.data, "dept_id", "parent_id", "dept_order");
           //设置默认选中状态，一定要再nextTick之后
-          this.$nextTick(() => {
-            //选中当前节点
-            this.$refs.tree.setCurrentKey(this.value);
-            //展开所有父节点
-            let selected = this.$refs.tree.getCurrentNode();
-            if (
-              this.$refs.tree.getNode(selected) &&
-              this.$refs.tree.getNode(selected).parent
-            ) {
-              this.expandParents(this.$refs.tree.getNode(selected).parent);
-            }
-          });
+          this.renderTree();
           this.deptLoading = false;
         })
         .catch((err) => {
           this.$message.error(err);
           this.deptLoading = false;
         });
+    },
+    refresh() {
+      this.getList();
+    },
+    renderTree() {
+      if (this.value != "") {
+        this.$nextTick(() => {
+          //选中当前节点
+          this.$refs.tree.setCurrentKey(this.value);
+          //展开所有父节点
+          let selected = this.$refs.tree.getCurrentNode();
+          if (
+            this.$refs.tree.getNode(selected) &&
+            this.$refs.tree.getNode(selected).parent
+          ) {
+            this.expandParents(this.$refs.tree.getNode(selected).parent);
+          }
+        });
+      }
     },
     //选中事件
     selectRow(e) {

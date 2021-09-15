@@ -11,7 +11,7 @@
       <el-form-item label="上级部门">
         <div class="lv-form-item">
           <div class="lv-form-item__component is-flex">
-            <dept-tree
+            <dept-tree ref="deptTree"
               :value="deptForm.parent_id"
               @input="deptTreeInputSelect"
             />
@@ -117,7 +117,6 @@ export default {
   methods: {
     deptTreeInputSelect(row) {
       this.deptForm.parent_id = row.dept_id;
-      console.log("deptTreeInputSelect", row);
     },
   },
 };

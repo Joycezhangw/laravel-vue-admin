@@ -196,6 +196,7 @@ export default {
               message: res.message,
               onClose: () => {
                 this.handleDialogClose();
+                this.$refs.deptForm.$refs.deptTree.refresh();
                 this.refresh();
               },
             });
@@ -212,6 +213,7 @@ export default {
               message: res.message,
               onClose: () => {
                 this.handleDialogClose();
+                this.$refs.deptForm.$refs.deptTree.refresh();
                 this.refresh();
               },
             });

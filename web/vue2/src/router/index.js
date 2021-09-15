@@ -67,6 +67,11 @@ const constantRoutes = [
             component: () => import("@/view/error/500"),
             meta: { title: "500" }
         }]
+    },
+    {
+        path: '*',
+        redirect: '/404',
+        hidden: true,
     }
 ];
 export const asyncRoutes = [{

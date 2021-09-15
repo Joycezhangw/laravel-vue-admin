@@ -43,6 +43,8 @@ const actions = {
                 }
                 const menuGroup = deepTree(res.menus);
                 let asyncRouter = res.menus.filter(e => e.menuType == 1);
+                //解决异步路由不存在跳转到404页面
+                asyncRouter.push({ path: "*", redirect: "/404", hidden: true })
 
                 //设置权限
                 commit('SET_PERMIESSION', res.power);

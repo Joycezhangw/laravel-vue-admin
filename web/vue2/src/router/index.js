@@ -25,7 +25,7 @@ const constantRoutes = [
                     title: '数据统计'
                 },
                 component: () => import("@/view/index/index.vue")
-            }
+            },
         ]
     },
     {
@@ -60,11 +60,6 @@ const constantRoutes = [
             component: () => import("@/view/error/500"),
             meta: { title: "500" }
         }]
-    },
-    {//通配，路由不存在跳转到404
-        path: '*',
-        redirect: '/404',
-        hidden: true,
     }
 ];
 const router = new VueRouter({

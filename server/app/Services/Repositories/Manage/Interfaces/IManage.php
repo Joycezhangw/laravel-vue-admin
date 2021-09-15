@@ -17,7 +17,14 @@ use JoyceZ\LaravelLib\Repositories\Interfaces\BaseInterface;
 interface IManage extends BaseInterface
 {
 
-    public function getLists(): array;
+    /**
+     * 管理员列表
+     * @param array $params 查询参数
+     * @param string $orderBy 排序字段
+     * @param string $sort 排序方式
+     * @return array
+     */
+    public function getList(array $params, string $orderBy = 'updated_at', string $sort = 'desc'): array;
 
     /**
      * 根据登录名获取用户信息

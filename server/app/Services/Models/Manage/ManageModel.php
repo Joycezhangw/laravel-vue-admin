@@ -93,6 +93,7 @@ class ManageModel extends Authenticatable implements JWTSubject
      */
     protected $casts = [
         'reg_date' => 'datetime:Y-m-d H:i:s',
+        'updated_at' => 'datetime:Y-m-d H:i:s',
     ];
 
     /**

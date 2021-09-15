@@ -26,6 +26,14 @@ const constantRoutes = [
                 },
                 component: () => import("@/view/index/index.vue")
             },
+            {
+                path: "/my/info",
+                component: () => import("@/view/my/info"),
+                meta: {
+                    title: "个人中心",
+                    keepAlive: true
+                }
+            }
         ]
     },
     {

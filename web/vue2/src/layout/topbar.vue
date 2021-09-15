@@ -44,6 +44,9 @@ export default {
 
     handleCommand(command) {
       switch (command) {
+        case "my":
+          this.$router.push("/my/info");
+          break;
         case "exit":
           this.$store.dispatch("user/LoginOut").finally(() => {
             location.reload();

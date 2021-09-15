@@ -46,7 +46,7 @@ export default {
           }
         };
         //首页不进行追查父菜单
-        if (route.path !== "/init" && route.path !== "/") {
+        if (route.path !== "/init" && route.path !== "/" && route.path!=="/my/info") {
           this.list = _(this.menuGroup)
             .map(deep)
             .filter(Boolean)

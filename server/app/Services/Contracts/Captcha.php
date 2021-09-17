@@ -3,8 +3,6 @@
 
 namespace App\Services\Contracts;
 
-use phpDocumentor\Reflection\Types\Boolean;
-
 /**
  * 验证码接口
  * Interface Captcha

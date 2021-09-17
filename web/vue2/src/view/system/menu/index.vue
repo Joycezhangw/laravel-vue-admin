@@ -17,6 +17,7 @@
           v-loading="tableLoading"
           :border="true"
           size="small"
+          height="500px"
           row-key="menuId"
         >
           <el-table-column label="名称" align="left" width="200">

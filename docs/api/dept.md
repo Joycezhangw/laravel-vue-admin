@@ -5,6 +5,9 @@
 ```
 GET:/manage/v1/dept
 
+Request-Header: {
+    'Authorization': bearer  eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwOlwvXC93d3cubGFyYXZlbHZ1ZS5jb21cL21hbmFnZVwvdjFcL3Bhc3Nwb3J0XC9sb2dpbiIsImlhdCI6MTYzMDMxNzIwNCwiZXhwIjoxNjMwMzIwODA0LCJuYmYiOjE2MzAzMTcyMDQsImp0aSI6IkVtbFVyM0oyMFU1OURySDEiLCJzdWIiOjEwMDAxLCJwcnYiOiI1OWY1MjliYjg4ZDY0NDAzOThhMjJkZjY1MDUwNDZhODVjN2VkMTUzIn0.UUgK-1b22bIXAGs3LJLiHIbZMPTT6ECoM-aIIQYERw4
+}
 
 Response:{
     "code": 200,
@@ -28,6 +31,9 @@ Response:{
 ```
 POST:/manage/v1/dept/read/{deptId}
 
+Request-Header: {
+    'Authorization': bearer  eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwOlwvXC93d3cubGFyYXZlbHZ1ZS5jb21cL21hbmFnZVwvdjFcL3Bhc3Nwb3J0XC9sb2dpbiIsImlhdCI6MTYzMDMxNzIwNCwiZXhwIjoxNjMwMzIwODA0LCJuYmYiOjE2MzAzMTcyMDQsImp0aSI6IkVtbFVyM0oyMFU1OURySDEiLCJzdWIiOjEwMDAxLCJwcnYiOiI1OWY1MjliYjg4ZDY0NDAzOThhMjJkZjY1MDUwNDZhODVjN2VkMTUzIn0.UUgK-1b22bIXAGs3LJLiHIbZMPTT6ECoM-aIIQYERw4
+}
 
 Response:{
     "code": 200,
@@ -49,6 +55,10 @@ Response:{
 ```
 POST:/manage/v1/dept/store
 
+Request-Header: {
+    'Authorization': bearer  eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwOlwvXC93d3cubGFyYXZlbHZ1ZS5jb21cL21hbmFnZVwvdjFcL3Bhc3Nwb3J0XC9sb2dpbiIsImlhdCI6MTYzMDMxNzIwNCwiZXhwIjoxNjMwMzIwODA0LCJuYmYiOjE2MzAzMTcyMDQsImp0aSI6IkVtbFVyM0oyMFU1OURySDEiLCJzdWIiOjEwMDAxLCJwcnYiOiI1OWY1MjliYjg4ZDY0NDAzOThhMjJkZjY1MDUwNDZhODVjN2VkMTUzIn0.UUgK-1b22bIXAGs3LJLiHIbZMPTT6ECoM-aIIQYERw4
+}
+
 Request-params:{
     dept_name: "",//部门名称
     dept_desc: "",//备注
@@ -67,6 +77,10 @@ Response:{
 ```
 PUT:/manage/v1/dept/update/{id}
 
+Request-Header: {
+    'Authorization': bearer  eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwOlwvXC93d3cubGFyYXZlbHZ1ZS5jb21cL21hbmFnZVwvdjFcL3Bhc3Nwb3J0XC9sb2dpbiIsImlhdCI6MTYzMDMxNzIwNCwiZXhwIjoxNjMwMzIwODA0LCJuYmYiOjE2MzAzMTcyMDQsImp0aSI6IkVtbFVyM0oyMFU1OURySDEiLCJzdWIiOjEwMDAxLCJwcnYiOiI1OWY1MjliYjg4ZDY0NDAzOThhMjJkZjY1MDUwNDZhODVjN2VkMTUzIn0.UUgK-1b22bIXAGs3LJLiHIbZMPTT6ECoM-aIIQYERw4
+}
+
 Request-params:{
     dept_name: "",//部门名称
     dept_desc: "",//备注
@@ -84,6 +98,10 @@ Response:{
 
 ```
 DELETE:/manage/v1/dept/delete/{id}
+
+Request-Header: {
+    'Authorization': bearer  eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwOlwvXC93d3cubGFyYXZlbHZ1ZS5jb21cL21hbmFnZVwvdjFcL3Bhc3Nwb3J0XC9sb2dpbiIsImlhdCI6MTYzMDMxNzIwNCwiZXhwIjoxNjMwMzIwODA0LCJuYmYiOjE2MzAzMTcyMDQsImp0aSI6IkVtbFVyM0oyMFU1OURySDEiLCJzdWIiOjEwMDAxLCJwcnYiOiI1OWY1MjliYjg4ZDY0NDAzOThhMjJkZjY1MDUwNDZhODVjN2VkMTUzIn0.UUgK-1b22bIXAGs3LJLiHIbZMPTT6ECoM-aIIQYERw4
+}
 
 Response:{
     "code": 200,

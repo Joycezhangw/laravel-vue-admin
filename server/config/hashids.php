@@ -64,7 +64,8 @@ return [
             'menu_id',
             'parent_id',
             'menuId',
-            'parentId'
+            'parentId',
+            'log_id'
         ]
     ]
 

@@ -46,6 +46,9 @@ Route::group([
         $router->post('/user/store', 'Manage@store')->name('manage.user.store');//新增用户
         $router->put('/user/update/{id}', 'Manage@update')->name('manage.user.update');//更新用户
         $router->delete('/user/delete/{id}', 'Manage@destroy')->name('manage.user.destroy');//删除
+        //请求日志
+        $router->get('/log', 'Log@index')->name('manage.log.index');//请求日志
+        $router->delete('/log/delete/{id}', 'Log@destroy')->name('manage.log.destroy');//删除
         //前台用户
 //        $router->get('/member', 'Member@index')->name('manage.member.index');//前台用户列表
 

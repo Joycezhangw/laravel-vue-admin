@@ -6,6 +6,7 @@ namespace App\Services\Repositories\Manage;
 
 use App\Services\Models\Manage\LogModel;
 use App\Services\Repositories\Manage\Interfaces\ILog;
+use App\Support\HashIdsSup;
 use JoyceZ\LaravelLib\Helpers\StrHelper;
 use JoyceZ\LaravelLib\Repositories\BaseRepository;
 
@@ -19,6 +20,16 @@ class LogRepo extends BaseRepository implements ILog
     public function __construct(LogModel $model)
     {
         parent::__construct($model);
+    }
+
+    /**
+     * 解析数据
+     * @param array $row
+     * @return array
+     */
+    public function parseDataRow(array $row): array
+    {
+        return (new HashIdsSup())->encode($row);
     }
 
     /**
@@ -36,6 +47,25 @@ class LogRepo extends BaseRepository implements ILog
             'useragent' => request()->server('HTTP_USER_AGENT'),
         ], $params);
         $this->model->create($data);
+    }
+
+    /**
+     * 后台用户请求日志
+     * @param array $params  搜索参数
+     * @param string $orderBy 排序
+     * @param string $sort 排序方式
+     * @return array
+     */
+    public function getList(array $params, string $orderBy = 'created_at', string $sort = 'desc'): array
+    {
+        $lists = $this->model->where(function ($query) use ($params) {
+            if (isset($params['search_text']) && $params['search_text'] != '') {
+                $query->where('manage_username', 'like', '%' . $params['search_text'] . '%');
+            }
+        })
+            ->orderBy($orderBy, $sort)
+            ->paginate(isset($params['page_size']) ? $params['page_size'] : config('laraveladmin.paginate.page_size'));
+        return $lists->toArray();
     }
 
 

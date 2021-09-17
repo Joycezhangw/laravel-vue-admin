@@ -23,4 +23,13 @@ interface ILog extends BaseInterface
      */
     public function record(array $params);
 
+    /**
+     * 后台用户请求日志
+     * @param array $params  搜索参数
+     * @param string $orderBy 排序
+     * @param string $sort 排序方式
+     * @return array
+     */
+    public function getList(array $params, string $orderBy = 'created_at', string $sort = 'desc'): array;
+
 }

@@ -6,10 +6,10 @@ import { routerMode } from "@/config/env";
  * @returns 
  */
 export function getUrlParam(name) {
-    let reg = new RegExp("(^|&)" + name + "=([^&]*)(&|$)");
-    let r = window.location.search.substr(1).match(reg);
-    if (r != null) return decodeURIComponent(r[2]);
-    return null;
+	let reg = new RegExp("(^|&)" + name + "=([^&]*)(&|$)");
+	let r = window.location.search.substr(1).match(reg);
+	if (r != null) return decodeURIComponent(r[2]);
+	return null;
 }
 
 /**
@@ -18,11 +18,11 @@ export function getUrlParam(name) {
  * @returns 
  */
 export function isArray(value) {
-    if (typeof Array.isArray === "function") {
-        return Array.isArray(value)
-    } else {
-        return Object.prototype.toString.call(value) === "[object Array]"
-    }
+	if (typeof Array.isArray === "function") {
+		return Array.isArray(value)
+	} else {
+		return Object.prototype.toString.call(value) === "[object Array]"
+	}
 }
 /**
  * 是否对象集
@@ -30,7 +30,7 @@ export function isArray(value) {
  * @returns 
  */
 export function isObject(value) {
-    return Object.prototype.toString.call(value) === "[object Object]"
+	return Object.prototype.toString.call(value) === "[object Object]"
 }
 /**
  * 是否数字
@@ -38,7 +38,7 @@ export function isObject(value) {
  * @returns 
  */
 export function isNumber(value) {
-    return !isNaN(Number(value))
+	return !isNaN(Number(value))
 }
 /**
  * 是否方法
@@ -46,7 +46,7 @@ export function isNumber(value) {
  * @returns 
  */
 export function isFunction(value) {
-    return typeof value == "function"
+	return typeof value == "function"
 }
 /**
  * 是否方法
@@ -54,7 +54,7 @@ export function isFunction(value) {
  * @returns 
  */
 export function isString(value) {
-    return typeof value == "string"
+	return typeof value == "string"
 }
 /**
  * 是否为空
@@ -62,59 +62,70 @@ export function isString(value) {
  * @returns 
  */
 export function isEmpty(value) {
-    if (isArray(value)) {
-        return value.length === 0;
-    }
-    if (isObject(value)) {
-        return Object.keys(value).length === 0;
-    }
-    return value === "" || value === undefined || value === null;
+	if (isArray(value)) {
+		return value.length === 0;
+	}
+	if (isObject(value)) {
+		return Object.keys(value).length === 0;
+	}
+	return value === "" || value === undefined || value === null;
 }
 
 export function isBoolean(value) {
-    return typeof value === "boolean"
+	return typeof value === "boolean"
 }
 
 export function last(data) {
-    if (isArray(data) || isString(data)) {
-        return data[data.length - 1]
-    }
+	if (isArray(data) || isString(data)) {
+		return data[data.length - 1]
+	}
 }
 
 export function href(path, newWindow) {
-    const { origin, pathname } = window.location;
+	const { origin, pathname } = window.location;
 
-    if (pathname == path) {
-        return false;
-    }
+	if (pathname == path) {
+		return false;
+	}
 
-    let url = "";
+	let url = "";
 
-    if (routerMode == "history") {
-        url = origin + join(process.env.BASE_URL, path)
-    } else {
-        url = href.substring(0, href.indexOf("#"));
-    }
+	if (routerMode == "history") {
+		url = origin + join(process.env.BASE_URL, path)
+	} else {
+		url = href.substring(0, href.indexOf("#"));
+	}
 
-    if (newWindow) {
-        window.open(url);
-    } else {
-        window.location.href = url;
-    }
+	if (newWindow) {
+		window.open(url);
+	} else {
+		window.location.href = url;
+	}
 }
 
 export function orderBy(list, key) {
 	return list.sort((a, b) => a[key] - b[key]);
 }
-
-export function deepTree(list) {
-	let newList = [];
-	let map = {};
-
-	list.forEach((e) => (map[e.menuId] = e));
+/**
+ * 转树形菜单
+ * @param {Array} list 一维原始数据
+ * @param {String} source 
+ * @returns 
+ */
+/**
+ * 转树形菜单
+ * @param {Array} list 一维原始数据
+ * @param {String} nodeKey 主键id
+ * @param {String} pKey  父级id
+ * @param {String} order 排序key
+ * @returns 
+ */
+export function deepTree(list, nodeKey = 'menuId',pKey='parentId',order='menuOrder') {
+	let newList = [], map = {};
+	list.forEach((e) => (map[e[nodeKey]] = e));
 
 	list.forEach((e) => {
-		let parent = map[e.parentId];
+		let parent = map[e[pKey]];
 
 		if (parent) {
 			(parent.children || (parent.children = [])).push(e);
@@ -126,7 +137,7 @@ export function deepTree(list) {
 	const fn = (list) => {
 		list.map((e) => {
 			if (e.children instanceof Array) {
-				e.children = orderBy(e.children, "menuOrder");
+				e.children = orderBy(e.children, order);
 
 				fn(e.children);
 			}
@@ -135,7 +146,7 @@ export function deepTree(list) {
 
 	fn(newList);
 
-	return orderBy(newList, "menuOrder");
+	return orderBy(newList, order);
 }
 
 

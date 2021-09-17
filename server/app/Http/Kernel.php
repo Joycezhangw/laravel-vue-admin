@@ -66,5 +66,6 @@ class Kernel extends HttpKernel
         'hashids' => \App\Http\Middleware\HashIds::class,//ids 解码
         'manage.log' => \App\Http\Middleware\ManageLog::class,//后台操作日志
         'manage.auth' => \App\Http\Middleware\ManageApiJwtAuth::class,//后台登录
+        'rbac.admin.permissiion' => \App\Http\Middleware\AdminPermission::class,//后端请求权限验证
     ];
 }

@@ -15,6 +15,9 @@ use Tymon\JWTAuth\Facades\JWTAuth;
 
 /**
  * jwt 后台中间件
+ *
+ * @author joyecZhang <zhangwei762@163.com>
+ *
  * Class ManageApiJwtAuth
  * @package App\Http\Middleware
  */

@@ -8,6 +8,10 @@ use Illuminate\Http\Request;
 
 /**
  * 请求 ids 解密中间件
+ *
+ * @author joyecZhang <zhangwei762@163.com>
+ *
+ *
  * Class HashIds
  * @package App\Http\Middleware
  */

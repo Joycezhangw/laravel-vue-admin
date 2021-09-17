@@ -11,6 +11,9 @@ use Tymon\JWTAuth\Facades\JWTAuth;
 
 /**
  * 后台操作日志
+ *
+ * @author joyecZhang <zhangwei762@163.com>
+ *
  * Class ManageLog
  * @package App\Http\Middleware
  */

@@ -25,7 +25,7 @@ module.exports = {
         }
     },
     devServer: {
-        // port: process.env.VUE_APP_CLI_PORT,
+        port: process.env.VUE_APP_CLI_PORT,
         open: true,
         compress: false,
         overlay: {
@@ -159,7 +159,6 @@ module.exports = {
             config.optimization.runtimeChunk('single')
         }
     },
-
     configureWebpack: config => {
         // 构建缓存
         config.plugins.push(new HardSourceWebpackPlugin());

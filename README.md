@@ -27,13 +27,16 @@ git clone https://github.com/Joycezhangw/laravel-vue-admin.git
 cd server
 
 # 使用 composer 并安装php依赖包
-composer update
+composer install
 
 
 #手动重命名 .env 文件，并配置上您的数据库等信息
 
 #生成项目密钥
 php artisan key:generate
+
+#生成jwt密钥
+php artisan jwt:secret
 
 #数据库迁移
 php artisan migrate
@@ -54,6 +57,11 @@ cnpm install || npm install
 # 启动web项目
 npm run serve
 ```
+
+### 3.3 注意事项
+
+需要修改 `/src/config/env.js` 下 `treeParentId` 变量，此变量是树形结构数据的顶级 `id`。
+由于`id` 使用了加密操作。故，需在完成以上动作之后，在 `系统管理-权限管理-菜单列表` 中得到。`系统管理` 中 `parentId` 就是所需要的顶级 `id=0=3vXAb8agzMlmO0kVA2WyJ5EoNjew9d1r`，顶级`id=0`，`0`的加密是根据后台`APP_KEY` 为加密盐。
 
 ## 4. 项目架构
 

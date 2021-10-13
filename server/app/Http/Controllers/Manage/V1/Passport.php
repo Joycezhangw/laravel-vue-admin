@@ -17,6 +17,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Arr;
 use JoyceZ\LaravelLib\Helpers\ResultHelper;
 use Tymon\JWTAuth\Exceptions\JWTException;
+use Tymon\JWTAuth\Exceptions\TokenBlacklistedException;
 use Tymon\JWTAuth\Exceptions\TokenInvalidException;
 use Tymon\JWTAuth\Facades\JWTAuth;
 use Tymon\JWTAuth\Facades\JWTFactory;
@@ -81,7 +82,8 @@ class Passport extends Controller
         if (intval($manageInfo['manage_status']) != 1) {
             return ResultHelper::returnFormat('用户已被禁用', ResponseCode::ERROR);
         }
-        $token = JWTAuth::fromUser($manage);
+//        $token = JWTAuth::fromUser($manage);
+        $token = $this->withAuthGuard('admin')->login($manage);
         $jwt = [
             'access_token' => $token,
             'token_type' => 'bearer',
@@ -103,15 +105,18 @@ class Passport extends Controller
     public function refreshToken(IManage $manageRepo)
     {
         try {
-            $user = JWTAuth::parseToken()->touser();
-            $manage = $manageRepo->getByPkId($user->manage_id);
+//            $user = JWTAuth::parseToken()->touser();
+            $manage = $this->getAuthUser('admin');
+//            $manage = $manageRepo->getByPkId($user->manage_id);
             if (!$manage) {
                 return ResultHelper::returnFormat('账号不存在', ResponseCode::ERROR);
             }
             if (intval($manage->manage_status) != 1) {
                 return ResultHelper::returnFormat('用户已被禁用', ResponseCode::ERROR);
             }
-            $token = JWTAuth::parseToken()->refresh();
+//            $token = JWTAuth::parseToken()->refresh();
+            //TODO:refresh 中不要再加任何参数，否则 getJWTCustomClaims 无效，刷新的令牌不会加上，model 中自定义的 role 参数
+            $token = $this->withAuthGuard('admin')->refresh();
             $jwt = [
                 'access_token' => $token,
                 'token_type' => 'bearer',
@@ -133,11 +138,16 @@ class Passport extends Controller
     public function logout()
     {
         try {
-            $user = JWTAuth::parseToken()->touser();
+//            $user = JWTAuth::parseToken()->touser();
+            $user = $this->getAuthUser('admin');
             event(new PassportManageRefreshTokenEvent($user, []));
-            JWTAuth::parseToken()->invalidate();//退出
+//            JWTAuth::parseToken()->invalidate();//退出
+            //使token无效
+            $this->withAuthGuard('admin')->invalidate(true);
             return ResultHelper::returnFormat('登出成功', ResponseCode::SUCCESS);
         } catch (TokenInvalidException $e) {
+            return ResultHelper::returnFormat('token 无效', ResponseCode::LOGIN_TOKEN_TIME_DIE);
+        } catch (TokenBlacklistedException $e){
             return ResultHelper::returnFormat('token 无效', ResponseCode::LOGIN_TOKEN_TIME_DIE);
         }
     }

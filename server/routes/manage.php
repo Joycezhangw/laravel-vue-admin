@@ -10,7 +10,7 @@ Route::group([
     $router->get('/passport/captcha', 'Passport@captcha')->name('manage.passport.captcha');
     $router->post('/passport/login', 'Passport@login')->name('manage.passport.login');
     $router->group([
-        'middleware' => ['hashids', 'manage.auth'],
+        'middleware' => ['hashids', 'jwt.role:admin'],
     ], function ($router) {
         $router->put('/passport/refreshToken', 'Passport@refreshToken')->name('manage.passport.refreshToken');//刷新token
         $router->post('/passport/logout', 'Passport@logout')->name('manage.passport.logout');//退出登录

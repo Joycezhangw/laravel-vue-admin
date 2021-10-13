@@ -97,6 +97,15 @@ class ManageModel extends Authenticatable implements JWTSubject
     ];
 
     /**
+     * 创建虚拟字段
+     * @var array
+     */
+    protected $appends=[
+        'manage_status_txt',
+        'is_super_txt',
+    ];
+
+    /**
      * 最后登录时间
      * @return false|string
      */
@@ -147,8 +156,7 @@ class ManageModel extends Authenticatable implements JWTSubject
      */
     public function getManageStatusTxtAttribute()
     {
-        $status = ManageStatusEnum::getMap();
-        return isset($status[$this->attributes['manage_status']]) ? $status[$this->attributes['manage_status']] : '';
+        return isset($this->attributes['manage_status']) ? (ManageStatusEnum::getValue($this->attributes['manage_status']) ?? '') : '';
     }
 
     /**
@@ -157,8 +165,7 @@ class ManageModel extends Authenticatable implements JWTSubject
      */
     public function getIsSuperTxtAttribute()
     {
-        $super = YesOrNoEnum::getMap();
-        return isset($super[$this->attributes['is_super']]) ? $super[$this->attributes['is_super']] : '';
+        return isset($this->attributes['is_super']) ? (YesOrNoEnum::getValue($this->attributes['is_super']) ?? '') : '';
     }
 
     /**
@@ -205,7 +212,7 @@ class ManageModel extends Authenticatable implements JWTSubject
      */
     public function getJWTCustomClaims()
     {
-        return [];
+        return ['role' => 'admin'];
     }
 
 

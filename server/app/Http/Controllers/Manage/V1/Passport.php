@@ -62,10 +62,10 @@ class Passport extends Controller
             return ResultHelper::returnFormat($error->first(), ResponseCode::ERROR);
         }
         //图形验证码校验
-//        $captchaUniq = $params[config('laraveladmin.passport.check_captcha_cache_key')];
-//        if (!$captchaRepo->check($params['captcha'], $captchaUniq)) {
-//            return ResultHelper::returnFormat('验证码错误', ResponseCode::ERROR);
-//        }
+       $captchaUniq = $params[config('laraveladmin.passport.check_captcha_cache_key')];
+       if (!$captchaRepo->check($params['captcha'], $captchaUniq)) {
+           return ResultHelper::returnFormat('验证码错误', ResponseCode::ERROR);
+       }
         $manage = $manageRepo->getInfoByUsername(trim($params['username']));
         if (!$manage) {
             return ResultHelper::returnFormat('账号不存在', ResponseCode::ERROR);

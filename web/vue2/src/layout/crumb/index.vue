@@ -62,7 +62,7 @@ export default {
 </script>
 <style lang="scss" scoped>
 .breadcrumb-wrap {
-  /deep/ .el-breadcrumb {
+  ::v-deep .el-breadcrumb {
     margin: 0 10px;
 
     &__inner {
@@ -84,7 +84,7 @@ export default {
       display: block;
     }
 
-    /deep/ .el-breadcrumb {
+    ::v-deep .el-breadcrumb {
       display: none;
     }
   }

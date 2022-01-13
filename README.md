@@ -12,7 +12,7 @@
 ## 3. 使用说明
 
 ```
-- node版本 > v12.18.3
+- node版本 > v16.13.1
 - php版本 >= v7.3
 ```
 ### 3.1 server项目
@@ -60,8 +60,42 @@ npm run serve
 
 ### 3.3 注意事项
 
+#### 3.3.1
 需要修改 `/src/config/env.js` 下 `treeParentId` 变量，此变量是树形结构数据的顶级 `id`。
 由于`id` 使用了加密操作。故，需在完成以上动作之后，在 `系统管理-权限管理-菜单列表` 中得到。`系统管理` 中 `parentId` 就是所需要的顶级 `id=0=3vXAb8agzMlmO0kVA2WyJ5EoNjew9d1r`，顶级`id=0`，`0`的加密是根据后台`APP_KEY` 为加密盐。
+
+#### 3.3.2 `sass-loader` 无法解析全局引入
+
+由于 `sass-loader`版本不同，`loaderOptions` 中 `additionalData`的键名不同，
+
+```
+module.exports = {
+	 css: {
+        extract: isProduction,
+        sourceMap: false,
+        loaderOptions: {
+            sass: {
+                prependData: `@import "~@/assets/css/common.scss";`
+            }
+        }
+    },
+}
+
+//sass-loader` v8-,这个选项名是 "data"
+//sass-loader` v8,这个选项名是 "prependData"
+//sass-loader` v10+,这个选项名是 "additionalData"
+
+```
+#### 3.3.3 `node-sass` 和 `sass-loader` 在`node 16`版本下对应版本号
+
+下面三个依赖请使用 `cnpm` 下载，在`npm`下，下载不成功，依赖问题
+
+```
+sass-loader@10.2.0 = node-sass@^6.0.1 = sass@^1.3.0
+```
+
+出现 `Auth guard[api] is not defined ` 情况，请重新 `composer require tymon/jwt-auth`
+https://jwt-auth.readthedocs.io/en/develop/laravel-installation/
 
 ## 4. 项目架构
 

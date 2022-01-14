@@ -30,31 +30,33 @@ export default {
       handler(route) {
         this.list.length = 0;
         const deep = (item) => {
-          if (route.path === "/init") {
+          if (route.path === "/" || route.path === "/init") {
+            return false;
+          }
+          if (item.path == route.path) {
             return item;
           } else {
-            if (item.children.length > 0) {
+            if (item.children) {
               const ret = item.children.map(deep).find(Boolean);
               if (ret) {
                 return [item, ret];
               } else {
-                return [];
+                return false;
               }
             } else {
-              return [];
+              return false;
             }
           }
         };
-        //首页不进行追查父菜单
-        if (route.path !== "/init" && route.path !== "/" && route.path!=="/my/info") {
-          this.list = _(this.menuGroup)
-            .map(deep)
-            .filter(Boolean)
-            .flattenDeep()
-            .value();
+        this.list = _(this.menuGroup)
+          .map(deep)
+          .filter(Boolean)
+          .flattenDeep()
+          .value();
+        //面包屑不存在，就把当前路由添加到面包屑中
+        if (isEmpty(this.list)) {
+          this.list.push(route);
         }
-        //将本路由添加到面包屑中
-        this.list.push(route);
       },
     },
   },

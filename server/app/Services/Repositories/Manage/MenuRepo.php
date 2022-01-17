@@ -9,6 +9,7 @@ use App\Services\Models\Manage\MenuModel;
 use App\Services\Models\Manage\RoleHasMenuModel;
 use App\Services\Repositories\Manage\Interfaces\IMenu;
 use App\Support\HashIdsSup;
+use JoyceZ\LaravelLib\Helpers\TreeHelper;
 use JoyceZ\LaravelLib\Repositories\BaseRepository;
 
 /**
@@ -138,7 +139,8 @@ class MenuRepo extends BaseRepository implements IMenu
                 continue;
             }
         }
-        return compact('menus', 'power');
+        $menuGroup=TreeHelper::listToTree($menus,0,'menuId','parentId');
+        return compact('menus', 'power','menuGroup');
     }
 
 }

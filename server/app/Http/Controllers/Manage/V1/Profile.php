@@ -77,7 +77,8 @@ class Profile extends Controller
         $ret = $menuRepo->generatePermission($roleIds, (boolean)$user->is_super);
         $menus = $menuRepo->parseDataRows($ret['menus']);
         $power = $ret['power'];
-        return ResultHelper::returnFormat('success', ResponseCode::SUCCESS, compact('menus', 'power'));
+        $menuGroup=$ret['menuGroup'];
+        return ResultHelper::returnFormat('success', ResponseCode::SUCCESS, compact('menus', 'power','menuGroup'));
     }
 
 }

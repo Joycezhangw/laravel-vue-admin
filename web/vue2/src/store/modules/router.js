@@ -1,8 +1,7 @@
 import profileApi from '@/api/profile';
-import { isArray, deepTree } from '@/library/utils';
+import { isArray } from '@/library/utils';
 import { Message } from 'element-ui';
 import storage from '@/library/utils/storage';
-// import { asyncRouterHandle } from '@/library/utils/asyncRouter'
 import router from '@/router'
 
 const state = {
@@ -41,21 +40,19 @@ const actions = {
                 if (!isArray(res.power)) {
                     res.power = [];
                 }
-                const menuGroup = deepTree(res.menus);
-                let asyncRouter = res.menus.filter(e => e.menuType == 1);
+                let asyncRouter = res.data.menus.filter(e => e.menuType == 1);
                 //解决异步路由不存在跳转到404页面
                 asyncRouter.push({ path: "*", redirect: "/404", hidden: true })
-
                 //设置权限
-                commit('SET_PERMIESSION', res.power);
+                commit('SET_PERMIESSION', res.data.power);
                 //设置菜单组
-                commit('SET_MENU_GROUP', menuGroup);
+                commit('SET_MENU_GROUP', res.data.menuGroup);
                 commit('SET_VIEW_ROUTES', asyncRouter);
                 resolve(asyncRouter)
             }
             //获取菜单、权限
             profileApi.getPermRules().then(res => {
-                next(res.data)
+                next(res)
             }).catch(err => {
                 Message.error('菜单加载异常');
                 reject(err)

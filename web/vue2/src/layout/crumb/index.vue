@@ -33,7 +33,7 @@ export default {
           if (route.path === "/" || route.path === "/init") {
             return false;
           }
-          if (item.path == route.path) {
+          if (item.name == route.name) {
             return item;
           } else {
             if (item.children) {

@@ -20,7 +20,7 @@ module.exports = {
         sourceMap: false,
         loaderOptions: {
             sass: {
-                additionalData: `@import "~@/assets/css/common.scss";`
+                prependData: `@import "~@/assets/css/common.scss";`
             }
         }
     },

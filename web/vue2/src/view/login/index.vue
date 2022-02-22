@@ -126,7 +126,7 @@ export default {
     return {
       loginForm: {
         username: "peadmin",
-        password: "123qwe@ASD",
+        password: "123456qwe@A",
         captcha: "",
         captcha_uniqid: "",
       },

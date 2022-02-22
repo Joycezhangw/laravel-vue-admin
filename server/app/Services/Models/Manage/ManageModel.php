@@ -8,6 +8,7 @@ use App\Services\Enums\Common\YesOrNoEnum;
 use App\Services\Enums\Manage\ManageStatusEnum;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use JoyceZ\LaravelLib\Traits\EncryptTableDbAttribute;
 use Tymon\JWTAuth\Contracts\JWTSubject;
 
 /**
@@ -20,7 +21,7 @@ use Tymon\JWTAuth\Contracts\JWTSubject;
  */
 class ManageModel extends Authenticatable implements JWTSubject
 {
-    use Notifiable;
+    use Notifiable,EncryptTableDbAttribute;
 
     /**
      * 表名
@@ -103,6 +104,14 @@ class ManageModel extends Authenticatable implements JWTSubject
     protected $appends=[
         'manage_status_txt',
         'is_super_txt',
+    ];
+
+    /**
+     * 需要加解密字段
+     * @var array
+     */
+    protected $encryptTable = [
+        'phone','pwd_salt'
     ];
 
     /**

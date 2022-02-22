@@ -4,10 +4,11 @@ namespace Database\Seeders;
 
 use App\Services\Enums\Common\YesOrNoEnum;
 use App\Services\Enums\Manage\ManageStatusEnum;
-use App\Support\Password;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
+use JoyceZ\LaravelLib\Aop\AopCrypt;
+use JoyceZ\LaravelLib\Aop\AopPassword;
 use JoyceZ\LaravelLib\Helpers\StrHelper;
 
 class SysManageSeeder extends Seeder
@@ -35,8 +36,8 @@ class SysManageSeeder extends Seeder
             'realname' => '超级管理员',
             'dept_id' => $deptId,
             'phone' => '',
-            'password' => (new Password())->withSalt(config('laraveladmin.passport.password_salt'))->encrypt('123qwe@ASD', $salt),
-            'pwd_salt' => $salt,
+            'password' => (new AopPassword())->withSalt(config('laraveladmin.passport.password_salt'))->encrypt('123456qwe@A', $salt),
+            'pwd_salt' =>(new AopCrypt())->withScrectKey(config('laraveladmin.crypt.screct_key'))->encrypt($salt),
             'avatar' => '',
             'is_super' => YesOrNoEnum::COMMON_YES,
             'reg_date' => now()->timestamp,

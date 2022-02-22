@@ -9,12 +9,12 @@ use App\Events\PassportManageLoginAfterEvent;
 use App\Events\PassportManageRefreshTokenEvent;
 use App\Http\Controllers\Controller;
 use App\Http\ResponseCode;
-use App\Services\Contracts\Captcha;
 use App\Services\Repositories\Manage\Interfaces\IManage;
-use App\Support\Password;
 use App\Validators\Passport\ManageLoginValidator;
 use Illuminate\Http\Request;
 use Illuminate\Support\Arr;
+use JoyceZ\LaravelLib\Aop\AopPassword;
+use JoyceZ\LaravelLib\Contracts\Captcha as CaptchaInterface;
 use JoyceZ\LaravelLib\Helpers\ResultHelper;
 use Tymon\JWTAuth\Exceptions\JWTException;
 use Tymon\JWTAuth\Exceptions\TokenBlacklistedException;
@@ -31,10 +31,10 @@ class Passport extends Controller
 
     /**
      * 获取图形验证码
-     * @param Captcha $captchaRepo
+     * @param CaptchaInterface $captchaRepo
      * @return array
      */
-    public function captcha(Captcha $captchaRepo)
+    public function captcha(CaptchaInterface $captchaRepo)
     {
         $captcha = $captchaRepo->makeCode()->get();
         $captchaImg = Arr::get($captcha, 'image', '');
@@ -53,7 +53,7 @@ class Passport extends Controller
      * @param IManage $manageRepo
      * @return array
      */
-    public function login(Request $request, ManageLoginValidator $validator, Captcha $captchaRepo, IManage $manageRepo)
+    public function login(Request $request, ManageLoginValidator $validator, CaptchaInterface $captchaRepo, IManage $manageRepo)
     {
         $params = $request->all();
         //表单校验
@@ -72,8 +72,8 @@ class Passport extends Controller
         }
         $manageInfo = $manage->makeVisible(['password', 'pwd_salt'])->toArray();
         //密码验证
-        $pwdFlag = (new Password())
-            ->withSalt((string)config('laraveladmin.passport.password_salt'))
+        $pwdFlag = (new AopPassword())
+            ->withSalt()
             ->check($manageInfo['password'], $params['password'], $manageInfo['pwd_salt']);
         if (!$pwdFlag) {
             return ResultHelper::returnFormat('账号密码错误', ResponseCode::ERROR);

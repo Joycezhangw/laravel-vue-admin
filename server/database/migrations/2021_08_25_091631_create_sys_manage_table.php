@@ -19,9 +19,9 @@ class CreateSysManageTable extends Migration
             $table->string('username', 50)->default('')->comment('管理员登录名');
             $table->string('nickname', 50)->default('')->comment('昵称');
             $table->string('realname', 60)->default('')->comment('真实姓名');
-            $table->string('phone', 18)->default('')->comment('联系电话');
+            $table->string('phone', 168)->default('')->comment('联系电话');
             $table->char('password',32)->default('')->comment('密码');
-            $table->char('pwd_salt', 6)->default('')->comment('密码加密盐');
+            $table->char('pwd_salt', 24)->default('')->comment('密码加密盐，已加密');
             $table->string('avatar', 256)->default('')->comment('头像');
             $table->string('introduce',500)->default('')->comment('个人简介');
             $table->unsignedTinyInteger('is_super')->default(0)->comment('是否超级管理员[1 是 0 否]');

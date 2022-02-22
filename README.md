@@ -3,6 +3,7 @@
 ### 1.1 项目介绍
 
 > Laravel-vue-admin是一个基于 [vue](https://vuejs.org) 和 [laravel8] 开发的全栈前后端分离的后台管理系统，集成jwt鉴权，动态路由，动态菜单。
+> 对数据库敏感字段进行可逆加密，加密依赖包 `JoyceZ\LaravelLib`，地址`https://github.com/Joycezhangw/laravel-lib`
 
 ## 2. 技术栈
 
@@ -43,6 +44,9 @@ php artisan migrate
 
 #数据填充
 php artisan db:seed
+
+#文件存储，软链接
+php artisan storage:link
 ```
 
 ### 3.2 web项目
@@ -97,6 +101,31 @@ sass-loader@10.2.0 = node-sass@^6.0.1 = sass@^1.3.0
 出现 `Auth guard[api] is not defined ` 情况，请重新 `composer require tymon/jwt-auth`
 https://jwt-auth.readthedocs.io/en/develop/laravel-installation/
 
+#### 3.3.4 数据库敏感字段加密存储
+
+- EncryptTableDbAttribute Eloquent 模型属性加密和解密
+- 不支持模糊搜索，只支持精准搜索
+- 加解密在 `config('laraveladmin.crypt.screct_key')` 进行配置
+- 依赖 `JoyceZ\LaravelLib\Aop\AopCrypt` 加密工具 
+
+```php
+use JoyceZ\LaravelLib\Traits\EncryptTableDbAttribute;
+
+class Client extends Model {
+
+    use EncryptTableDbAttribute;
+   
+    /**
+     * 
+     * @var array  需要加密解密的字段
+     */
+    protected $encryptTable = [
+        'id_number', 
+        'email',
+    ];
+}
+```
+
 ## 4. 项目架构
 
 ### 4.1 目录结构
@@ -114,7 +143,7 @@ https://jwt-auth.readthedocs.io/en/develop/laravel-installation/
         │   │    │   └── xxxx  （其他控制器）
         │   │    └──Middleware   （中间件）
         │   └── Services        （服务）     
-        │       ├──Captcha      （图形验证码）
+        │       ├──Captcha      （图形验证码） //弃用，移动到 JoyceZ\LaravelLib 扩展包下
         │       ├──Contracts    （工具类服务接口）
         │       ├──Models       （Eloquent 模型类）
         │       ├──Enums        （状态枚举）     
@@ -146,3 +175,8 @@ https://jwt-auth.readthedocs.io/en/develop/laravel-installation/
              └─view      （前端页面）
 
 ```
+
+### 需要解决的问题
+
+
+* [ ] 添加完路由菜单，没有实时更新路由菜单数据

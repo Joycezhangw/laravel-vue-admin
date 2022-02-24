@@ -29,3 +29,15 @@ export function defaultName(name) {
 export function toThousandFilter(num) {
     return (+num || 0).toString().replace(/^-?\d+/g, m => m.replace(/(?=(?!\b)(\d{3})+$)/g, ','))
 }
+/**
+ * 数据脱敏
+ * @param {String} str 需要脱敏的字符串
+ * @param {Number} beginLen 起始显示长度
+ * @param {Number} endLen 结束显示长度
+ * @returns 
+ */
+ export function desensitization(str, beginLen = 3, endLen = 4) {
+    let len = str.length, firstStr = str.substring(0, beginLen), lastStr = str.substring(len-endLen);
+    let middleStr = str.substring(beginLen, len - Math.abs(endLen)).replace(/[\s\S]/ig, '*');
+    return firstStr + middleStr + lastStr;
+}

@@ -90,13 +90,6 @@ module.exports = {
 //sass-loader` v10+,这个选项名是 "additionalData"
 
 ```
-#### 3.3.3 `node-sass` 和 `sass-loader` 在`node 16`版本下对应版本号
-
-下面三个依赖请使用 `cnpm` 下载，在`npm`下，下载不成功，依赖问题
-
-```
-sass-loader@10.2.0 = node-sass@^6.0.1 = sass@^1.3.0
-```
 
 出现 `Auth guard[api] is not defined ` 情况，请重新 `composer require tymon/jwt-auth`
 https://jwt-auth.readthedocs.io/en/develop/laravel-installation/
@@ -124,6 +117,19 @@ class Client extends Model {
         'email',
     ];
 }
+```
+#### 3.3.5 前端枚举使用
+
+
+```javascript
+
+//在模板中使用
+//根据枚举值获取描述
+$enum.getLabelByValue("NATION_ENUM",scope.row.teacher_nation)
+//获取全部键值枚举
+$enum.getMap("NATION_ENUM")
+
+
 ```
 
 ## 4. 项目架构

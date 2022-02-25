@@ -67,6 +67,68 @@
         color: #ababab;
         text-decoration: none;
       }
+	  .preload .loading {
+				height: 30px;
+				width: 30px;
+				border-radius: 30px;
+				border: 7px solid currentColor;
+				border-bottom-color: #2f3447 !important;
+				position: relative;
+				animation: r 1s infinite cubic-bezier(0.17, 0.67, 0.83, 0.67),
+					bc 2s infinite ease-in;
+				transform: rotate(0deg);
+			}
+
+			@keyframes r {
+				from {
+					transform: rotate(0deg);
+				}
+				to {
+					transform: rotate(360deg);
+				}
+			}
+
+			.preload .loading::after,
+			.preload .loading::before {
+				content: "";
+				display: inline-block;
+				position: absolute;
+				bottom: -2px;
+				height: 7px;
+				width: 7px;
+				border-radius: 10px;
+				background-color: currentColor;
+			}
+
+			.preload .loading::after {
+				left: -1px;
+			}
+
+			.preload .loading::before {
+				right: -1px;
+			}
+
+			@keyframes bc {
+				0% {
+					color: #689cc5;
+				}
+
+				25% {
+					color: #b3b7e2;
+				}
+
+				50% {
+					color: #93dbe9;
+				}
+
+				75% {
+					color: #abbd81;
+				}
+
+				100% {
+					color: #689cc5;
+				}
+			}
     </style>
 	<% if(process.env.NODE_ENV!=='development' && htmlWebpackPlugin.options.cdns){ %>
       <% htmlWebpackPlugin.options.cdns.forEach(function(item){ if(item.js){ %>
@@ -86,6 +148,7 @@
       <div class="preload">
         <div class="container">
           <p class="name">LARAVEL-VUE-ADMIN</p>
+		  <div class="loading"></div>
           <p class="title">正在加载资源...</p>
           <p class="sub-title">初次加载资源可能需要较多时间，请耐心等待...</p>
         </div>

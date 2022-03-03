@@ -29,16 +29,11 @@ EnumConstant.install = function (Vue, options) {
      * @returns 
      */
     Enum.getLabelByValue = function (constantName, value) {
-
         if (!Object.prototype.hasOwnProperty.call(constantInfo, constantName)) {
             return ''
         }
-        let constantItem = constantInfo[constantName]
-        for (let item in constantItem) {
-            if (constantItem[item].value === parseInt(value)) {
-                return constantItem[item].label
-            }
-        }
+        let constantItem = constantInfo[constantName];
+        return constantItem.find((item) => (item.value == value)).label;
     }
 
     Enum.getValueByLabel = function () {

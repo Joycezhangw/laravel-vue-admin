@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" href="/favicon.ico" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title><%= VUE_APP_TITLE %></title>
+    <style>
+     #app,body,html{height:100%;margin:0;padding:0;width:100%}
+.nd-home{background-color:#303133;height:100%;display:flex;flex-direction:column}
+.nd-home__main{user-select:none;width:100%;flex-grow:1;display:flex;justify-content:center;align-items:center;flex-direction:column}
+.nd-home__footer{width:100%;flex-grow:0;text-align:center;padding:1em 0}
+.nd-home__footer>a{font-size:12px;color:#ababab;text-decoration:none}
+.nd-home__loading{height:30px;width:30px;border-radius:30px;border:7px solid currentColor;border-bottom-color:#2f3447!important;position:relative;animation:nd-loading__r 1s infinite cubic-bezier(.17,.67,.83,.67),nd-loading__bc 2s infinite ease-in;transform:rotate(0)}
+@keyframes nd-loading__r{from{transform:rotate(0)}
+to{transform:rotate(360deg)}
+}
+.nd-home__loading::after,.nd-home__loading::before{content:"";display:inline-block;position:absolute;bottom:-2px;height:7px;width:7px;border-radius:10px;background-color:currentColor}
+.nd-home__loading::after{left:-1px}
+.nd-home__loading::before{right:-1px}
+@keyframes nd-loading__bc{0%{color:#689cc5}
+25%{color:#b3b7e2}
+50%{color:#93dbe9}
+75%{color:#abbd81}
+100%{color:#689cc5}
+}
+
+    </style>
+  </head>
+  <body>
+    <div id="app">
+      <div class="nd-home">
+        <div class="nd-home__main">
+          <div class="nd-home__loading"></div>
+        </div>
+        <div class="nd-home__footer">
+          <a
+            href="https://github.com/Joycezhangw/laravel-vue-admin.git"
+            target="_blank"
+          >
+            https://github.com/Joycezhangw/laravel-vue-admin.git
+          </a>
+        </div>
+      </div>
+    </div>
+    <script type="module" src="/src/main.js"></script>
+  </body>
+</html>

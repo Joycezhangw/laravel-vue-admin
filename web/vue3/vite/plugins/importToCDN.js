@@ -40,6 +40,6 @@ export default function createImportToCDN(env) {
     ];
 
     return importToCDN({
-        modules: parseInt(VITE_IS_IMPORT_TO_CDN) === 1 ? cdns : []
+        modules: VITE_IS_IMPORT_TO_CDN ? cdns : []
     });
 }

@@ -1,13 +1,9 @@
 import { defineConfig, loadEnv } from 'vite'
-import vue from '@vitejs/plugin-vue'
-import importToCDN from 'vite-plugin-cdn-import'
-
-import { createHtmlPlugin } from "vite-plugin-html";
+import createVitePlugins from './vite/plugins'
 
 import path from 'path'
 
-//当前执行node命令时文件夹的地址（工作目录）
-const root = process.cwd();
+
 /**
  * 路径查找
  * @param {*} dir 
@@ -16,26 +12,14 @@ const root = process.cwd();
 function resolve(dir) {
   return path.resolve(__dirname, ".", dir);
 }
-
-// https://vitejs.dev/config/
-export default defineConfig(async ({ mode }) => {
-  const { VITE_PORT, VITE_IS_IMPORT_TO_CDN, VITE_APP_TITLE } = loadEnv(mode, root);
-  //cdn配置
-  const buildImportToCNDConf = require(resolve('./importToCDN.config.js'));
+export default defineConfig(async ({ mode, command }) => {
+  //当前执行node命令时文件夹的地址（工作目录）
+  const root = process.cwd();
+  const env = loadEnv(mode, root)
+  const isBuild = command === 'build';
+  const { VITE_PORT } = env;
   return {
-    plugins: [
-      vue(),
-      importToCDN({
-        modules: parseInt(VITE_IS_IMPORT_TO_CDN) === 1 ? buildImportToCNDConf.cdns : []
-      }),
-      createHtmlPlugin({
-        inject: {//需要注入 index.html ejs 模版的数据
-          data: {
-            appTitle: VITE_APP_TITLE,
-          },
-        },
-      })
-    ],
+    plugins: createVitePlugins(env, isBuild),
     css: {
       preprocessorOptions: {
         scss: {

@@ -75,19 +75,27 @@ service.interceptors.response.use(
                 case 500:
                     //错误页面
                     if (!isDev) {
-						href("/500");
-					}
+                        href("/500");
+                    }
                     break;
                 case 502:
                     if (!isDev) {
-						href("/500");
-					}
+                        href("/500");
+                    }
                     break
                 default:
                     console.error(status, config.url)
             }
+            return Promise.reject(error.message)
+        } else {
+            //处理断网情况
+            if (!window.navigator.onLine) {
+                console.log('网络断开了，请查看网络是否正常')
+            } else {
+                return Promise.reject(error.message)
+            }
         }
-        return Promise.reject(error.message)
+
     }
 )
 export default service

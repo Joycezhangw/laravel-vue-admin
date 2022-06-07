@@ -1,0 +1,50 @@
+import request from '@/landao/service/request'
+/**
+ * 登录相关
+ */
+export default class PassportService {
+    static get apiUri() {
+        return {
+            captcha: '/v1/passport/captcha',
+            login: '/v1/passport/login',
+            logout: '/v1/passport/logout',
+            refreshToken: '/v1/passport/refreshToken'
+        }
+    }
+
+    /**
+     * 图形验证码
+     * @returns 
+     */
+    static captcha() {
+        return request.get(this.apiUri.captcha)
+    }
+
+    /**
+     * 登录
+     * @param {Object} params 
+     * @returns 
+     */
+    static login(params) {
+        return request.post(this.apiUri.login, params)
+    }
+
+    /**
+   * 退出登录
+   * @returns 
+   */
+    static logout() {
+        return request.post(this.apiUri.logout)
+    }
+
+    /**
+     * 刷新令牌
+     * @returns 
+     */
+    static refreshToken() {
+        return request({
+            url: this.apiUri.refreshToken,
+            method: 'put'
+        })
+    }
+}

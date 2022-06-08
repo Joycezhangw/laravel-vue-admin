@@ -15,9 +15,9 @@ export function href(path, newWindow = false) {
     let url = "";
 
     if (app.router.mode == "history") {
-        url = origin + import.meta.env.BASE_URL + path.substr(1);
+        url = origin + import.meta.env.VITE_APP_HOST + path.substr(1);
     } else {
-        url = origin + import.meta.env.BASE_URL + "#" + path;
+        url = origin + import.meta.env.VITE_APP_HOST + "#" + path;
     }
 
     if (newWindow) {

@@ -60,6 +60,7 @@
                       style="width: 60%; float: left"
                     ></el-input>
                     <captcha
+                      :ref="setRefs('captcha')"
                       v-model="loginForm.captcha_uniqid"
                       @change="
                         () => {
@@ -102,10 +103,12 @@
   </div>
 </template>
 <script>
-import { reactive, defineComponent, ref } from "vue";
+import { reactive, defineComponent, toRaw } from "vue";
 import { User, Lock, View, Hide } from "@element-plus/icons-vue";
 import Captcha from "./components/captcha.vue";
-import { useBoolean } from "@/landao/hooks";
+import { useBoolean, useRequest, useRefs } from "@/landao/hooks";
+import { PassportService } from "@/service";
+import { ElMessage } from "element-plus";
 export default defineComponent({
   components: {
     iconView: View,
@@ -116,23 +119,52 @@ export default defineComponent({
     const curYear = new Date().getFullYear();
     // 表单数据,注意表单不能输入的原因的：ref 和 model 的名字不能一样
     //  ref="refLoginForm"  :model="loginForm"
+    const { refs, setRefs } = useRefs();
     const loginForm = reactive({
       username: "peadmin",
       password: "123456qwe@A",
       captcha: "",
       captcha_uniqid: "",
     });
-    // 登录按钮状态
-    const saving = ref(false);
-    //登录
-    async function submitForm() {}
     //密码框和文本框切换
     const { state: isLock, toggle: lockToggle } = useBoolean(true);
+    //登录
+    const { loading: saving, run: doLogin } = useRequest(
+      PassportService.login,
+      {
+        manual: true,
+        onSuccess(res) {
+          console.log("登录结果", res);
+        },
+        onError(msg) {
+          //刷新验证码
+          refs.value.captcha.refresh();
+          ElMessage.error(msg);
+        },
+      }
+    );
+    //提交登录
+    const submitForm = () => {
+      if (!loginForm.username) {
+        return ElMessage.error("用户名不能为空");
+      }
+
+      if (!loginForm.password) {
+        return ElMessage.error("密码不能为空");
+      }
+
+      if (!loginForm.captcha) {
+        return ElMessage.error("图片验证码不能为空");
+      }
+      doLogin(toRaw(loginForm));
+    };
+
     return {
       curYear,
       loginForm,
       saving,
       submitForm,
+      setRefs,
       isLock,
       lockToggle,
       iconUser: User,

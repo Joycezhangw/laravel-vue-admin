@@ -1,4 +1,6 @@
 import request from '@/landao/service/request'
+
+// export const captcha = () =>request.get('/v1/passport/captcha')
 /**
  * 登录相关
  */
@@ -17,7 +19,7 @@ export default class PassportService {
      * @returns 
      */
     static captcha() {
-        return request.get(this.apiUri.captcha)
+        return request.get('/v1/passport/captcha')
     }
 
     /**
@@ -26,7 +28,7 @@ export default class PassportService {
      * @returns 
      */
     static login(params) {
-        return request.post(this.apiUri.login, params)
+        return request.post('/v1/passport/login', params)
     }
 
     /**
@@ -34,7 +36,7 @@ export default class PassportService {
    * @returns 
    */
     static logout() {
-        return request.post(this.apiUri.logout)
+        return request.post('/v1/passport/logout')
     }
 
     /**
@@ -43,7 +45,7 @@ export default class PassportService {
      */
     static refreshToken() {
         return request({
-            url: this.apiUri.refreshToken,
+            url: '/v1/passport/refreshToken',
             method: 'put'
         })
     }

@@ -7,6 +7,7 @@ specifiers:
   axios: ^0.27.2
   dayjs: ^1.11.2
   element-plus: ^2.2.0
+  lodash: ^4.17.21
   nprogress: ^0.2.0
   pinia: ^2.0.14
   qs: ^6.10.5
@@ -25,6 +26,7 @@ dependencies:
   axios: registry.npmmirror.com/axios/0.27.2
   dayjs: registry.npmmirror.com/dayjs/1.11.2
   element-plus: registry.npmmirror.com/element-plus/2.2.0_vue@3.2.33
+  lodash: registry.npmmirror.com/lodash/4.17.21
   nprogress: registry.npmmirror.com/nprogress/0.2.0
   pinia: registry.npmmirror.com/pinia/2.0.14_vue@3.2.33
   qs: registry.npmmirror.com/qs/6.10.5

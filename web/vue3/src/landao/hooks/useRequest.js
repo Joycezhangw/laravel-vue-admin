@@ -1,18 +1,18 @@
-import { ref, shallowRef } from 'vue'
+import { ref } from 'vue'
 
 export function useRequest(service, options) {
 
     //初始化响应数据
     const loading = ref(false);//是否正在执行
     const error = ref(null);//抛出的异常
-    const data = shallowRef({});
+    const data = ref({});
 
     const DefaultOptions = {
         manual: false,
         onSuccess: () => { },
         onError: () => { },
         onFinally: () => { },
-        defaultParams: [],
+        defaultParams: {},
     }
 
     const finalOptions = { ...DefaultOptions, ...options };
@@ -30,13 +30,13 @@ export function useRequest(service, options) {
         loading.value = value;
     }
 
-    let promiseService = async (...args) => new Promise((resolve, reject) => {
+    let promiseService = async (args) => new Promise((resolve, reject) => {
         service(args).then(resolve).catch(reject)
     })
 
-    function _run(...args) {
+    function _run(args) {
         setLoadingState(true);
-        return promiseService(...args).then(res => {
+        return promiseService(args).then(res => {
             onSuccess(res, args);
             data.value = res;
             return res;
@@ -53,7 +53,7 @@ export function useRequest(service, options) {
 
     //是否手动执行，默认flase。即在初始化自动执行 service
     if (!manual) {
-        run(...defaultParams)
+        run(defaultParams)
     }
 
     return {

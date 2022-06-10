@@ -106,7 +106,7 @@
 import { reactive, defineComponent, toRaw } from "vue";
 import { User, Lock, View, Hide } from "@element-plus/icons-vue";
 import Captcha from "./components/captcha.vue";
-import { useBoolean, useRequest, useRefs } from "@/landao/hooks";
+import { useBoolean, useRequest, useRefs, useCryptoJS } from "@/landao/hooks";
 import { PassportService } from "@/service";
 import { ElMessage } from "element-plus";
 export default defineComponent({
@@ -128,6 +128,7 @@ export default defineComponent({
     });
     //密码框和文本框切换
     const { state: isLock, toggle: lockToggle } = useBoolean(true);
+
     //登录
     const { loading: saving, run: doLogin } = useRequest(
       PassportService.login,
@@ -156,7 +157,18 @@ export default defineComponent({
       if (!loginForm.captcha) {
         return ElMessage.error("图片验证码不能为空");
       }
-      doLogin(toRaw(loginForm));
+      let resForm = toRaw(loginForm);
+      const { aseValue } = useCryptoJS(
+        resForm.password,
+        resForm.captcha_uniqid
+      );
+
+      doLogin({
+        username: resForm.username,
+        password: aseValue,
+        captcha: resForm.captcha,
+        captcha_uniqid: resForm.captcha_uniqid,
+      });
     };
 
     return {

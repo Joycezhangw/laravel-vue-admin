@@ -10,6 +10,7 @@ use App\Events\PassportManageRefreshTokenEvent;
 use App\Http\Controllers\Controller;
 use App\Http\ResponseCode;
 use App\Services\Repositories\Manage\Interfaces\IManage;
+use App\Support\CryptoJsSup;
 use App\Validators\Passport\ManageLoginValidator;
 use Illuminate\Http\Request;
 use Illuminate\Support\Arr;
@@ -71,10 +72,12 @@ class Passport extends Controller
             return ResultHelper::returnFormat('账号不存在', ResponseCode::ERROR);
         }
         $manageInfo = $manage->makeVisible(['password', 'pwd_salt'])->toArray();
+        //将前端加密的密码进行解密
+        $password = (new CryptoJsSup($captchaUniq))->decrypt($params['password']);
         //密码验证
         $pwdFlag = (new AopPassword())
             ->withSalt()
-            ->check($manageInfo['password'], $params['password'], $manageInfo['pwd_salt']);
+            ->check($manageInfo['password'], (string)$password, $manageInfo['pwd_salt']);
         if (!$pwdFlag) {
             return ResultHelper::returnFormat('账号密码错误', ResponseCode::ERROR);
         }

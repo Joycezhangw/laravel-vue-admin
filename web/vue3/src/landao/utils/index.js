@@ -1,4 +1,6 @@
 
+import CryptoJS from "./crypto";
+export { CryptoJS }
 /**
  * 跳转
  * @param {string} path 地址

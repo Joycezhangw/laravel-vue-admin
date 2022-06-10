@@ -14,7 +14,8 @@ export default defineComponent({
     const base64 = ref("");
     const { loading, run: refresh } = useRequest(PassportService.captcha, {
       onSuccess(res) {
-        const { captcha, captcha_uniqid } = res;
+  
+        const { captcha, captcha_uniqid } = res.data;
         base64.value = captcha;
         emit("update:modelValue", captcha_uniqid);
         emit("change", { captcha, captcha_uniqid });

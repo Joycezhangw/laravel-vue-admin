@@ -56,7 +56,7 @@ axios.interceptors.response.use(
         if (code === -1 || code === -403) {
             return Promise.reject({ code, message })
         }
-        return data
+        return response.data
     },
     async error => {//请求失败
         NProgress.done();

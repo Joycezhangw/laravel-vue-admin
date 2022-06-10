@@ -60,9 +60,6 @@ export function useRequest(service, options) {
         loading,
         data,
         run,
-        error,
-        onSuccess,
-        onError,
-        onFinally
+        error
     }
 }

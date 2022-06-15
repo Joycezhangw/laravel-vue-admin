@@ -1,6 +1,7 @@
 
 import CryptoJS from "./crypto";
-export { CryptoJS }
+import storage from "./storage";
+export { CryptoJS, storage }
 /**
  * 跳转
  * @param {string} path 地址

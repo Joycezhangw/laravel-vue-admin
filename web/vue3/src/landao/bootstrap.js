@@ -1,11 +1,26 @@
 import { createPinia } from "pinia"
 import ElementPlus from "element-plus";
-// 使用cdn  <link rel="stylesheet" href="//unpkg.com/element-plus/dist/index.css" />
+import { router } from "./router"
+import { useBaseStore } from "@/store";
+/**
+ * TODO:在构建生产环境时,需要CDN引用，需要注释掉。以免重复打包样式。
+ * 暂时没有更好的解决方案，在生产环境下判断构建
+ */
 import "element-plus/theme-chalk/src/index.scss";
 
-export async function bootstrap(app) {
+
+export async function bootstrap(vue) {
     //缓存
-    app.use(createPinia())
+    vue.use(createPinia())
     //ui库
-    app.use(ElementPlus)
+    vue.use(ElementPlus)
+    //路由
+    vue.use(router)
+
+    // 基础
+    const { app } = useBaseStore();
+    app.showLoading();
+    //#此处要加载一些，比如菜单
+
+    app.hideLoading();
 }

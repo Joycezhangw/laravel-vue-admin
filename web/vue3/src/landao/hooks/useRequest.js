@@ -58,6 +58,7 @@ export function useRequest(service, options) {
 
     return {
         loading,
+        setLoadingState,
         data,
         run,
         error

@@ -1,22 +1,15 @@
 import axios from 'axios'
-import NProgress from "nprogress";
-import "nprogress/nprogress.css";
 import { isDev, ignore, baseURL } from "@/landao/config";
 import { ElMessage } from "element-plus"
-import { href } from "@/landao/utils"
+import { href, storage } from "@/landao/utils"
+import { useBaseStore } from "@/store";
 
 
-NProgress.configure({
-    showSpinner: false
-});
 
 axios.defaults.baseURL = baseURL;
 axios.defaults.timeout = 30000;
 axios.defaults.withCredentials = true;
 
-NProgress.configure({
-    showSpinner: false
-});
 
 
 // @ts-ignore
@@ -25,16 +18,8 @@ axios.interceptors.request.eject(axios._req);
 //request拦截器
 axios._req = axios.interceptors.request.use(
     config => {
-        if (config.url) {
-            //过滤无需进度条url
-            if (!ignore.NProgress.some(val => config.url.includes(val))) {
-                NProgress.start();
-            }
-            //需要加token请求
-            if (!ignore.apiToken.some(val => config.url.includes(val))) {
-                config.headers['Authorization'] = `Bearer ${token}`;
-            }
-        }
+        const { user } = useBaseStore();
+    
         // 请求信息
         if (isDev) {
             console.group(config.url);
@@ -42,6 +27,20 @@ axios._req = axios.interceptors.request.use(
             console.table("data:", config.method == "get" ? config.params : config.data);
             console.groupEnd();
         }
+
+        //验证用户token
+        if (user.token) {
+            if (!ignore.apiToken.some(val => config.url.includes(val))) {
+                //判断token是否过期
+                if (storage.hasExpired('token')) {
+                    user.clear();
+                    return href('/login')
+                }
+                config.headers['Authorization'] = `Bearer ${user.token}`;
+            }
+        }
+
+
         return config
     },
     error => {
@@ -51,7 +50,6 @@ axios._req = axios.interceptors.request.use(
 
 axios.interceptors.response.use(
     response => {
-        NProgress.done();
         const { code, data, message } = response.data;
         if (code === -1 || code === -403) {
             return Promise.reject({ code, message })
@@ -59,7 +57,6 @@ axios.interceptors.response.use(
         return response.data
     },
     async error => {//请求失败
-        NProgress.done();
         const { response } = error;
         if (response) {
             const { status, config } = error.response

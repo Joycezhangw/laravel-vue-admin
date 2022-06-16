@@ -1,6 +1,6 @@
 import { createPinia } from "pinia"
 import ElementPlus from "element-plus";
-import { router } from "./router"
+import { setupRouter } from "./router"
 import { useBaseStore } from "@/store";
 /**
  * TODO:在构建生产环境时,需要CDN引用，需要注释掉。以免重复打包样式。
@@ -14,8 +14,9 @@ export async function bootstrap(vue) {
     vue.use(createPinia())
     //ui库
     vue.use(ElementPlus)
-    //路由
-    vue.use(router)
+    //挂载路由
+    // vue.use(router)
+    await setupRouter(vue)
 
     // 基础
     const { app } = useBaseStore();

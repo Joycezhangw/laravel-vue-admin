@@ -16,7 +16,7 @@ const ignore = {
     //api不需要携带token请求
     apiToken: ['/v1/passport/captcha', '/v1/passport/login'],
     //不需要token的页面
-    pageToken: ['./login']
+    whiteName: ['Login']
 }
 
 const app={

@@ -16,7 +16,6 @@ export function createRouterGuards(router, whiteNameList) {
     router.beforeEach(async (to, from, next) => {
         NProgress.start();
         const { user } = useBaseStore();
-        console.log(getComponentName(to))
         if (user.token) {
             if (to.name === 'Login') {
                 next({ path: defaultRoutePath });
@@ -34,7 +33,6 @@ export function createRouterGuards(router, whiteNameList) {
                 } else {
                     next({ ...to, replace: true })
                 }
-                NProgress.done();
             }
         } else {
             if (whiteNameList.some((val) => val === to.name)) {
@@ -47,10 +45,15 @@ export function createRouterGuards(router, whiteNameList) {
             }
         }
     });
-
+    //获取路由对应的组件名称
     const getComponentName = (route) => {
         return route.matched.find((item) => item.name === route.name)?.components?.default.name;
     }
+
+    //路由加载后
+    router.afterEach(() => {
+        NProgress.done();
+    })
 
     //路由错误锁
     let routerLock = false;

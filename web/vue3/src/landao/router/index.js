@@ -13,12 +13,12 @@ const { mode } = app.router;
 const constantRoutes = [
     {
         path: '/',
-        name: "index",
+        name: "Layout",
         component: () => import('@/layout/index.vue'),
         children: [
             {
                 path: "/",
-                name: "数据统计",
+                name: "Index",
                 component: () => import("@/views/home/index.vue")
             }
         ]

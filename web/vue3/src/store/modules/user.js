@@ -1,5 +1,6 @@
 import { defineStore } from "pinia";
 import { storage, href } from "@/landao/utils";
+import { ProfileService, PassportService } from "@/service"
 import { ref } from "vue";
 
 export const useUserStore = defineStore("user", function () {
@@ -16,7 +17,7 @@ export const useUserStore = defineStore("user", function () {
     const userInfo = ref(storage.get('userInfo') || null);
 
     //设置用户信息
-    const setUserToken = (value) => {
+    const setUserInfo = (value) => {
         userInfo.value = value;
         storage.set('userInfo', value)
     }
@@ -31,14 +32,19 @@ export const useUserStore = defineStore("user", function () {
         userInfo.value = null;
     }
 
+    //退出
     async function logout() {
+        await PassportService.logout();
         clear();
         href("/login")
     }
 
     //获取用户信息
     async function getUserInfo() {
-
+        return ProfileService.getUserInfo().then(res => {
+            setUserInfo(res.data.userInfo);
+            return res;
+        })
     }
 
 
@@ -47,7 +53,7 @@ export const useUserStore = defineStore("user", function () {
         token,
         setToken,
         userInfo,
-        setUserToken,
+        setUserInfo,
         clear,
         logout,
         getUserInfo

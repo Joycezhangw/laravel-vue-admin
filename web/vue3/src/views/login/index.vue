@@ -74,7 +74,7 @@
                       type="primary"
                       style="width: 100%"
                       :loading="saving"
-                      @click="submitForm"
+                      @click="doLogin"
                       >登 录</el-button
                     >
                   </el-form-item>
@@ -106,9 +106,11 @@
 import { reactive, defineComponent, toRaw } from "vue";
 import { User, Lock, View, Hide } from "@element-plus/icons-vue";
 import Captcha from "./components/captcha.vue";
-import { useBoolean, useRequest, useRefs, useCryptoJS } from "@/landao/hooks";
+import { useBoolean, useRefs, useCryptoJS } from "@/landao/hooks";
 import { PassportService } from "@/service";
 import { ElMessage } from "element-plus";
+import { useBaseStore } from "@/store";
+import { useRouter, useRoute } from "vue-router";
 export default defineComponent({
   components: {
     iconView: View,
@@ -128,24 +130,15 @@ export default defineComponent({
     });
     //密码框和文本框切换
     const { state: isLock, toggle: lockToggle } = useBoolean(true);
+    //登录交互状态
+    const { state: saving, toggle: savingToggle } = useBoolean(false);
 
+    const route = useRoute();
+    const router = useRouter();
+
+    const { user: userStore, menu: menuStore } = useBaseStore();
     //登录
-    const { loading: saving, run: doLogin } = useRequest(
-      PassportService.login,
-      {
-        manual: true,
-        onSuccess(res) {
-          console.log("登录结果", res);
-        },
-        onError(msg) {
-          //刷新验证码
-          refs.value.captcha.refresh();
-          ElMessage.error(msg);
-        },
-      }
-    );
-    //提交登录
-    const submitForm = () => {
+    async function doLogin() {
       if (!loginForm.username) {
         return ElMessage.error("用户名不能为空");
       }
@@ -162,20 +155,35 @@ export default defineComponent({
         resForm.password,
         resForm.captcha_uniqid
       );
-
-      doLogin({
-        username: resForm.username,
-        password: aseValue,
-        captcha: resForm.captcha,
-        captcha_uniqid: resForm.captcha_uniqid,
-      });
-    };
+      savingToggle(true);
+      try {
+        //登录
+        await PassportService.login({
+          username: resForm.username,
+          password: aseValue,
+          captcha: resForm.captcha,
+          captcha_uniqid: resForm.captcha_uniqid,
+        }).then((res) => {
+          userStore.setToken(res.data);
+        });
+        //获取用户信息
+        await userStore.getUserInfo();
+        await menuStore.getPremRules();
+        //跳转页面
+        setTimeout(() => router.replace(route.query.redirect || "/"));
+      } catch (error) {
+        //刷新验证码
+        refs.value.captcha.refresh();
+        ElMessage.error(error);
+      }
+      savingToggle(false);
+    }
 
     return {
       curYear,
       loginForm,
       saving,
-      submitForm,
+      doLogin,
       setRefs,
       isLock,
       lockToggle,

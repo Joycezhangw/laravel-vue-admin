@@ -5,11 +5,7 @@
         <div class="login-form">
           <div class="login-form-main">
             <div class="login-form-logo">
-              <a href="/"
-                ><img
-                  src="@/assets/logo.png"
-                  alt=""
-              /></a>
+              <a href="/"><img src="@/assets/logo.png" alt="" /></a>
             </div>
             <div class="login-form-content">
               <div class="account-slogon">
@@ -99,6 +95,7 @@
 </template>
 <script>
 import passportApi from "@/api/passport";
+import Crypto from "@/library/utils/crypto";
 export default {
   name: "Login",
   data() {
@@ -177,8 +174,17 @@ export default {
         if (valid) {
           this.saving = true;
           try {
+            const aesPwd = Crypto.aesEncrypt(
+              this.loginForm.password,
+              this.loginForm.captcha_uniqid
+            );
             //登录
-            await this.$store.dispatch("user/LoginIn", this.loginForm);
+            await this.$store.dispatch("user/LoginIn", {
+              username: this.loginForm.username,
+              password: aesPwd,
+              captcha: this.loginForm.captcha,
+              captcha_uniqid: this.loginForm.captcha_uniqid,
+            });
             //用户信息
             await this.$store.dispatch("user/GetUserInfo");
             //用户权限菜单

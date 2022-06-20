@@ -130,7 +130,7 @@
   </div>
 </template>
 <script>
-import deptTree from "@/view/system/components/deptTree";
+import deptTree from "@/views/system/components/deptTree";
 import roleApi from "@/api/role";
 export default {
   name: "userForm",

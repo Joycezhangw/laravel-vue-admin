@@ -156,7 +156,7 @@
 <script>
 import menuApi from "@/api/menu";
 import { deepTree } from "@/library/utils";
-import menuForm from "@/view/system/components/menuForm";
+import menuForm from "@/views/system/components/menuForm";
 export default {
   name: "menuList",
   components: {

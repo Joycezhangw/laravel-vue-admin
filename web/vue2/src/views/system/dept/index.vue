@@ -91,7 +91,7 @@
 <script>
 import deptApi from "@/api/dept";
 import { deepTree } from "@/library/utils";
-import deptForm from "@/view/system/components/deptForm";
+import deptForm from "@/views/system/components/deptForm";
 export default {
   name: "deptList",
   components: {

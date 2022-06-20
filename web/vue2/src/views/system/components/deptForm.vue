@@ -55,7 +55,7 @@
 </template>
 <script>
 import { treeParentId } from "@/config/env";
-import deptTree from "@/view/system/components/deptTree";
+import deptTree from "@/views/system/components/deptTree";
 export default {
   name: "deptForm",
   components: {

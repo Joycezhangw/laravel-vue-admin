@@ -4,7 +4,7 @@
       <el-button size="mini" @click="refresh()">刷新</el-button>
       <el-button
         type="primary"
-        v-permission="'manage.user.store'"
+        v-permission="'manage.role.store'"
         size="mini"
         @click="handleAdd()"
         >新增</el-button
@@ -14,7 +14,7 @@
         <el-input
           class="lv-search-key__input"
           v-model="search_text"
-          placeholder="请输入用户名称"
+          placeholder="请输入角色名称"
           clearable
           size="mini"
           style="250px"
@@ -38,85 +38,22 @@
           :border="true"
           size="small"
           @sort-change="onSortChange"
-          :default-sort="{ prop: 'reg_date', order: 'descending' }"
+          :default-sort="{ prop: 'updated_at', order: 'descending' }"
         >
           <el-table-column
-            label="用户名"
+            label="角色名"
+            align="center"
+            width="200"
+            prop="role_name"
+          />
+          <el-table-column label="角色描述" align="center" prop="role_desc" />
+          <el-table-column
+            label="更新时间"
             align="center"
             width="150"
-            prop="username"
-          />
-          <el-table-column
-            label="真实姓名"
-            align="center"
-            width="150"
-            prop="realname"
-          />
-          <el-table-column
-            label="手机号"
-            align="center"
-            width="150"
-            prop="phone"
-          />
-          <el-table-column
-            label="部门名称"
-            align="center"
-            width="150"
-            prop="nickname"
-          >
-            <template slot-scope="scope">
-              <span>{{ scope.row.department.dept_name }}</span>
-            </template>
-          </el-table-column>
-          <el-table-column width="380" label="角色" align="center">
-            <template slot-scope="scope">
-              <el-tag
-                type="dark"
-                size="mini"
-                style="margin: 2px"
-                v-for="(item, index) in scope.row.roles"
-                :key="index"
-                >{{ item.role_name }}</el-tag
-              >
-            </template>
-          </el-table-column>
-          <el-table-column width="60" label="状态" align="center">
-            <template slot-scope="scope">
-              <el-tag
-                effect="dark"
-                type="success"
-                size="mini"
-                v-if="scope.row.manage_status === 1"
-                >{{ scope.row.manage_status_txt }}</el-tag
-              >
-              <el-tag
-                effect="dark"
-                type="danger"
-                size="mini"
-                v-if="scope.row.manage_status === 0"
-                >{{ scope.row.manage_status_txt }}</el-tag
-              >
-            </template>
-          </el-table-column>
-          <el-table-column
-            label="最近登录IP"
-            align="center"
-            width="120"
-            prop="last_login_ip"
-          />
-          <el-table-column
-            label="最近登录时间"
-            align="center"
-            width="180"
-            prop="last_login_time"
-          />
-          <el-table-column
-            label="创建时间"
-            align="center"
-            width="180"
             sortable="custom"
             :sort-orders="['ascending', 'descending']"
-            prop="reg_date"
+            prop="updated_at"
           />
           <el-table-column
             fixed="right"
@@ -125,11 +62,11 @@
             width="120"
           >
             <template slot-scope="scope">
-              <div v-if="scope.row.is_super === 0">
+              <div v-if="scope.row.is_default === 0">
                 <el-button
                   size="mini"
                   type="text"
-                  v-permission="'manage.user.update'"
+                  v-permission="'manage.role.update'"
                   @click="handleEdit(scope.$index, scope.row)"
                   >修改</el-button
                 >
@@ -137,7 +74,7 @@
                   size="mini"
                   type="text"
                   class="text-delete"
-                  v-permission="'manage.user.destroy'"
+                  v-permission="'manage.role.destroy'"
                   @click="handleDelete(scope.$index, scope.row)"
                   >删除</el-button
                 >
@@ -148,19 +85,33 @@
         </el-table>
       </div>
     </el-row>
+    <el-row type="flex">
+      <div class="lv-flex1"></div>
+      <el-pagination
+        :background="true"
+        @size-change="handleSizeChange"
+        @current-change="handleCurrentChange"
+        :current-page="pagination.currentPage"
+        :page-sizes="[10, 20, 30, 40, 50, 100]"
+        :page-size="pagination.pageSize"
+        layout="total, sizes, prev, pager, next, jumper"
+        :total="total"
+      >
+      </el-pagination>
+    </el-row>
     <div class="lv-dialog">
       <el-dialog
         v-dialogDrag
-        :title="dialogIsEdit ? '修改用户' : '新增用户'"
+        :title="dialogIsEdit ? '修改角色' : '新增角色'"
         :visible.sync="dialogVisible"
-        width="50%"
+        width="40%"
         :before-close="handleDialogClose"
         :close-on-click-modal="false"
       >
-        <user-form
-          ref="userForm"
+        <role-form
           :is-edit="dialogIsEdit"
-          :user-data="userData"
+          :role-data="roleData"
+          ref="roleForm"
         />
         <div slot="footer" class="dialog-footer">
           <el-button size="small" @click="handleDialogClose">关闭</el-button>
@@ -173,12 +124,12 @@
   </div>
 </template>
 <script>
-import userApi from "@/api/user";
-import userForm from "@/view/system/components/userForm";
+import roleApi from "@/api/role";
+import roleForm from "@/views/system/components/roleForm";
 export default {
-  name: "userList",
+  name: "roleList",
   components: {
-    userForm,
+    roleForm,
   },
   data() {
     return {
@@ -191,16 +142,16 @@ export default {
         page_size: 20,
       },
       sort: {
-        order: "reg_date",
+        order: "updated_at",
         sort: "desc",
       },
       dialogVisible: false,
       dialogIsEdit: false,
-      userData: {},
+      roleData: {},
     };
   },
-  async mounted() {
-    await this.getList();
+  mounted() {
+    this.getList();
   },
   methods: {
     onSearch() {
@@ -209,6 +160,48 @@ export default {
     },
     refresh() {
       this.getList();
+    },
+    handleAdd() {
+      this.dialogVisible = true;
+      this.dialogIsEdit = false;
+      this.roleData = {};
+    },
+    getList() {
+      this.tableLoading = true;
+      let { pagination, search_text, sort } = this;
+      let searchForm = { ...pagination, search_text, ...sort };
+      roleApi
+        .getList(searchForm)
+        .then((res) => {
+          this.tableList = res.data.list;
+          this.total = res.data.pagination.total;
+          this.tableLoading = false;
+        })
+        .catch((err) => {
+          this.$message.error(err);
+          this.tableLoading = false;
+        });
+    },
+    handleSizeChange(pageSize) {
+      // 每页条数切换
+      // 改变每页显示的条数
+      this.pagination.page_size = pageSize;
+      // 注意：在改变每页显示的条数时，要将页码显示到第一页
+      this.pagination.page = 1;
+      this.getList();
+    },
+    handleCurrentChange(currentPage) {
+      //页码切换
+      this.pagination.page = currentPage;
+      this.getList();
+    },
+    //关闭窗口
+    handleDialogClose() {
+      this.dialogVisible = false;
+      this.dialogIsEdit = false;
+      this.roleData = {};
+      //关闭dialog，清空表单。否则下次弹窗，表单数据还在
+      this.$refs.roleForm.$refs.form.resetFields();
     },
     //排序
     onSortChange({ prop, order }) {
@@ -226,39 +219,16 @@ export default {
         this.refresh();
       }
     },
-    handleAdd() {
-      this.dialogVisible = true;
-      this.dialogIsEdit = false;
-      this.userData = {};
-    },
-    //修改
-    handleEdit(index, row) {
-      this.dialogVisible = true;
-      this.dialogIsEdit = true;
-      this.userData = row;
-    },
-    //关闭窗口
-    handleDialogClose() {
-      this.dialogVisible = false;
-      this.dialogIsEdit = false;
-      this.userData = {};
-      //关闭dialog，清空表单。否则下次弹窗，表单数据还在
-      this.$refs.userForm.$refs.form.resetFields();
-    },
-    async getList() {
-      this.tableLoading = true;
-      let { pagination, search_text, sort } = this;
-      let searchForm = { ...pagination, search_text, ...sort };
-      await userApi
-        .getList(searchForm)
+    async handleEdit(index, row) {
+      await roleApi
+        .getInfo(row.role_id)
         .then((res) => {
-          this.tableList = res.data.list;
-          this.total = res.data.pagination.total;
-          this.tableLoading = false;
+          this.roleData = res.data;
+          this.dialogVisible = true;
+          this.dialogIsEdit = true;
         })
         .catch((err) => {
           this.$message.error(err);
-          this.tableLoading = false;
         });
     },
     //删除
@@ -268,8 +238,8 @@ export default {
       })
         .then((res) => {
           if (res === "confirm") {
-            userApi
-              .doDelete(row.manage_id)
+            roleApi
+              .doDelete(row.role_id)
               .then((res) => {
                 this.$message({
                   message: res.message,
@@ -287,7 +257,7 @@ export default {
         .catch(() => null);
     },
     submitForm() {
-      this.$refs.userForm.$refs.form.validate((valid) => {
+      this.$refs.roleForm.$refs.form.validate((valid) => {
         if (valid) {
           this.submitData();
         } else {
@@ -296,10 +266,10 @@ export default {
       });
     },
     async submitData() {
-      const formData = this.$refs.userForm._data.userForm;
-      if (this.dialogIsEdit && this.userData.manage_id) {
-        await userApi
-          .doUpdate(this.userData.manage_id, formData)
+      const formData = this.$refs.roleForm._data.roleForm;
+      if (this.dialogIsEdit && this.roleData.role_id) {
+        await roleApi
+          .doUpdate(this.roleData.role_id, formData)
           .then((res) => {
             this.$message({
               type: "success",
@@ -314,7 +284,7 @@ export default {
             this.$message.error(err);
           });
       } else {
-        await userApi
+        await roleApi
           .doStore(formData)
           .then((res) => {
             this.$message({

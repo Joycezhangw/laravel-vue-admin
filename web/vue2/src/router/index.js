@@ -24,11 +24,11 @@ const constantRoutes = [
                 meta: {
                     title: '数据统计'
                 },
-                component: () => import("@/view/index/index.vue")
+                component: () => import("@/views/index/index.vue")
             },
             {
                 path: "/my/info",
-                component: () => import("@/view/my/info"),
+                component: () => import("@/views/my/info"),
                 meta: {
                     title: "个人中心",
                     keepAlive: true
@@ -42,7 +42,7 @@ const constantRoutes = [
         meta: {
             title: '登录'
         },
-        component: () => import('@/view/login/index')
+        component: () => import('@/views/login/index')
     }, {
         path: "/error",
         component: EmptyLayout,
@@ -53,19 +53,19 @@ const constantRoutes = [
         children: [{
             path: "/403",
             name: "Error403",
-            component: () => import("@/view/error/403"),
+            component: () => import("@/views/error/403"),
             meta: { title: "403" }
         },
         {
             path: "/404",
             name: "Error404",
-            component: () => import("@/view/error/404"),
+            component: () => import("@/views/error/404"),
             meta: { title: "404" }
         },
         {
             path: "/500",
             name: "Error500",
-            component: () => import("@/view/error/500"),
+            component: () => import("@/views/error/500"),
             meta: { title: "500" }
         }]
     }

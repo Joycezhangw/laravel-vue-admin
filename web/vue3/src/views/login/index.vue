@@ -106,11 +106,10 @@
 import { reactive, defineComponent, toRaw } from "vue";
 import { User, Lock, View, Hide } from "@element-plus/icons-vue";
 import Captcha from "./components/captcha.vue";
-import { useBoolean, useRefs, useCryptoJS } from "@/landao/hooks";
+import { useBoolean, useRefs, useCryptoJS, useLanDao } from "@/landao/hooks";
 import { PassportService } from "@/service";
 import { ElMessage } from "element-plus";
 import { useBaseStore } from "@/store";
-import { useRouter, useRoute } from "vue-router";
 export default defineComponent({
   components: {
     iconView: View,
@@ -133,8 +132,7 @@ export default defineComponent({
     //登录交互状态
     const { state: saving, toggle: savingToggle } = useBoolean(false);
 
-    const route = useRoute();
-    const router = useRouter();
+    const { route, router } = useLanDao();
 
     const { user: userStore, menu: menuStore } = useBaseStore();
     //登录

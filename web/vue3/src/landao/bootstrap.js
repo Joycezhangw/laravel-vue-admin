@@ -9,19 +9,27 @@ import { useBaseStore } from "@/store";
 import "element-plus/theme-chalk/src/index.scss";
 
 
-export async function bootstrap(vue) {
+export async function bootstrap(app) {
     //缓存
-    vue.use(createPinia())
+    app.use(createPinia())
     //ui库
-    vue.use(ElementPlus)
+    app.use(ElementPlus)
     //挂载路由
-    // vue.use(router)
-    await setupRouter(vue)
+    await setupRouter(app)
 
-    // 基础
-    const { app } = useBaseStore();
-    app.showLoading();
+    // 基础store
+    const { app: appStore, user: userStore, menu: menuStore } = useBaseStore();
+
+    //应用挂载loading开始
+    appStore.showLoading();
     //#此处要加载一些，比如菜单
+    if (userStore.token) {
+        // 获取用户信息
+        await userStore.getUserInfo();
 
-    app.hideLoading();
+        // 获取菜单权限
+        await menuStore.getPremRules();
+    }
+    //应用挂载loading结束
+    appStore.hideLoading();
 }

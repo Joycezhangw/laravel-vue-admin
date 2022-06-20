@@ -18,16 +18,16 @@ const ignore = {
     //不需要token的页面
     whiteName: ['Login']
 }
-
-const app={
-    router:{
+const app = {
+    name: import.meta.env.VITE_APP_TITLE || "LARAVEL_VUE_ADMIN",
+    router: {
         //模式
-        mode:"history",
+        mode: "history",
         //页面
-        pages:[],
+        pages: [],
         //试图 / 路由下的children
-        views:[]
+        views: []
     }
 }
 
-export { isDev, host, baseURL, ignore,app }
+export { isDev, host, baseURL, ignore, app }

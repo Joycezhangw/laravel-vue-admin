@@ -10,8 +10,10 @@
   "dependencies": {
     "axios": "^0.24.0",
     "core-js": "^3.6.5",
+    "crypto-js": "^4.1.1",
     "dayjs": "^1.10.7",
     "element-ui": "^2.15.6",
+    "lodash": "^4.17.21",
     "nprogress": "^0.2.0",
     "store": "^2.0.12",
     "vue": "^2.6.11",

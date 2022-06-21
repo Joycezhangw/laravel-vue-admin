@@ -222,9 +222,10 @@ export default defineComponent({
     background-color: #fff;
     padding: 36px 8px 48px;
     margin-bottom: 64px;
-    border: 1px solid #e9e9e9;
     border-radius: 4px;
     padding-bottom: 16px;
+    box-shadow: 0 8px 32px 0 rgb(216 218 217 / 60%);
+    border: 0.5px solid #eff0f0;
     .login-form-logo {
       max-width: 320px;
       margin: 0 auto;
@@ -298,6 +299,38 @@ export default defineComponent({
   }
   :deep(.el-input__suffix-inner) {
     cursor: pointer;
+  }
+  .third-login-a {
+    width: 35px;
+    height: 35px;
+    display: inline-block;
+  }
+  .third-login {
+    position: relative;
+    margin-top: 26px;
+    padding-top: 26px;
+    .third-login-link {
+      margin-left: 25px;
+      justify-content: center;
+      text-align: center;
+      a {
+        margin-right: 20px;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        cursor: pointer;
+      }
+    }
+    span {
+      display: inline-block;
+      width: 28px;
+      height: 29px;
+      background-image: url(@/assets/img/third-login.png);
+      background-repeat: no-repeat;
+      background-size: 100%;
+      vertical-align: middle;
+      margin-right: 5px;
+    }
   }
 }
 </style>

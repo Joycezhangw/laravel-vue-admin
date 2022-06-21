@@ -9,6 +9,7 @@ export const useAppStore = defineStore("app", function () {
 
     //加载
     const loading = ref(false);
+
     //应用基本信息
     const appInfo = ref({
         ...app
@@ -20,12 +21,23 @@ export const useAppStore = defineStore("app", function () {
     // 是否折叠
     const isFold = ref(browser.value.isMini || false);
 
+    //是否全屏
+    const isFullscreen = ref(false);
+
     //设置折叠
     const setFold = (value) => {
         if (value === undefined) {
             value = !isFold.value;
         }
         isFold.value = value;
+    }
+
+    //设置全屏显示
+    const setFullscreen = (value) => {
+        if (value === undefined) {
+            value = !isFullscreen.value;
+        }
+        isFullscreen.value = value;
     }
 
     //设置基本信息
@@ -58,6 +70,8 @@ export const useAppStore = defineStore("app", function () {
         browser,
         setBrowser,
         appInfo,
-        setAppInfo
+        setAppInfo,
+        isFullscreen,
+        setFullscreen
     }
 })

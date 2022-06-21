@@ -1,13 +1,18 @@
 <template>
-  <div class="page-layout">
+  <div class="page-layout" :class="{ collapse: appStore.isFold }">
     <div class="page-layout__left">
       <sidebar />
     </div>
-    <div class="page-layout__right"></div>
+    <div class="page-layout__right">
+      <topbar />
+    </div>
   </div>
 </template>
 <script name="Layout" setup>
 import Sidebar from "./components/sidebar.vue";
+import topbar from "./components/topbar.vue";
+import { useBaseStore } from "@/store";
+const { app: appStore } = useBaseStore();
 </script>
 <style lang="scss" scoped>
 .page-layout {

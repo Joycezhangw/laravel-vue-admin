@@ -1,8 +1,19 @@
 <template>
   <div class="app-toolbar">
-    <span @click="onHandleFullscreen">{{
-      appStore.isFullscreen ? "退出全屏" : "全屏"
-    }}</span>
+    <el-tooltip
+      class="box-item"
+      effect="dark"
+      :content="appStore.isFullscreen ? '退出全屏' : '全屏'"
+      placement="bottom"
+    >
+      <icon-svg
+        size="26px"
+        :name="
+          appStore.isFullscreen ? 'icon-fullscreen-exit' : 'icon-fullscreen'
+        "
+        @click="onHandleFullscreen"
+      ></icon-svg>
+    </el-tooltip>
   </div>
 </template>
 <script>
@@ -13,6 +24,7 @@ export default defineComponent({
   name: "Toolbar",
   setup() {
     const { app: appStore } = useBaseStore();
+    //全屏操作
     const onHandleFullscreen = () => {
       const doc = document,
         docBody = doc.body;
@@ -46,3 +58,8 @@ export default defineComponent({
   },
 });
 </script>
+<style lang="scss" scoped>
+.app-toolbar {
+  padding: 0 16px;
+}
+</style>

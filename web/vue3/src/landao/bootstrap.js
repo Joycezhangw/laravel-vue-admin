@@ -2,6 +2,8 @@ import { createPinia } from "pinia"
 import ElementPlus from "element-plus";
 import { setupRouter } from "./router"
 import { useBaseStore } from "@/store";
+import { registerComponent } from "./registerComponents";
+
 /**
  * TODO:在构建生产环境时,需要CDN引用，需要注释掉。以免重复打包样式。
  * 暂时没有更好的解决方案，在生产环境下判断构建
@@ -19,6 +21,9 @@ export async function bootstrap(app) {
 
     // 基础store
     const { app: appStore, user: userStore, menu: menuStore } = useBaseStore();
+
+    //注册公用组件
+    await registerComponent(app)
 
     //应用挂载loading开始
     appStore.showLoading();

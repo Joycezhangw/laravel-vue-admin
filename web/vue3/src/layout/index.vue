@@ -5,12 +5,14 @@
     </div>
     <div class="page-layout__right">
       <topbar />
+      <views />
     </div>
   </div>
 </template>
 <script name="Layout" setup>
 import Sidebar from "./components/sidebar.vue";
 import topbar from "./components/topbar.vue";
+import views from "./components/views.vue";
 import { useBaseStore } from "@/store";
 const { app: appStore } = useBaseStore();
 </script>

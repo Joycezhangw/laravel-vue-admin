@@ -36,6 +36,11 @@ export default function createImportToCDN(env) {
             var: 'ElementPlus',
             path: `${cndUrl}/element-plus`,
             css: `${cndUrl}/element-plus/dist/index.css`
+        },
+        {
+            name: 'echarts',
+            var: 'echarts',
+            path: `${cndUrl}/echarts@5.3.3/dist/echarts.min.js`,
         }
     ];
 

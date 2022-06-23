@@ -23,7 +23,6 @@ export default defineComponent({
     },
   },
   setup(props) {
-    console.log(props);
     const style = ref({
       fontSize: isNumber(props.size) ? props.size + "px" : props.size,
     });

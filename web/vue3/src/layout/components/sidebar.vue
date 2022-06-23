@@ -40,9 +40,10 @@ export default defineComponent({
         const { app: appStore } = useBaseStore();
         function deepMenu(list, index) {
           return list
-            .filter((e) => !e.hidden)
+            .filter((e) => e.isShow)
             .map((item) => {
               let html = null;
+              console.log("isFold", appStore.isFold);
               //目录菜单
               if (item.menuType === 0) {
                 html = h(
@@ -56,9 +57,8 @@ export default defineComponent({
                     title() {
                       return (
                         <div class="wrap">
-                          <span v-show={!appStore.isFold || index != 1}>
-                            {item.meta.title}
-                          </span>
+                          <icon-svg name={item.meta.icon}></icon-svg>
+                          <span>{item.meta.title}</span>
                         </div>
                       );
                     },
@@ -80,9 +80,8 @@ export default defineComponent({
                     default() {
                       return (
                         <div class="wrap">
-                          <span v-show={!appStore.isFold || index != 1}>
-                            {item.meta.title}
-                          </span>
+                          <icon-svg name={item.meta.icon}></icon-svg>
+                          <span>{item.meta.title}</span>
                         </div>
                       );
                     },
@@ -215,6 +214,14 @@ export default defineComponent({
           .icon-svg {
             font-size: 18px;
           }
+        }
+        & .el-menu-item span,
+        & .el-sub-menu .el-sub-menu__title span {
+          height: 0;
+          width: 0;
+          overflow: hidden;
+          visibility: hidden;
+          display: inline-block;
         }
       }
     }

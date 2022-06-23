@@ -20,7 +20,7 @@ export default {
     },
     render() {
         const fn = list => {
-            return list.filter(item => !item.hidden).map(item => {
+            return list.filter(item => item.isShow).map(item => {
                 let html = null;
                 if (item.menuType == 0) {
                     html = (

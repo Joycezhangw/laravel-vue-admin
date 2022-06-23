@@ -75,7 +75,7 @@ class MenuRepo extends BaseRepository implements IMenu
                 'parentId' => $item['parent_id'],
                 'menuType' => $item['menu_type'],
                 'component' => $item['menu_component'],
-                'hidden' => !(boolean)$item['is_show'],
+                'isShow' => $item['is_show'],
                 'menuOrder' => $item['menu_order'],
                 'apiMethod' => $item['api_method'],
                 'apiPath' => $item['api_path'],
@@ -83,7 +83,7 @@ class MenuRepo extends BaseRepository implements IMenu
                 'meta' => [
                     'title' => $item['menu_title'],
                     'icon' => $item['menu_icon'],
-                    'keepAlive' => (boolean)$item['keep_alive']
+                    'keepAlive' => $item['keep_alive']
                 ],
                 'children' => []
             ];

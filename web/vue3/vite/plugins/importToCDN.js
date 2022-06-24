@@ -34,8 +34,13 @@ export default function createImportToCDN(env) {
         {
             name: 'element-plus',
             var: 'ElementPlus',
-            path: `${cndUrl}/element-plus`,
-            css: `${cndUrl}/element-plus/dist/index.css`
+            path: `${cndUrl}/element-plus@2.2.0`,
+            css: `${cndUrl}/element-plus@2.2.0/dist/index.css`
+        },
+        {
+            name: '@element-plus/icons-vue',
+            var: 'IconsVue',
+            path: `${cndUrl}/@element-plus/icons-vue@2.0.4`,
         },
         {
             name: 'echarts',

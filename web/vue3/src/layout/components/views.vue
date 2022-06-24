@@ -1,7 +1,7 @@
 <template>
   <div class="app-views" v-if="!appStore.loading">
     <router-view v-slot="{ Component }">
-      <transition :name="setTransitionName" mode="out-in">
+      <transition mode="out-in">
         <component :is="Component" />
       </transition>
     </router-view>

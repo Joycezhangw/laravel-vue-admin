@@ -3,10 +3,10 @@ import components from "@/components"
 
 /**
  * 注册公用组件
- * @param {*} app 
+ * @param {*} App 
  */
-export async function registerComponent(app) {
-    for (const i in components) {
-        app.component(components[i].name, components[i]);
+export async function registerComponent(App) {
+    for (const [key, component] of Object.entries(components)) {
+        App.component(key, component)
     }
 }

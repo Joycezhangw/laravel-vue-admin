@@ -5,23 +5,25 @@ import { useBaseStore } from "@/store";
 import { storage } from "@/landao/utils";
 import { ElMessage } from "element-plus";
 
-NProgress.configure({
-    showSpinner: false
-});
 
 export function createRouterGuards(router, whiteNameList) {
+    NProgress.configure({
+        showSpinner: false
+    });
+
     //默认路径
     const defaultRoutePath = '/';
     //路由守卫
     router.beforeEach(async (to, from, next) => {
         NProgress.start();
         const { user } = useBaseStore();
+
         if (user.token) {
             if (to.name === 'Login') {
                 next({ path: defaultRoutePath });
                 NProgress.done();
             } else {
-                //判断vuex中是否有对应的用户数据，如果没有，重新获取用户详情接口
+                //判断Pinia中是否有对应的用户数据，如果没有，重新获取用户详情接口
                 if (user.userInfo.manage_id) {
                     //token 是否过期，过期清除用户数据刷新页面
                     if (!storage.hasExpired('token')) {

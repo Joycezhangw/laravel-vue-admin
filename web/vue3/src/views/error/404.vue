@@ -16,7 +16,7 @@
 </template>
 <style scoped>
 .error-404 {
-  width: 252px;
-  height: 294px;
+  width: 252px !important;
+  height: 294px !important;
 }
 </style>

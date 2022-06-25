@@ -32,10 +32,35 @@ const constantRoutes = [
         component: () => import('@/views/login/index')
     },
     {
-        path: "/:catchAll(.*)",
-        name: "404",
-        redirect: "/404"
-    }
+        path: '/error',
+        name: "error",
+        component: () => import('@/layout/emptyLayout.vue'),
+        children: [
+            {
+                path: "/404",
+                name: "Error404",
+                component: () => import("@/views/error/404.vue"),
+                meta: {
+                    title: 'message.staticRoutes.notFound',
+                },
+            }, {
+                path: "/401",
+                name: "Error401",
+                component: () => import("@/views/error/401.vue"),
+                meta: {
+                    title: 'message.staticRoutes.noPower',
+                }
+            }
+        ]
+    },
+    {
+        path: '/:path(.*)*',
+        name: 'notFound',
+        component: () => import('@/views/error/404.vue'),
+        meta: {
+            title: 'message.staticRoutes.notFound',
+        },
+    },
 ];
 //创建
 const router = createRouter({

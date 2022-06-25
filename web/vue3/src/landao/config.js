@@ -16,7 +16,7 @@ const ignore = {
     //api不需要携带token请求
     apiToken: ['/v1/passport/captcha', '/v1/passport/login'],
     //不需要token的页面
-    whiteName: ['Login']
+    whiteName: ['Login','Error','Error401','Error404','Error500']
 }
 const app = {
     name: import.meta.env.VITE_APP_TITLE || "LARAVEL_VUE_ADMIN",

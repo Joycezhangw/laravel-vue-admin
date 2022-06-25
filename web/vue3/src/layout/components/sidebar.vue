@@ -43,7 +43,6 @@ export default defineComponent({
             .filter((e) => e.isShow)
             .map((item) => {
               let html = null;
-              console.log("isFold", appStore.isFold);
               //目录菜单
               if (item.menuType === 0) {
                 html = h(

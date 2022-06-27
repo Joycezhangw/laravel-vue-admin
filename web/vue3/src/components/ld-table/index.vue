@@ -43,6 +43,7 @@
         <el-table-column
           v-if="column.type == 'index' && column.title == '#'"
           :label="column.title"
+          :fixed="column.fixed || false"
           align="center"
           width="50"
         >

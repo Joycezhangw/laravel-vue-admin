@@ -50,6 +50,7 @@ export default {
           title: "#",
           width: 200,
           align: "center",
+          fixed: "left",
           type: "index",
         },
         {
@@ -85,6 +86,7 @@ export default {
         {
           title: "操作",
           width: 200,
+          fixed: "right",
           align: "center",
           slot: "handleSlot",
         },

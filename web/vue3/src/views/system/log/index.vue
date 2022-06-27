@@ -6,6 +6,8 @@
       :table-config="tableConfig"
       :filter-data="filterData"
     >
+      <template #toolbar>
+      </template>
       <template #filter>
         <el-form-item>
           <el-input

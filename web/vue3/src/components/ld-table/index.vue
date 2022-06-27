@@ -1,14 +1,17 @@
 <template>
   <el-row type="flex">
     <el-button size="small" @click="refresh()">刷新</el-button>
+    <!--其他操作按钮-->
+    <slot name="toolbar"></slot>
     <div class="flex1"></div>
+    <!--搜索表单-->
     <div class="ld-search-key">
       <el-form
         ref="filterFormRef"
         class="ld-search-key__form"
         :model="filterData"
         :inline="true"
-        :size="tableConfig.attrs.size"
+        :size="tableConfig.attrs.size || 'small'"
       >
         <slot name="filter"></slot>
         <el-form-item>
@@ -28,7 +31,7 @@
       ref="tableRef"
       :border="true"
       stripe
-      :size="tableConfig.attrs.size"
+      :size="tableConfig.attrs.size || 'small'"
       v-loading="loading"
       :row-key="tableConfig.attrs.rowKey"
       :data="tableData"
@@ -36,6 +39,7 @@
       :header-cell-style="{ background: '#f5f7fa', color: '#606266' }"
     >
       <template v-for="column in tableConfig.columns" :key="column.field">
+        <!--表格数据有序序号-->
         <el-table-column
           v-if="column.type == 'index' && column.title == '#'"
           :label="column.title"
@@ -46,6 +50,7 @@
             {{ buildTableIndex(scope) }}
           </template>
         </el-table-column>
+        <!--表格数据显示-->
         <el-table-column
           v-if="!column.slot && !column.type"
           :prop="column.field"
@@ -56,6 +61,7 @@
           :show-overflow-tooltip="column.isTooltip || true"
         >
         </el-table-column>
+        <!--表格插槽，一般用于修改、删除某条数据-->
         <el-table-column
           v-if="column.slot && !column.type"
           :label="column.title"
@@ -73,6 +79,7 @@
       </template>
     </el-table>
   </el-row>
+  <!--分页显示部分-->
   <el-row type="flex" v-if="isPagination">
     <div class="flex1"></div>
     <el-pagination
@@ -121,7 +128,6 @@ export default defineComponent({
       },
     },
   },
-  emits: ["onChangePage", "onChangeSize"],
   setup(props, ctx) {
     //表格数据
     const tableData = ref([]);

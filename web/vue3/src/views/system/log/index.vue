@@ -6,10 +6,9 @@
       :table-config="tableConfig"
       :filter-data="filterData"
     >
-      <template #toolbar>
-      </template>
+      <template #toolbar> </template>
       <template #filter>
-        <el-form-item>
+        <el-form-item prop="search_text">
           <el-input
             class="ld-search-key__input"
             v-model="filterData.search_text"
@@ -62,25 +61,31 @@ export default {
         {
           title: "请求地址",
           width: 200,
+          align: "center",
           field: "log_action",
         },
         {
           title: "请求参数",
           width: 200,
+          align: "center",
           field: "log_params",
         },
         {
           title: "请求IP",
           width: 200,
+          align: "center",
           field: "log_ip",
         },
         {
           title: "创建时间",
           width: 150,
+          align: "center",
           field: "created_at",
         },
         {
           title: "操作",
+          width: 200,
+          align: "center",
           slot: "handleSlot",
         },
       ],

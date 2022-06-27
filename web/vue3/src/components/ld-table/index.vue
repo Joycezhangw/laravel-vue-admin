@@ -79,7 +79,6 @@
       </template>
     </el-table>
   </el-row>
-  <!--分页显示部分-->
   <el-row type="flex" v-if="isPagination">
     <div class="flex1"></div>
     <el-pagination
@@ -99,7 +98,14 @@
 <script lang="jsx">
 import { useRequest } from "@/landao/hooks";
 import { ElMessage } from "element-plus";
-import { onMounted, reactive, ref, nextTick, defineComponent } from "vue";
+import {
+  onMounted,
+  reactive,
+  ref,
+  nextTick,
+  defineComponent,
+  unref,
+} from "vue";
 import { Search } from "@element-plus/icons-vue";
 export default defineComponent({
   name: "LdTable",
@@ -142,7 +148,7 @@ export default defineComponent({
     //分页
     const pagination = reactive({ page: 1, page_size: 20 });
     //请求
-    const { loading, run: fetchData } = useRequest(props.serviceApi, {
+    const { loading, run } = useRequest(props.serviceApi, {
       manual: true,
       onSuccess: (res) => {
         tableData.value = res.data.list;
@@ -156,11 +162,17 @@ export default defineComponent({
     //刷新数据
     const refresh = () => {
       //清除表单
-      // resetFilterForm(filterFormRef);
+      resetFilterForm();
       //页码重置为第一页
-      // pagination.page = 1;
+      pagination.page = 1;
       let searchForm = { ...pagination, ...props.filterData };
-      fetchData(searchForm);
+      run(searchForm);
+    };
+
+    //获取数据
+    const fetchData = () => {
+      let searchForm = { ...pagination, ...props.filterData };
+      run(searchForm);
     };
 
     //表单搜索
@@ -186,8 +198,9 @@ export default defineComponent({
           _h += element.offsetTop;
           //获取表格下的高度
           let nextEl = element.nextSibling;
-
           _h += nextEl.clientHeight + 5;
+          console.log(_h);
+          console.log(element.offsetParent);
           maxHeight.value = element.offsetParent.clientHeight - _h;
         }
       });
@@ -197,24 +210,24 @@ export default defineComponent({
       fetchData();
       updateHeight();
     });
+
     //分页
     const handleCurrentChange = (val) => {
-      console.log("设置页码", val);
       pagination.page = val;
-      refresh();
+      fetchData();
     };
     //设置一页显示数量
     const handleSize = (val) => {
-      console.log("设置显示条数", val);
       pagination.page_size = val;
       refresh();
     };
 
     //清除搜索表单
-    const resetFilterForm = (formEl) => {
-      if (!formEl) return;
+    function resetFilterForm() {
+      if (!filterFormRef) return;
+      const formEl = unref(filterFormRef);
       formEl.resetFields();
-    };
+    }
 
     //生成表格有序序号
     function buildTableIndex(row) {

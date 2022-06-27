@@ -8,7 +8,6 @@ export default class LogService {
      * @returns 
      */
      static getList(params) {
-        console.log('getList',params)
         return request({
             url: '/v1/log',
             method: 'get',

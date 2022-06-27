@@ -1,5 +1,5 @@
 <template>
-  <div class="app-views" v-if="!appStore.loading">
+  <div class="page-layout__view" v-if="!appStore.loading">
     <router-view v-slot="{ Component }">
       <transition mode="out-in">
         <component :is="Component" />
@@ -21,7 +21,7 @@ export default defineComponent({
 });
 </script>
 <style lang="scss" scoped>
-.app-views {
+.page-layout__view {
 	flex: 1;
 	overflow: hidden;
 	padding: 0 10px;

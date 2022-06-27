@@ -5,7 +5,9 @@
     </div>
     <div class="page-layout__right">
       <topbar />
-      <views />
+      <div class="page-layout__container">
+        <views />
+      </div>
     </div>
   </div>
 </template>
@@ -35,6 +37,13 @@ const { app: appStore } = useBaseStore();
     flex-direction: column;
     height: 100%;
     width: calc(100% - 208px);
+  }
+  &__container {
+    width: 100%;
+    box-sizing: border-box;
+    flex: 1;
+    overflow: hidden;
+    margin-bottom: 10px;
   }
   @media only screen and (max-width: 768px) {
     .page-layout__left {

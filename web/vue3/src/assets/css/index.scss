@@ -78,31 +78,123 @@ ol {
 	flex-direction: row;
 	justify-content: flex-start;
 	align-items: center
-  }
-  
-  .flex,.flex-row-start-center {
-	display: flex
-  }
-  
-  .flex-center {
-	justify-content: space-between
-  }
-  
-  .flex-center,.flex-vertical-center {
+}
+
+.flex,.flex-row-start-center {
+display: flex
+}
+
+.flex-center {
+justify-content: space-between
+}
+
+.flex-center,.flex-vertical-center {
+display: flex;
+align-items: center
+}
+
+.flex-horizontal-center,.flex-vertical-horizontal-center {
+display: flex;
+justify-content: center
+}
+
+.flex-vertical-horizontal-center {
+align-items: center
+}
+
+.flex-space-between {
+display: flex;
+justify-content: space-between
+}
+//result 提示页面
+.app-result {
+	padding: 48px 32px;
+	&-icon {
+		margin-bottom: 24px;
+		text-align: center;
+	}
+	&-image {
+		width: 250px;
+		height: 295px;
+		margin: auto;
+	}
+	&-title {
+		color: rgba(0, 0, 0, 0.85);
+		font-size: 24px;
+		line-height: 1.8;
+		text-align: center;
+	}
+	&-subtitle {
+		color: rgba(0, 0, 0, 0.45);
+		font-size: 14px;
+		line-height: 1.6;
+		text-align: center;
+	}
+	&-extra {
+		margin: 32px 0 0;
+		text-align: center;
+	}
+}
+.app-container{
 	display: flex;
-	align-items: center
-  }
-  
-  .flex-horizontal-center,.flex-vertical-horizontal-center {
+    flex-direction: column;
+    height: 100%;
+    position: relative;
+    padding: 10px;
+    box-sizing: border-box;
+    background-color: #fff;
+    overflow: hidden;
+	&.is-border {
+		border: 1px solid #eee;
+	}
+	& .el-input-number__decrease,& .el-input-number__increase{
+		border: 0;
+		background-color: transparent
+	}
+	& > .el-row {
+		overflow-x: auto;
+		overflow-y: hidden;
+		flex-wrap: nowrap;
+		padding-bottom: 5px;
+		margin-bottom: 0;
+		&::-webkit-scrollbar {
+			height: 4px
+		}
+		&::-webkit-scrollbar-thumb {
+			background-color: hsla(220,4%,58%,.3);
+			border-radius: 5px
+		}
+		::-webkit-scrollbar-track {
+			background: transparent
+		}
+		& +.el-row {
+			margin-top: 5px
+		}
+	}
+}
+.ld-search-key {
 	display: flex;
-	justify-content: center
+	margin-left: 10px;
+	&__form{
+		.el-form-item{
+			margin-bottom: 0 !important;
+			margin-right: 6px !important;
+		}
+		.el-form-item:last-child{
+			margin-right: 0px !important;
+		}
+	}
+  
+	&__cascader,
+	&__select,
+	&__input {
+	  margin-right: 10px;
+	}
+  
+	&__button {
+	  &.el-button {
+		margin-left: 10px;
+	  }
+	}
   }
   
-  .flex-vertical-horizontal-center {
-	align-items: center
-  }
-  
-  .flex-space-between {
-	display: flex;
-	justify-content: space-between
-  }

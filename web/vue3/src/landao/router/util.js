@@ -65,7 +65,6 @@ export async function addViews(routeList) {
 				item.redirect = "/404";
 			}
 		}
-		console.log(item)
 		//批量添加路由
 		router.addRoute("Layout", item)
 	});

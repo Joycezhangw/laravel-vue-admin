@@ -27,9 +27,16 @@ export default {
     const filterData = reactive({ search_text: "" });
     const tableConfig = {
       attrs: {
-        rowKey: "log_id",
+        rowKey: "log_id",//表格索引
+        size: "small",//表格和搜索表单尺寸
       },
       columns: [
+        {
+          title: "#",
+          width: 200,
+          align: "center",
+          type: "index",
+        },
         {
           title: "用户名",
           width: 200,

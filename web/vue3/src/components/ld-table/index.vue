@@ -8,7 +8,7 @@
         class="ld-search-key__form"
         :model="filterData"
         :inline="true"
-        size="small"
+        :size="tableConfig.attrs.size"
       >
         <slot name="filter"></slot>
         <el-form-item>
@@ -28,7 +28,7 @@
       ref="tableRef"
       :border="true"
       stripe
-      size="small"
+      :size="tableConfig.attrs.size"
       v-loading="loading"
       :row-key="tableConfig.attrs.rowKey"
       :data="tableData"
@@ -37,7 +37,18 @@
     >
       <template v-for="column in tableConfig.columns" :key="column.field">
         <el-table-column
-          v-if="!column.slot"
+          v-if="column.type == 'index' && column.title == '#'"
+          :label="column.title"
+          align="center"
+          width="50"
+        >
+          <template #default="scope">
+            {{ buildTableIndex(scope) }}
+          </template>
+        </el-table-column>
+
+        <el-table-column
+          v-if="!column.slot && !column.type"
           :prop="column.field"
           :label="column.title"
           :fixed="column.fixed || false"
@@ -189,6 +200,15 @@ export default defineComponent({
       formEl.resetFields();
     };
 
+    //生成表格有序序号
+    function buildTableIndex(row) {
+      return (
+        row.$index +
+        1 +
+        (parseInt(pagination.page) - 1) * parseInt(pagination.page_size)
+      );
+    }
+
     return {
       handleCurrentChange,
       handleSize,
@@ -203,6 +223,7 @@ export default defineComponent({
       filterFormRef,
       resetFilterForm,
       searchData,
+      buildTableIndex,
     };
   },
 });

@@ -1,5 +1,5 @@
 <template>
-  <el-config-provider>
+ 	<el-config-provider :locale="zhCn">
     <div class="nd-home" v-if="app.loading">
       <div class="nd-home__main">
         <div class="nd-home__loading"></div>
@@ -19,6 +19,8 @@
 <script setup>
 import { ElConfigProvider } from "element-plus";
 import { useBaseStore } from "@/store";
+// 引入中文包
+import zhCn from "element-plus/lib/locale/lang/zh-cn";
 const { app } = useBaseStore();
 </script>
 <style lang="scss" src="@/assets/css/index.scss"></style>

@@ -44,7 +44,7 @@ class Log extends Controller
     {
         $log = $logRepo->getByPkId($logId);
         if (!$log) {
-            return ResultHelper::returnFormat('日志不存在');
+            return ResultHelper::returnFormat('日志不存在',ResponseCode::ERROR);
         }
         if ($log->delete()) {
             return ResultHelper::returnFormat('删除成功');

@@ -1,6 +1,7 @@
 <template>
   <div class="app-container">
     <ld-table
+      ref="logTableRef"
       :service-api="serviceApi"
       :table-config="tableConfig"
       :filter-data="filterData"
@@ -16,19 +17,32 @@
           />
         </el-form-item>
       </template>
+      <template v-slot:handleSlot="{ scopeData }">
+        <el-button type="danger" size="small" @click="handleDel(scopeData.row)"
+          >删除</el-button
+        >
+        <el-button
+          type="primary"
+          size="small"
+          @click="handleEdit(scopeData.row)"
+          >编辑</el-button
+        >
+      </template>
     </ld-table>
   </div>
 </template>
 <script>
 import { LogService } from "@/service";
-import { reactive } from "vue";
+import { reactive, ref } from "vue";
+import { ElMessageBox, ElMessage } from "element-plus";
 export default {
   setup() {
     const filterData = reactive({ search_text: "" });
+    const logTableRef = ref();
     const tableConfig = {
       attrs: {
-        rowKey: "log_id",//表格索引
-        size: "small",//表格和搜索表单尺寸
+        rowKey: "log_id", //表格索引
+        size: "small", //表格和搜索表单尺寸
       },
       columns: [
         {
@@ -70,8 +84,25 @@ export default {
       ],
     };
 
+    //删除日志
     const handleDel = (row) => {
-      console.log("删除", row);
+      ElMessageBox.confirm("此操作将永久删除选中数据，是否继续？", "提示", {
+        confirmButtonText: "OK",
+        cancelButtonText: "Cancel",
+        type: "warning",
+      })
+        .then(() => {
+          LogService.doDelete(row.log_id)
+            .then((res) => {
+              if (logTableRef) {
+                logTableRef.value.refresh();
+              }
+            })
+            .catch((err) => {
+              ElMessage.error(err);
+            });
+        })
+        .catch(() => {});
     };
     const handleEdit = (row) => {
       console.log("修改", row);
@@ -85,6 +116,7 @@ export default {
       handleEdit,
       serviceApi,
       filterData,
+      logTableRef,
     };
   },
 };

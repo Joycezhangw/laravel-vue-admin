@@ -4,7 +4,7 @@
     <div class="flex1"></div>
     <div class="ld-search-key">
       <el-form
-        :ref="filterFormRef"
+        ref="filterFormRef"
         class="ld-search-key__form"
         :model="filterData"
         :inline="true"
@@ -46,7 +46,6 @@
             {{ buildTableIndex(scope) }}
           </template>
         </el-table-column>
-
         <el-table-column
           v-if="!column.slot && !column.type"
           :prop="column.field"
@@ -56,6 +55,17 @@
           :width="column.width || ''"
           :show-overflow-tooltip="column.isTooltip || true"
         >
+        </el-table-column>
+        <el-table-column
+          v-if="column.slot && !column.type"
+          :label="column.title"
+          :fixed="column.fixed || false"
+          :align="column.align || 'left'"
+          :width="column.width || ''"
+        >
+          <template #default="scope">
+            <slot :name="column.slot" :scopeData="scope"></slot>
+          </template>
         </el-table-column>
       </template>
       <template #empty>

@@ -44,7 +44,7 @@
           v-if="column.type == 'index' && column.title == '#'"
           :label="column.title"
           :fixed="column.fixed || false"
-          align="center"
+          :align="column.align || 'left'"
           width="50"
         >
           <template #default="scope">
@@ -80,6 +80,7 @@
       </template>
     </el-table>
   </el-row>
+  <!--分页-->
   <el-row type="flex" v-if="isPagination">
     <div class="flex1"></div>
     <el-pagination
@@ -187,7 +188,7 @@ export default defineComponent({
     //更新表格高度
     function updateHeight() {
       nextTick(() => {
-        let vm = tableRef.value;
+        const vm = tableRef.value;
         let element = null;
 
         if (vm) {
@@ -197,11 +198,13 @@ export default defineComponent({
           element = vm.$parent.$el;
           // 获取表格上的高度
           _h += element.offsetTop;
-          //获取表格下的高度
-          let nextEl = element.nextSibling;
-          _h += nextEl.clientHeight + 5;
-          console.log(_h);
-          console.log(element.offsetParent);
+          //TODO：实际上，此处要获取紧跟底部的多个兄弟节点，并累加底部兄弟节点的可视高度
+          //获取表格下的dom
+          let nextEl = element.nextElementSibling;
+          //dom存在，就获取高度
+          if (nextEl) {
+            _h += nextEl.clientHeight + 5;
+          }
           maxHeight.value = element.offsetParent.clientHeight - _h;
         }
       });
@@ -217,26 +220,36 @@ export default defineComponent({
       pagination.page = val;
       fetchData();
     };
+    
     //设置一页显示数量
     const handleSize = (val) => {
       pagination.page_size = val;
       refresh();
     };
 
-    //清除搜索表单
+    /**
+     * 清空搜索表单为初始值
+     * 此处要注意，在搜索表单 slot 中，需要给 el-form-item 组件添加 prop=""，否则清空表单无效
+     */
     function resetFilterForm() {
       if (!filterFormRef) return;
       const formEl = unref(filterFormRef);
       formEl.resetFields();
     }
 
-    //生成表格有序序号
+    /**
+     * 生成表格有序序号
+     */
     function buildTableIndex(row) {
-      return (
-        row.$index +
-        1 +
-        (parseInt(pagination.page) - 1) * parseInt(pagination.page_size)
-      );
+      //初始有序序号
+      let index = row.$index + 1;
+      //若存在分页，需要对页码和总条数进行计算当前序号
+      if (props.isPagination) {
+        index =
+          index +
+          (parseInt(pagination.page) - 1) * parseInt(pagination.page_size);
+      }
+      return index;
     }
 
     return {

@@ -5,6 +5,7 @@
       :service-api="serviceApi"
       :table-config="tableConfig"
       :filter-data="filterData"
+      :is-pagination="true"
     >
       <template #toolbar> </template>
       <template #filter>

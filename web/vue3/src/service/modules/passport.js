@@ -1,6 +1,5 @@
 import request from '@/landao/service/request'
 
-// export const captcha = () =>request.get('/v1/passport/captcha')
 /**
  * 登录相关
  */

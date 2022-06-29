@@ -11,11 +11,11 @@ export default class ProfileService {
         return request.get('/v1/profile')
     }
 
-     /**
-     * 获取用户权限菜单和按钮
-     * @returns 
-     */
-      static getPermRules() {
+    /**
+    * 获取用户权限菜单和按钮
+    * @returns 
+    */
+    static getPermRules() {
         return request.get('/v1/profile/rules')
     }
 
@@ -23,10 +23,7 @@ export default class ProfileService {
      * 更新个人信息
      * @returns 
      */
-    static doUpdate() {
-        return request({
-            url: '/v1/profile/update',
-            method: 'put'
-        })
+    static doUpdate(data) {
+        return request.put('/v1/profile/update', data)
     }
 }

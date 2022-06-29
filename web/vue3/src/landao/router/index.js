@@ -20,6 +20,14 @@ const constantRoutes = [
                 path: "/",
                 name: "Index",
                 component: () => import("@/views/home/index.vue")
+            },
+            {
+                path: "/my/info",
+                name:'Personal',
+                component: () => import("@/views/my/info"),
+                meta: {
+                    title: "个人中心",
+                }
             }
         ]
     },

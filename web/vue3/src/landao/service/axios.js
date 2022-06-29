@@ -123,8 +123,10 @@ class Http {
      * @param {Object} params 请求参数
      * @returns 
      */
-    get(url, params = {}) {
-        return this.request({ url, method: 'get', params })
+    get(url, params = {}, _object = {}) {
+        _object.method = 'get';
+        console.log({ url, params, ..._object })
+        return this.request({ url, params, ..._object })
     }
     /**
      * POST 提交

@@ -3,7 +3,7 @@ import QS from 'qs'
 
 export default class BaseService {
     //定义静态request属性，子类可以直接调用
-    static $request = request;
+    static $request = http;
 
     /**
      * 定义请求地址

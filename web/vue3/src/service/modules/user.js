@@ -1,4 +1,6 @@
 import request from '@/landao/service/request'
+import QS from 'qs'
+
 /**
  * 用户操作
  */
@@ -24,13 +26,10 @@ export default class UserService {
      * @returns 
      */
     static page(params) {
-        return request({
-            url: '/v1/user',
-            method: "get",
-            params,
+        return request.get('/v1/user', params, {
             paramsSerializer: function (params) {
                 return QS.stringify(params, { arrayFormat: "indices" });
-            },
+            }
         })
     }
 
@@ -50,11 +49,7 @@ export default class UserService {
     * @returns 
     */
     static doUpdate(id, data) {
-        return request({
-            url: `/v1/user/update/${id}`,
-            method: 'put',
-            data
-        })
+        return request.put(`/v1/user/update/${id}`, data)
     }
 
     /**
@@ -72,9 +67,6 @@ export default class UserService {
    * @returns 
    */
     static doDelete(id) {
-        return request({
-            url: `/v1/user/delete/${id}`,
-            method: 'delete',
-        })
+        return request.delete(`/v1/user/delete/${id}`)
     }
 }

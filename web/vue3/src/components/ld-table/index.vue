@@ -1,8 +1,12 @@
 <template>
   <el-row type="flex">
-    <el-button size="small" @click="refresh()">刷新</el-button>
-    <!--其他操作按钮-->
-    <slot name="toolbar"></slot>
+    <div class="flex1 ld-table-toolbar">
+      <el-button size="small" @click="refresh()">刷新</el-button>
+      <!--其他操作按钮-->
+      <template v-if="slot.toolbar">
+        <slot name="toolbar"></slot>
+      </template>
+    </div>
     <div class="flex1"></div>
     <!--搜索表单-->
     <div class="ld-search-key">
@@ -38,7 +42,7 @@
       :max-height="maxHeight"
       :header-cell-style="{ background: '#f5f7fa', color: '#606266' }"
     >
-      <template v-for="column in tableConfig.columns" :key="column.field">
+      <template v-for="column in tableConfig.columns" :key="column.key">
         <!--表格数据有序序号-->
         <el-table-column
           v-if="column.type == 'index' && column.title == '#'"
@@ -53,25 +57,26 @@
         </el-table-column>
         <!--表格数据显示-->
         <el-table-column
-          v-if="!column.slot && !column.type"
-          :prop="column.field"
+          v-if="!column.customSlot && !column.type"
+          :prop="column.key"
           :label="column.title"
           :fixed="column.fixed || false"
           :align="column.align || 'left'"
           :width="column.width || ''"
+          :sortable="column.sortable || false"
           :show-overflow-tooltip="column.isTooltip || true"
         >
         </el-table-column>
         <!--表格插槽，一般用于修改、删除某条数据-->
         <el-table-column
-          v-if="column.slot && !column.type"
+          v-if="column.customSlot && !column.type"
           :label="column.title"
           :fixed="column.fixed || false"
           :align="column.align || 'left'"
           :width="column.width || ''"
         >
           <template #default="scope">
-            <slot :name="column.slot" :scopeData="scope"></slot>
+            <slot :name="column.customSlot" :scopeData="scope"></slot>
           </template>
         </el-table-column>
       </template>
@@ -98,8 +103,8 @@
   </el-row>
 </template>
 <script lang="jsx">
-import { useRequest } from "@/landao/hooks";
 import { ElMessage } from "element-plus";
+import { useSlots } from "vue";
 import {
   onMounted,
   reactive,
@@ -109,6 +114,8 @@ import {
   unref,
 } from "vue";
 import { Search } from "@element-plus/icons-vue";
+import { useRequest } from "@/landao/hooks";
+import { isFunction } from "lodash";
 export default defineComponent({
   name: "LdTable",
   components: {
@@ -149,12 +156,27 @@ export default defineComponent({
     const filterFormRef = ref(null);
     //分页
     const pagination = reactive({ page: 1, page_size: 20 });
+
     //请求
     const { loading, run } = useRequest(props.serviceApi, {
       manual: true,
       onSuccess: (res) => {
-        tableData.value = res.data.list;
-        total.value = res.data.pagination.total;
+        try {
+          const dataSource = res.data.list ? res.data.list : res.data;
+          if (
+            props.tableConfig.attrs.formatData &&
+            isFunction(props.tableConfig.attrs.formatData)
+          ) {
+            tableData.value = props.tableConfig.attrs.formatData(dataSource);
+          } else {
+            tableData.value = dataSource;
+          }
+          if (props.isPagination) {
+            total.value = res.data.pagination.total;
+          }
+        } catch (error) {
+          console.error(error);
+        }
       },
       onError: (error) => {
         ElMessage.error(error);
@@ -220,7 +242,7 @@ export default defineComponent({
       pagination.page = val;
       fetchData();
     };
-    
+
     //设置一页显示数量
     const handleSize = (val) => {
       pagination.page_size = val;
@@ -251,7 +273,7 @@ export default defineComponent({
       }
       return index;
     }
-
+    const slot = useSlots();
     return {
       handleCurrentChange,
       handleSize,
@@ -267,6 +289,7 @@ export default defineComponent({
       resetFilterForm,
       searchData,
       buildTableIndex,
+      slot,
     };
   },
 });

@@ -136,3 +136,43 @@ export function getBrowser() {
         screen
     };
 }
+
+export function orderBy(list, key) {
+    return list.sort((a, b) => a[key] - b[key]);
+}
+/**
+ * 转树形菜单
+ * @param {Array} list 一维原始数据
+ * @param {String} nodeKey 主键id
+ * @param {String} pKey  父级id
+ * @param {String} order 排序key
+ * @returns 
+ */
+export function deepTree(list, nodeKey = 'menuId', pKey = 'parentId', order = 'menuOrder') {
+    let newList = [], map = {};
+    list.forEach((e) => (map[e[nodeKey]] = e));
+
+    list.forEach((e) => {
+        let parent = map[e[pKey]];
+
+        if (parent) {
+            (parent.children || (parent.children = [])).push(e);
+        } else {
+            newList.push(e);
+        }
+    });
+
+    const fn = (list) => {
+        list.map((e) => {
+            if (e.children instanceof Array) {
+                e.children = orderBy(e.children, order);
+
+                fn(e.children);
+            }
+        });
+    };
+
+    fn(newList);
+
+    return orderBy(newList, order);
+}

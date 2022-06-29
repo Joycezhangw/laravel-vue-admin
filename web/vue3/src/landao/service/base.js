@@ -1,4 +1,4 @@
-import request from "./request";
+import http from "./request";
 import QS from 'qs'
 
 export default class BaseService {
@@ -25,7 +25,7 @@ export default class BaseService {
      * @returns 
      */
     static list(params) {
-        return request({
+        return http.request({
             url: this.apiUri.getList,
             method: "get",
             params,
@@ -41,7 +41,7 @@ export default class BaseService {
      * @returns 
      */
     static page(params) {
-        return request({
+        return http.request({
             url: this.apiUri.getPageList,
             method: "get",
             params,
@@ -57,7 +57,7 @@ export default class BaseService {
      * @returns 
      */
     static doStore(data) {
-        return request.post(this.apiUri.store, data)
+        return http.post(this.apiUri.store, data)
     }
 
     /**
@@ -68,7 +68,7 @@ export default class BaseService {
      * @returns 
      */
     static doUpdate(id, data) {
-        return request({
+        return http.request({
             url: `${this.apiUri.update}/${id}`,
             method: 'put',
             data
@@ -83,7 +83,7 @@ export default class BaseService {
      * @returns 
      */
     static doModifyFiled(id, data) {
-        return request({
+        return http.request({
             url: `${this.apiUri.modifyFiled}/${id}`,
             method: 'put',
             da
@@ -96,7 +96,7 @@ export default class BaseService {
      * @returns 
      */
     static doDelete(id) {
-        return request({
+        return http.request({
             url: `${this.apiUri.delete}/${id}`,
             method: 'delete'
         })

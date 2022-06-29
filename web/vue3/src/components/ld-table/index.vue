@@ -163,6 +163,7 @@ export default defineComponent({
       onSuccess: (res) => {
         try {
           const dataSource = res.data.list ? res.data.list : res.data;
+          //返回数据格式化函数存在，则需要对数据进行格式化处理
           if (
             props.tableConfig.attrs.formatData &&
             isFunction(props.tableConfig.attrs.formatData)
@@ -171,6 +172,7 @@ export default defineComponent({
           } else {
             tableData.value = dataSource;
           }
+          //分页存在，需要设置总条数
           if (props.isPagination) {
             total.value = res.data.pagination.total;
           }

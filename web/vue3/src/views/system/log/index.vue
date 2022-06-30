@@ -19,7 +19,7 @@
           />
         </el-form-item>
       </template>
-      <template v-slot:handleSlot="{ scopeData }">
+      <template v-slot:operatorSlot="{ scopeData }">
         <el-button type="danger" size="small" @click="handleDel(scopeData.row)"
           >删除</el-button
         >
@@ -58,38 +58,38 @@ export default {
           title: "用户名",
           width: 200,
           align: "center",
-          field: "manage_username",
+          key: "manage_username",
         },
         {
           title: "请求地址",
           width: 200,
           align: "center",
-          field: "log_action",
+          key: "log_action",
         },
         {
           title: "请求参数",
           width: 200,
           align: "center",
-          field: "log_params",
+          key: "log_params",
         },
         {
           title: "请求IP",
           width: 200,
           align: "center",
-          field: "log_ip",
+          key: "log_ip",
         },
         {
           title: "创建时间",
           width: 150,
           align: "center",
-          field: "created_at",
+          key: "created_at",
         },
         {
           title: "操作",
           width: 200,
           fixed: "right",
           align: "center",
-          slot: "handleSlot",
+          customSlot: "operatorSlot",
         },
       ],
     };

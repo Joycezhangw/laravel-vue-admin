@@ -36,7 +36,7 @@ const { app: appStore } = useBaseStore();
     display: flex;
     flex-direction: column;
     height: 100%;
-    width: calc(100% - 208px);
+    width: calc(100% - 255px);
   }
   &__container {
     width: 100%;

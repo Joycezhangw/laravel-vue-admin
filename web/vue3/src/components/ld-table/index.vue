@@ -9,7 +9,7 @@
     </div>
     <div class="flex1"></div>
     <!--搜索表单-->
-    <div class="ld-search-key">
+    <div class="ld-search-key" v-if="slot.filter">
       <el-form
         ref="filterFormRef"
         class="ld-search-key__form"
@@ -165,10 +165,10 @@ export default defineComponent({
           const dataSource = res.data.list ? res.data.list : res.data;
           //返回数据格式化函数存在，则需要对数据进行格式化处理
           if (
-            props.tableConfig.attrs.formatData &&
-            isFunction(props.tableConfig.attrs.formatData)
+            props.tableConfig.formatData &&
+            isFunction(props.tableConfig.formatData)
           ) {
-            tableData.value = props.tableConfig.attrs.formatData(dataSource);
+            tableData.value = props.tableConfig.formatData(dataSource);
           } else {
             tableData.value = dataSource;
           }
@@ -258,6 +258,7 @@ export default defineComponent({
     function resetFilterForm() {
       if (!filterFormRef) return;
       const formEl = unref(filterFormRef);
+      if (!formEl) return;
       formEl.resetFields();
     }
 

@@ -1,4 +1,4 @@
-import { isArray, cloneDeep } from "lodash";
+import { isArray, cloneDeep } from "lodash-es";
 import { router } from "./index";
 import { isUrl } from "@/landao/utils/is";
 

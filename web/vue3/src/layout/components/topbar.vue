@@ -39,7 +39,7 @@ import { defineComponent } from "vue";
 import { useBaseStore } from "@/store";
 import { useLanDao } from "@/landao/hooks";
 import { Fold } from "@element-plus/icons-vue";
-import { trim } from "lodash";
+import { trim } from "lodash-es";
 import defaultAvatar from "@/assets/img/default-avatar.png";
 import Toolbar from "./toolbar.vue";
 export default defineComponent({

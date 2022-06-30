@@ -102,7 +102,7 @@
     </el-pagination>
   </el-row>
 </template>
-<script lang="jsx">
+<script>
 import { ElMessage } from "element-plus";
 import { useSlots } from "vue";
 import {
@@ -115,7 +115,7 @@ import {
 } from "vue";
 import { Search } from "@element-plus/icons-vue";
 import { useRequest } from "@/landao/hooks";
-import { isFunction } from "lodash";
+import { isFunction } from "@/landao/utils/is";
 export default defineComponent({
   name: "LdTable",
   components: {

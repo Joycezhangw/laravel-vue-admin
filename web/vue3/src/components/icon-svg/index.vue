@@ -7,7 +7,7 @@
 //Vue3+vite+ts 中使用svg-icon https://juejin.cn/post/6992600484217356301
 //在vue3+vite项目中使用svg https://segmentfault.com/a/1190000039255368
 import { computed, defineComponent, ref } from "vue";
-import { isNumber } from "lodash";
+import { isNumber } from "lodash-es";
 
 export default defineComponent({
   name: "icon-svg",

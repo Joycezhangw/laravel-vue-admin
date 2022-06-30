@@ -1,5 +1,5 @@
 import * as CryptoJS from 'crypto-js';
-import { padEnd } from 'lodash';
+import { padEnd } from 'lodash-es';
 
 export default class Crypto {
     /**

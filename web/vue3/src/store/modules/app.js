@@ -2,7 +2,7 @@ import { defineStore } from "pinia";
 import { ref } from "vue";
 import { getBrowser } from "@/landao/utils";
 import { app } from "@/landao/config"
-import { merge } from "lodash";
+import { merge } from "lodash-es";
 import { storage } from "@/landao/utils";
 
 export const useAppStore = defineStore("app", function () {

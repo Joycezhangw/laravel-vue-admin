@@ -9,7 +9,7 @@ specifiers:
   dayjs: ^1.11.2
   echarts: ^5.3.3
   element-plus: ^2.2.0
-  lodash: ^4.17.21
+  lodash-es: ^4.17.21
   nprogress: ^0.2.0
   pinia: ^2.0.14
   qs: ^6.10.5
@@ -25,6 +25,7 @@ specifiers:
   vue: ^3.2.33
   vue-echarts: ^6.1.0
   vue-router: '4'
+  vue-types: ^4.1.1
 
 dependencies:
   '@element-plus/icons-vue': registry.npmmirror.com/@element-plus/icons-vue/2.0.4_vue@3.2.33
@@ -33,7 +34,7 @@ dependencies:
   dayjs: registry.npmmirror.com/dayjs/1.11.2
   echarts: registry.npmmirror.com/echarts/5.3.3
   element-plus: registry.npmmirror.com/element-plus/2.2.0_vue@3.2.33
-  lodash: registry.npmmirror.com/lodash/4.17.21
+  lodash-es: registry.npmmirror.com/lodash-es/4.17.21
   nprogress: registry.npmmirror.com/nprogress/0.2.0
   pinia: registry.npmmirror.com/pinia/2.0.14_vue@3.2.33
   qs: registry.npmmirror.com/qs/6.10.5
@@ -53,6 +54,7 @@ devDependencies:
   vite-plugin-cdn-import: registry.npmmirror.com/vite-plugin-cdn-import/0.3.5
   vite-plugin-html: registry.npmmirror.com/vite-plugin-html/3.2.0_vite@2.9.9
   vite-svg-loader: registry.npmmirror.com/vite-svg-loader/3.3.0
+  vue-types: registry.npmmirror.com/vue-types/4.1.1_vue@3.2.33
 
 packages:
 
@@ -2350,6 +2352,13 @@ packages:
       isobject: registry.npmmirror.com/isobject/3.0.1
     dev: true
 
+  registry.npmmirror.com/is-plain-object/5.0.0:
+    resolution: {integrity: sha512-VRSzKkbMm5jMDoKLbltAkFQ5Qr7VDiTFGXxYFXXowVj387GeGNOCsOH6Msy00SGZ3Fp84b1Naa1psqgcCIEP5Q==, registry: https://registry.npm.taobao.org/, tarball: https://registry.npmmirror.com/is-plain-object/-/is-plain-object-5.0.0.tgz}
+    name: is-plain-object
+    version: 5.0.0
+    engines: {node: '>=0.10.0'}
+    dev: true
+
   registry.npmmirror.com/is-reference/1.2.1:
     resolution: {integrity: sha512-U82MsXXiFIrjCK4otLT+o2NA2Cd2g5MLoOVXUZjIOhLurrRxpEXzI8O0KZHr3IjLvlAH1kTPYSuqer5T9ZVBKQ==, registry: https://registry.npm.taobao.org/, tarball: https://registry.npmmirror.com/is-reference/-/is-reference-1.2.1.tgz}
     name: is-reference
@@ -3887,6 +3896,19 @@ packages:
       '@vue/devtools-api': registry.npmmirror.com/@vue/devtools-api/6.1.4
       vue: registry.npmmirror.com/vue/3.2.33
     dev: false
+
+  registry.npmmirror.com/vue-types/4.1.1_vue@3.2.33:
+    resolution: {integrity: sha512-Jq2GZ/w6rExJbLA/h7nHBFLciu+YNekgox0DB64wN1snZ4IIJMq+qnqp1/vE4fc7vEjZcP5KGhLzkkSjIHLRzw==, registry: https://registry.npm.taobao.org/, tarball: https://registry.npmmirror.com/vue-types/-/vue-types-4.1.1.tgz}
+    id: registry.npmmirror.com/vue-types/4.1.1
+    name: vue-types
+    version: 4.1.1
+    engines: {node: '>=12.16.0'}
+    peerDependencies:
+      vue: ^2.0.0 || ^3.0.0
+    dependencies:
+      is-plain-object: registry.npmmirror.com/is-plain-object/5.0.0
+      vue: registry.npmmirror.com/vue/3.2.33
+    dev: true
 
   registry.npmmirror.com/vue/3.2.33:
     resolution: {integrity: sha512-si1ExAlDUrLSIg/V7D/GgA4twJwfsfgG+t9w10z38HhL/HA07132pUQ2KuwAo8qbCyMJ9e6OqrmWrOCr+jW7ZQ==, registry: https://registry.npm.taobao.org/, tarball: https://registry.npmmirror.com/vue/-/vue-3.2.33.tgz}

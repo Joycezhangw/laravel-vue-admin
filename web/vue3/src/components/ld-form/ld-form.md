@@ -73,6 +73,7 @@ export default defineComponent({
 | colProps | `ColEx` | - | - | 参考上方 ColEx |
 | componentProps | `any,()=>{}` | - | - | 所渲染的组件的 props |
 | renderComponentContent | `()=>{}` | - | - | 自定义渲染组内部的 slot(见下文) |
+| slot | `string` | - | - | 自定义 slot，渲染组件 |
 
 **componentProps**
 
@@ -115,6 +116,44 @@ export default defineComponent({
 }
 ```
 
+**slot** 
+自定义插槽渲染内容
+
+```vue
+
+<template>
+ <div class="ld-form">
+    <ld-form label-position="right" label-width="150px" :schemas="schemas">
+        <!-- #slotName 或 v-slot:slotName -->
+      <template #menuFileSlot="{ model, field, values }">
+        <menu-file v-model="model[field]" />
+      </template>
+    </ld-form>
+  </div>
+</template>
+<script>
+  import { defineComponent } from 'compatible-vue';
+  import menuFile from "@/views/system/components/menu-file";
+  export default defineComponent({
+    name: 'FormDemo',
+     components: { menuFile },
+    setup(props) {
+      const schemas = [
+      {
+        field: "menu_component",
+        label: "文件路径：",
+        slot: "menuFileSlot",
+      },
+    ];
+
+    return {
+      schemas,
+    };
+    },
+  });
+</script>
+```
+
 
 **ComponentType**
 
@@ -125,6 +164,7 @@ export type ComponentType =
   | 'Input'
   | 'Switch'
   | 'Radio'
+  | 'RadioGroup'
   | 'InputNumber'
   | 'Rate'
   | 'Cascader'

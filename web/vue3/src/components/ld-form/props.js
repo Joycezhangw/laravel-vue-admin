@@ -10,6 +10,7 @@ export const basicProps = {
         type: Object,
         default: () => { }
     },
+    disabled: VueTypes.bool.def(false),//是否禁用该表单内的所有组件
     //el-form 自带属性
     labelPosition: oneOf(['right', 'left', 'top']).def('right'),//表单域标签的位置
     labelWidth: VueTypes.string,

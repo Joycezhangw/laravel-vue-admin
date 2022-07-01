@@ -8,6 +8,7 @@
       <template v-for="schema in getSchema" :key="schema.field">
         <schema-form-item
           :schema="schema"
+          :formProps="getProps"
           :formElRef="formElRef"
           :formModel="formModel"
           :setFormModel="setFormModel"

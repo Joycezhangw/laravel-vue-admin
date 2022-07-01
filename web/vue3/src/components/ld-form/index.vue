@@ -13,6 +13,9 @@
           :formModel="formModel"
           :setFormModel="setFormModel"
         >
+          <template #[item]="data" v-for="item in Object.keys($slots)">
+            <slot :name="item" v-bind="data"></slot>
+          </template>
         </schema-form-item>
       </template>
     </el-row>

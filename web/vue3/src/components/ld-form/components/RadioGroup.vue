@@ -47,7 +47,6 @@ export default defineComponent({
 
     function getContent() {
       const { type, border, size } = props;
-      console.log("getOptions",getOptions)
       return getOptions.value.map((item) => {
         return type === "button" ? (
           <el-radio-button size={size} label={item.value}>

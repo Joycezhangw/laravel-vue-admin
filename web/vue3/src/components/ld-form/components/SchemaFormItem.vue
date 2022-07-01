@@ -3,7 +3,7 @@ import { defineComponent, computed, unref } from "vue";
 import { componentMap } from "../componentMap";
 import { upperFirst } from "lodash-es";
 import { isFunction } from "@/landao/utils/is";
-import { createPlaceholderMessage } from "../helper";
+import { createPlaceholderMessage, getSlot } from "../helper";
 
 export default defineComponent({
   name: "SchemaFormItem",
@@ -124,7 +124,7 @@ export default defineComponent({
         ...on,
         ...propsData,
       };
-      
+
       //如果没有设定组件插槽
       if (!renderComponentContent) {
         //返回组件
@@ -139,11 +139,14 @@ export default defineComponent({
 
     //渲染组件
     function renderFormItem() {
-      const { field, label, labelWidth } = props.schema;
+      const { field, label, labelWidth, slot } = props.schema;
 
       //获取组件内容
       const getContent = () => {
-        return renderFormItemComponent();
+        //自定义插槽存在，则渲染插槽组件。否则渲染内置组件
+        return slot
+          ? getSlot(slots, slot, unref(getValues))
+          : renderFormItemComponent();
       };
 
       return (

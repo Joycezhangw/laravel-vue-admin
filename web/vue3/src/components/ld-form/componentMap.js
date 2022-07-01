@@ -11,10 +11,15 @@ import {
     ElTimePicker,
 } from 'element-plus'
 
+import RadioGroup from './components/RadioGroup.vue'
+
 const componentMap = new Map();
 componentMap.set('Input', ElInput);
 componentMap.set('Switch', ElSwitch);
+
 componentMap.set('Radio', ElRadio);
+componentMap.set('RadioGroup', RadioGroup)
+
 componentMap.set('InputNumber', ElInputNumber);
 componentMap.set('Rate', ElRate);
 componentMap.set('Cascader', ElCascader);

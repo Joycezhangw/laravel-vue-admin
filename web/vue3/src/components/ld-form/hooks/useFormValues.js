@@ -8,6 +8,7 @@ export function useFormValues({ getSchema, formModel }) {
         const schemas = unref(getSchema);
         schemas.forEach((item) => {
             const { defaultValue, field } = item;
+            //默认值存在的情况下，设置默认值
             if (!isNullOrUnDef(defaultValue)) {
                 formModel[field] = defaultValue;
             }

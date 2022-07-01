@@ -10,7 +10,7 @@ export const basicProps = {
         type: Object,
         default: () => { }
     },
-    //el-form 自带树形
+    //el-form 自带属性
     labelPosition: oneOf(['right', 'left', 'top']).def('right'),//表单域标签的位置
     labelWidth: VueTypes.string,
     inline: VueTypes.bool.def(false),//行内表单模式

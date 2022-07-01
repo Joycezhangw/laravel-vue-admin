@@ -26,7 +26,7 @@ componentMap.set('TimePicker', ElTimePicker);
 /**
  * 添加组件
  * @param {String} compName 
- * @param {*} component 
+ * @param {VNode} component 
  */
 export function add(compName, component) {
     componentMap.set(compName, component);
@@ -34,7 +34,7 @@ export function add(compName, component) {
 
 /**
  * 移除组件
- * @param {*} compName 
+ * @param {String} compName 
  */
 export function del(compName) {
     componentMap.delete(compName);

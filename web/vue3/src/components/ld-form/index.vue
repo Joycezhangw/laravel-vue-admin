@@ -34,14 +34,16 @@ export default defineComponent({
   props: basicProps,
   emits: ["submit", "reset"],
   setup(props, { emit }) {
-    const formElRef = ref(null);
-    const formModel = reactive({});
+    const formElRef = ref(null); //表单ref
+    const formModel = reactive({}); //表单model
     const propsRef = ref({}); //外部定义表单属性
 
+    //获取全部props
     const getProps = computed(() => {
       return { ...props, ...unref(propsRef) };
     });
 
+    //处理表单配置和校验规则
     const getSchema = computed(() => {
       const schemas = unref(getProps).schemas;
       const passRules = unref(getProps).rules;
@@ -57,11 +59,13 @@ export default defineComponent({
 
     /**
      * 从schemas 提取，设置 表单 model 值，
+     * 动态新增formModel
      */
     function setFormModel(key, value) {
       formModel[key] = value;
     }
 
+    //表单初始化，根据 schema 设置 formModel
     const { initDefault } = useFormValues({ getSchema, formModel });
 
     // 监听 getSchema 属性 初始化
@@ -75,6 +79,7 @@ export default defineComponent({
         }
       }
     );
+    //初始表单
     onMounted(() => {
       initDefault();
     });

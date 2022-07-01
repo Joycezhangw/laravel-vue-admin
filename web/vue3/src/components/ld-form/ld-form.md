@@ -54,6 +54,7 @@ export default defineComponent({
 | labelPosition | `string` | - | `'right', 'left', 'top'` | 表单域标签的位置 |  |
 | labelWidth | `number , string` | - | - | 扩展 form 组件，增加 label 宽度，表单内所有组件适用，可以单独在某个项覆盖或者禁用 |  |
 | size | `string` | `default` | `'large', 'default', 'small'` | 向表单内所有组件传递 size 参数,自定义组件需自行实现 size 接收 |  |
+| disabled | `boolean` | `false` | `'false', 'true'` | 向表单内所有组件传递 disabled 属性，自定义组件需自行实现 disabled 接收 |  |
 
 ### ColEx
 
@@ -70,6 +71,32 @@ export default defineComponent({
 | component | `string` | - | - | 组件类型，见下方 ComponentType |
 | required | `boolean` | - | - | 简化 rules 配置，为 true 则转化成 [{required:true}] |
 | colProps | `ColEx` | - | - | 参考上方 ColEx |
+| componentProps | `any,()=>{}` | - | - | 所渲染的组件的 props |
+
+**componentProps**
+
+- 当值为对象类型时,该对象将作为`component`所对应组件的的 props 传入组件.见[element-plus(Form 表单组件)](https://element-plus.org/zh-CN/component/input.html)
+
+- 当值为一个函数时候
+
+参数有 4 个
+
+`schema`: 表单的整个 schemas
+
+`formModel`: 表单的双向绑定对象，这个值是响应式的。所以可以方便处理很多操作
+```tsx
+{
+  // 简单例子，值改变的时候操作表格或者修改表单内其他元素的值
+  component:'Input',
+  componentProps: ({ schema,  formModel }) => {
+    return {
+      onChange:(e)=>{
+      }
+    };
+  };
+}
+```
+
 
 **ComponentType**
 

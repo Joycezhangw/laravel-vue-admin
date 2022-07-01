@@ -4,15 +4,17 @@
     ref="formElRef"
     :model="formModel"
   >
-    <template v-for="schema in getSchema" :key="schema.field">
-      <schema-form-item
-        :schema="schema"
-        :formElRef="formElRef"
-        :formModel="formModel"
-        :setFormModel="setFormModel"
-      >
-      </schema-form-item>
-    </template>
+    <el-row>
+      <template v-for="schema in getSchema" :key="schema.field">
+        <schema-form-item
+          :schema="schema"
+          :formElRef="formElRef"
+          :formModel="formModel"
+          :setFormModel="setFormModel"
+        >
+        </schema-form-item>
+      </template>
+    </el-row>
   </el-form>
 </template>
 <script>
@@ -26,7 +28,7 @@ import {
   onMounted,
 } from "vue";
 import { basicProps } from "./props";
-import SchemaFormItem from "./components/schemaFormItem.vue";
+import SchemaFormItem from "./components/SchemaFormItem";
 import { useFormValues } from "./hooks/useFormValues";
 export default defineComponent({
   name: "ldForm",
@@ -38,7 +40,7 @@ export default defineComponent({
     const formModel = reactive({}); //表单model
     const propsRef = ref({}); //外部定义表单属性
 
-    //获取全部props
+    //获取表单基础配置
     const getProps = computed(() => {
       return { ...props, ...unref(propsRef) };
     });

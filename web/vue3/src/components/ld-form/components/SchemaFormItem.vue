@@ -26,11 +26,12 @@ export default defineComponent({
   setup(props, { slots }) {
     //渲染 form-item 内容
     function renderFormItemComponent() {
-      //field 字段名
-      //label 标签名
-      //component 组件类型，见 ../componentMap
-      //labelWidth 覆盖 el-form 设置 labelWidth
-      //changeEvent 控件事件
+      /**
+       * component 组件类型，见 ../componentMap
+       * changeEvent 控件事件
+       * field 字段名
+       * label 标签名
+       */
       const { component, changeEvent = "change", field } = props.schema;
 
       const isInput = component && ["Input"].includes(component);
@@ -54,13 +55,12 @@ export default defineComponent({
         ["modelValue"]: props.formModel[field],
       };
 
+      //组件props v-bind
       const compAttr = {
         ...bindValue,
         ...on,
       };
-
-      console.log(compAttr);
-
+      //返回组件
       return <Comp {...compAttr}></Comp>;
     }
 
@@ -68,6 +68,7 @@ export default defineComponent({
     function renderFormItem() {
       const { field, label, labelWidth } = props.schema;
 
+      //获取组件内容
       const getContent = () => {
         return renderFormItemComponent();
       };
@@ -80,11 +81,11 @@ export default defineComponent({
     }
 
     return () => {
-      const { customrComponent } = props.schema;
+      const { colProps = {} } = props.schema;
       const getContent = () => {
-        return customrComponent ? customrComponent() : renderFormItem();
+        return renderFormItem();
       };
-      return getContent();
+      return <el-col {...colProps}> {getContent()}</el-col>;
     };
   },
 });

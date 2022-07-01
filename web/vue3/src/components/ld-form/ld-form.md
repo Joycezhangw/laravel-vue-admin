@@ -72,6 +72,7 @@ export default defineComponent({
 | required | `boolean` | - | - | 简化 rules 配置，为 true 则转化成 [{required:true}] |
 | colProps | `ColEx` | - | - | 参考上方 ColEx |
 | componentProps | `any,()=>{}` | - | - | 所渲染的组件的 props |
+| renderComponentContent | `()=>{}` | - | - | 自定义渲染组内部的 slot(见下文) |
 
 **componentProps**
 
@@ -84,6 +85,7 @@ export default defineComponent({
 `schema`: 表单的整个 schemas
 
 `formModel`: 表单的双向绑定对象，这个值是响应式的。所以可以方便处理很多操作
+
 ```tsx
 {
   // 简单例子，值改变的时候操作表格或者修改表单内其他元素的值
@@ -94,6 +96,22 @@ export default defineComponent({
       }
     };
   };
+}
+```
+
+**renderComponentContent**
+
+见[element-plus(input-插槽)](https://element-plus.org/zh-CN/component/input.html#input-%E6%8F%92%E6%A7%BD)
+
+```tsx
+{
+  // 简单例子，组件内部slot
+  component:'Input',
+  renderComponentContent: () => {
+    return {
+        prefix: () => 'Search',
+        append: () => ".com",
+    };
 }
 ```
 

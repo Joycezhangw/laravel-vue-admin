@@ -30,6 +30,18 @@ export default defineComponent({
   },
   inheritAttrs: false,
   setup(props, { slots }) {
+    const getValues = computed(() => {
+      const { formModel, schema } = props;
+      return {
+        field: schema.field,
+        model: formModel,
+        values: {
+          ...formModel,
+        },
+        schema: schema,
+      };
+    });
+
     //获取组件 props
     const getComponentsProps = computed(() => {
       const { schema, formModel } = props;
@@ -61,7 +73,12 @@ export default defineComponent({
        * field 字段名
        * label 标签名
        */
-      const { component, changeEvent = "change", field } = props.schema;
+      const {
+        component,
+        changeEvent = "change",
+        field,
+        renderComponentContent,
+      } = props.schema;
 
       //组件是否是input
       const isInput = component && ["Input"].includes(component);
@@ -107,8 +124,17 @@ export default defineComponent({
         ...on,
         ...propsData,
       };
-      //返回组件
-      return <Comp {...compAttr}></Comp>;
+      
+      //如果没有设定组件插槽
+      if (!renderComponentContent) {
+        //返回组件
+        return <Comp {...compAttr}></Comp>;
+      }
+      //Input 插槽
+      const compSlot = isFunction(renderComponentContent)
+        ? { ...renderComponentContent(unref(getValues)) }
+        : { default: () => renderComponentContent };
+      return <Comp {...compAttr}>{compSlot}</Comp>;
     }
 
     //渲染组件

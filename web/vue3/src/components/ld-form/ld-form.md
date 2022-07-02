@@ -74,6 +74,8 @@ export default defineComponent({
 | componentProps | `any,()=>{}` | - | - | 所渲染的组件的 props |
 | renderComponentContent | `()=>{}` | - | - | 自定义渲染组内部的 slot(见下文) |
 | slot | `string` | - | - | 自定义 slot，渲染组件 |
+| helpMessage | `string` | - | - | 标签右侧温馨提示 |
+| helpComponentProps | `Object` | - | - | 标签名右侧温馨提示组件 `props`, 部分继承 `el-tootip` 属性,见下方 `HelpComponentProps` |
 
 **componentProps**
 
@@ -154,6 +156,34 @@ export default defineComponent({
 </script>
 ```
 
+**helpComponentProps**
+
+见[element-plus(Tooltip 文字提示)](https://element-plus.gitee.io/zh-CN/component/tooltip.html#%E5%B1%9E%E6%80%A7)
+```tsx
+export default defineComponent({
+  props: {
+    icon: {
+      //图标名字，依赖 ld-icon 组件
+      type: String,
+      default: "icon-question",
+    },
+    iconSize: {
+      //图标大小，依赖 ld-icon 组件
+      type: [String, Number],
+      default: "1em",
+    },
+    iconColor: {
+      //图标颜色，依赖 ld-icon 组件
+      type: String,
+      default: "#606266",
+    },
+    placement: { type: String, default: "top" }, //	Tooltip 组件出现的位置
+    rawContent: { type: Boolean, default: false }, //content 中的内容是否作为 HTML 字符串处理
+    effect: { type: String, default: "dark" }, //Tooltip 主题，内置了 dark / light 两种
+    popperClass: { type: String, default: "" }, //	为 Tooltip 的 popper 添加自定义类名
+  },
+});
+```
 
 **ComponentType**
 

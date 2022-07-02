@@ -21,10 +21,14 @@ export default defineComponent({
     size: {
       type: [String, Number],
     },
+    color: {
+      type: String,
+    },
   },
   setup(props) {
     const style = ref({
       fontSize: isNumber(props.size) ? props.size + "px" : props.size,
+      color: props.color != "" ? props.color : "",
     });
     const iconName = computed(() => `#icon-${props.name}`);
     const svgClass = computed(() => {

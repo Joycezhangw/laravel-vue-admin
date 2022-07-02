@@ -65,6 +65,18 @@ export default defineComponent({
       return disabled;
     });
 
+    //渲染标签右边温馨提示
+    function renderLabelHelpMessage() {
+      const { label, helpMessage, helpComponentProps } = props.schema;
+      if (!helpMessage) return label;
+      return (
+        <>
+          {label}
+          <ld-help content={helpMessage} {...helpComponentProps}></ld-help>
+        </>
+      );
+    }
+
     //渲染 form-item 内容
     function renderFormItemComponent() {
       /**
@@ -150,7 +162,11 @@ export default defineComponent({
       };
 
       return (
-        <el-form-item label={label} prop={field} labelWidth={labelWidth}>
+        <el-form-item
+          v-slots={{ label: () => renderLabelHelpMessage() }}//Form Item label插槽
+          prop={field}
+          labelWidth={labelWidth}
+        >
           {getContent()}
         </el-form-item>
       );

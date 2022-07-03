@@ -76,6 +76,8 @@ export default defineComponent({
 | slot | `string` | - | - | 自定义 slot，渲染组件 |
 | helpMessage | `string` | - | - | 标签右侧温馨提示 |
 | helpComponentProps | `Object` | - | - | 标签名右侧温馨提示组件 `props`, 部分继承 `el-tootip` 属性,见下方 `HelpComponentProps` |
+| ifShow | `boolean / ((renderCallbackParams) => boolean)` | `true` | - | 动态判断当前组件是否显示，js 控制，会删除 dom,见下方`renderCallbackParams` |
+| show | `boolean / ((renderCallbackParams) => boolean)` | `true` | - | 动态判断当前组件是否显示，css 控制，不会删除 dom,见下方`renderCallbackParams` |
 
 **componentProps**
 
@@ -117,6 +119,20 @@ export default defineComponent({
     };
 }
 ```
+
+**renderCallbackParams**
+回调参数
+```js
+return {
+        field: schema.field,//当前字段名
+        model: formModel,//双向绑定
+        values: {//双向绑定值
+          ...formModel,
+        },
+        schema: schema,//配置参数
+      };
+```
+
 
 **slot** 
 自定义插槽渲染内容

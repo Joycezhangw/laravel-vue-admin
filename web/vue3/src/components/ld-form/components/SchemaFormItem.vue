@@ -2,7 +2,7 @@
 import { defineComponent, computed, unref } from "vue";
 import { componentMap } from "../componentMap";
 import { upperFirst } from "lodash-es";
-import { isFunction } from "@/landao/utils/is";
+import { isFunction, isBoolean } from "@/landao/utils/is";
 import { createPlaceholderMessage, getSlot } from "../helper";
 
 export default defineComponent({
@@ -30,6 +30,7 @@ export default defineComponent({
   },
   inheritAttrs: false,
   setup(props, { slots }) {
+    //定义回调值，包含 slot 、 ifShow 等等
     const getValues = computed(() => {
       const { formModel, schema } = props;
       return {
@@ -41,6 +42,28 @@ export default defineComponent({
         schema: schema,
       };
     });
+
+    //获取 schema 是否显示
+    function getShow() {
+      const { ifShow, show } = props.schema;
+      let isIfShow = true;
+      let isShow = true;
+      //如果传入的的 boolean
+      if (isBoolean(ifShow)) {
+        isIfShow = ifShow;
+      }
+      if (isBoolean(show)) {
+        isShow = isShow;
+      }
+      //如果传入的是function
+      if (isFunction(ifShow)) {
+        isIfShow = ifShow(unref(getValues));
+      }
+      if (isFunction(show)) {
+        isShow = show(unref(getValues));
+      }
+      return { isIfShow, isShow };
+    }
 
     //获取组件 props
     const getComponentsProps = computed(() => {
@@ -151,7 +174,7 @@ export default defineComponent({
 
     //渲染组件
     function renderFormItem() {
-      const { field, label, labelWidth, slot } = props.schema;
+      const { field, labelWidth, slot } = props.schema;
 
       //获取组件内容
       const getContent = () => {
@@ -163,7 +186,7 @@ export default defineComponent({
 
       return (
         <el-form-item
-          v-slots={{ label: () => renderLabelHelpMessage() }}//Form Item label插槽
+          v-slots={{ label: () => renderLabelHelpMessage() }} //Form Item label插槽
           prop={field}
           labelWidth={labelWidth}
         >
@@ -174,10 +197,20 @@ export default defineComponent({
 
     return () => {
       const { colProps = {} } = props.schema;
+
+      //判断组件是否显示隐藏
+      const { isIfShow, isShow } = getShow();
+
       const getContent = () => {
         return renderFormItem();
       };
-      return <el-col {...colProps}> {getContent()}</el-col>;
+      return (
+        isIfShow && (
+          <el-col {...colProps} v-show={isShow}>
+            {getContent()}
+          </el-col>
+        )
+      );
     };
   },
 });

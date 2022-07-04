@@ -12,6 +12,7 @@ import {
 } from 'element-plus'
 
 import RadioGroup from './components/RadioGroup.vue'
+import ApiSelect from './components/ApiSelect'
 
 const componentMap = new Map();
 componentMap.set('Input', ElInput);
@@ -27,6 +28,8 @@ componentMap.set('Checkbox', ElCheckbox);
 componentMap.set('DatePicker', ElDatePicker);
 componentMap.set('TimeSelect', ElTimeSelect);
 componentMap.set('TimePicker', ElTimePicker);
+
+componentMap.set('ApiSelect', ApiSelect);
 
 /**
  * 添加组件

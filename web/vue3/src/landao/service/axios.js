@@ -72,6 +72,9 @@ class Http {
                     case 401:
                         href("/login");
                         break;
+                    case 429:
+                        console.error('请求频繁，服务器限流')
+                        break;
                     case 403:
                         console.error(`${config.url} 无权限访问！！`);
                         href("/401")

@@ -5,7 +5,7 @@
       :key="item.value + index"
       :label="item.label"
       :value="item.value"
-       :disabled="item.disabled"
+      :disabled="item.disabled"
     ></el-option>
   </el-select>
 </template>
@@ -45,7 +45,7 @@ export default defineComponent({
 
     //获取并重置 options
     const getOptions = computed(() => {
-      const { labelField, valueField } = props;
+      const { labelField, valueField, disabledField } = props;
       const apiOptions = unref(options);
 
       let resultOptions = [];
@@ -53,25 +53,17 @@ export default defineComponent({
       if (apiOptions?.length <= 0) {
         return [];
       }
-      //labelField 存在，则是数组中是对象值。若不存在则是纯Number或String值
-      if (apiOptions[0][labelField]) {
-        for (const i in apiOptions) {
-          resultOptions.push({
-            label: apiOptions[i][labelField],
-            value: apiOptions[i][valueField],
-            value: apiOptions[i][disabledField]
+      const isStringArray = !!apiOptions[0][labelField];
+      for (const i in apiOptions) {
+        resultOptions.push({
+          label: isStringArray ? apiOptions[i][labelField] : apiOptions[i],
+          value: isStringArray ? apiOptions[i][valueField] : apiOptions[i],
+          disabled: isStringArray
+            ? apiOptions[i][disabledField]
               ? !!apiOptions[i][disabledField]
-              : false,
-          });
-        }
-      } else {
-        for (const i in apiOptions) {
-          resultOptions.push({
-            label: apiOptions[i],
-            value: apiOptions[i],
-            disabled: false,
-          });
-        }
+              : false
+            : false,
+        });
       }
       return resultOptions;
     });

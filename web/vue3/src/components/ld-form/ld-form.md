@@ -218,6 +218,7 @@ export type ComponentType =
   | 'DatePicker'
   | 'TimeSelect'
   | 'TimePicker'
+  | 'ApiSelect'
 ```
 
 ## ApiSelect 组件
@@ -233,11 +234,19 @@ export type ComponentType =
 
 ```js
 const schemas = [
-  {
-    field: 'field',
-    component: 'ApiSelect',
-    label: '字段',
-  },
+ {
+    field: "api_path",
+    label: "权限标识",
+    required: true,
+    component: "ApiSelect",
+    defaultValue: "",
+    componentProps: {
+      placeholder: "请选择权限标识",
+      api: MenuService.getPower,
+      immediate: true,
+      filterable: true,
+    },
+ }
 ];
 ```
 

@@ -219,3 +219,35 @@ export type ComponentType =
   | 'TimeSelect'
   | 'TimePicker'
 ```
+
+## ApiSelect 组件
+
+远程下拉加载组件
+
+注意：
+
+- 组件内会将数据转换成`{label:labelField,value:valueField,disabled:disabledField}`
+- 若返回的值是`['manage.passport.captcha', 'manage.passport.login']` 组件依然转换成：`{label:value,value:value,disabled:false}`
+
+### 使用
+
+```js
+const schemas = [
+  {
+    field: 'field',
+    component: 'ApiSelect',
+    label: '字段',
+  },
+];
+```
+
+### Props
+
+| 属性 | 类型 | 默认值 | 说明 |
+| --- | --- | --- | --- |
+| api | `()=>{}` | - | 数据接口，接受一个 Promise 对象 |
+| params | `object` | - | 接口参数。此属性改变时会自动重新加载接口数据 |
+| labelField | `string` | `label` | 下拉数组项内`label`显示文本的字段|
+| valueField | `string` | `value` | 下拉数组项内`value`实际值的字段 |
+| disabledField | `boolean` | `disabled` | 下拉数组项内`disabled`实际值的字段 |
+| immediate | `boolean` | `true` | 是否立即请求接口，否则将在第一次点击时候触发请求 |

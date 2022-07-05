@@ -215,15 +215,17 @@ export type ComponentType =
   | 'Rate'
   | 'Cascader'
   | 'Checkbox'
+  | 'CheckboxGroup'
   | 'DatePicker'
   | 'TimeSelect'
   | 'TimePicker'
   | 'ApiSelect'
+  | 'ApiTreeSelect'
 ```
 
-## ApiSelect 组件
+## ApiSelect 远程下拉组件
 
-远程下拉加载组件，其他`componentProps`可参见`el-select`配置
+远程下拉组件，其他`componentProps`可参见`el-select`配置
 
 注意：
 
@@ -250,7 +252,7 @@ const schemas = [
 ];
 ```
 
-### Props
+### componentProps
 
 | 属性 | 类型 | 默认值 | 说明 |
 | --- | --- | --- | --- |
@@ -260,3 +262,54 @@ const schemas = [
 | valueField | `string` | `value` | 下拉数组项内`value`实际值的字段 |
 | disabledField | `boolean` | `disabled` | 下拉数组项内`disabled`实际值的字段 |
 | immediate | `boolean` | `true` | 是否立即请求接口，否则将在第一次点击时候触发请求 |
+
+
+## ApiTreeSelect 远程树形下拉组件
+
+远程树形下拉组件，含有下拉菜单的树形选择器，结合了 el-tree 和 el-select 两个组件的功能。
+
+- 具体内置参数见[element-plus(TreeSelect 树形选择)](https://element-plus.gitee.io/zh-CN/component/tree-select.html)
+- 其他扩展参数见以下 `componentProps`
+- 特别提醒：此组件基于`element-plus V2.1.8`
+
+### 使用
+
+```js
+const schemas = [
+  {
+    field: "parent_id",
+    label: "上级节点",
+    required: true,
+    component: "ApiTreeSelect",
+    componentProps: {
+      placeholder: "请选择上级节点",
+      api: MenuService.getList,
+      filterable: true,
+      nodeKey: "menuId",
+      props: {
+        label: "title",
+        children: "children",
+      },
+      checkStrictly: true,
+      formatData: (treeData) => {
+        if (!treeData) return [];
+        let menuList = treeData.filter((item) => item.menuType != 2);
+        menuList.unshift({
+          title: "一级菜单",
+          menuId: 0,
+        });
+        return deepTree(menuList);
+      },
+    },
+  },
+];
+```
+
+### componentProps
+
+| 属性 | 类型 | 默认值 | 说明 |
+| --- | --- | --- | --- |
+| api | `()=>{}` | - | 数据接口，接受一个 Promise 对象 |
+| params | `object` | - | 接口参数。此属性改变时会自动重新加载接口数据 |
+| immediate | `boolean` | `true` | 是否立即请求接口，否则将在第一次点击时候触发请求 |
+| formatData | `null | ()=>{}` | - | 对数据进行格式化操作，比如后端返回的是一维数组，前端er可以在这个函数下自行对数据进行格式化 |

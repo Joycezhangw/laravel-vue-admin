@@ -92,6 +92,15 @@ export function isRegExp(val) {
     return is(val, 'RegExp');
 }
 
+/**
+ * 判断数组中的是否是字符串值
+ * @param {Array} options 
+ * @returns 
+ */
+export function isStringArray(options = []) {
+    return options.some((item) => isString(item));
+}
+
 
 
 export function isUrl(path) {

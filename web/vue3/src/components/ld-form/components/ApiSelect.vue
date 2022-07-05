@@ -1,5 +1,10 @@
 <template>
-  <el-select :loading="loading" @visible-change="handleFetch" v-bind="attrs">
+  <el-select
+    :loading="loading"
+    @visible-change="handleFetch"
+    v-model:value="state"
+    v-bind="attrs"
+  >
     <el-option
       v-for="(item, index) in getOptions"
       :key="item.value + index"
@@ -12,8 +17,9 @@
 <script>
 import { computed, defineComponent, ref, unref, watchEffect } from "vue";
 import VueTypes from "vue-types";
-import { isFunction } from "@/landao/utils/is";
+import { isFunction, isStringArray } from "@/landao/utils/is";
 import { useAttrs } from "../hooks/useAttrs";
+import { useRuleFormItem } from "../hooks/useRuleFormItem";
 
 export default defineComponent({
   name: "ApiSelect",
@@ -26,11 +32,7 @@ export default defineComponent({
     labelField: VueTypes.string.def("label"), //下拉数组项内label显示文本的字段
     valueField: VueTypes.string.def("value"), //下拉数组项内value实际值的字段
     disabledField: VueTypes.string.def("disabled"), //下拉数组项内是否禁用该选项
-    params: {
-      //接口请求参数
-      type: Object,
-      default: () => ({}),
-    },
+    params: VueTypes.object.def({}), //接口请求参数
     immediate: VueTypes.bool.def(true), //是否立即请求接口
   },
   setup(props) {
@@ -43,29 +45,27 @@ export default defineComponent({
     //select props
     const attrs = useAttrs();
 
+    const [state] = useRuleFormItem(props);
+
     //获取并重置 options
     const getOptions = computed(() => {
       const { labelField, valueField, disabledField } = props;
       const apiOptions = unref(options);
 
-      let resultOptions = [];
-
       if (apiOptions?.length <= 0) {
         return [];
       }
-      const isStringArray = !!apiOptions[0][labelField];
-      for (const i in apiOptions) {
-        resultOptions.push({
-          label: isStringArray ? apiOptions[i][labelField] : apiOptions[i],
-          value: isStringArray ? apiOptions[i][valueField] : apiOptions[i],
-          disabled: isStringArray
-            ? apiOptions[i][disabledField]
-              ? !!apiOptions[i][disabledField]
-              : false
-            : false,
-        });
-      }
-      return resultOptions;
+      //判断数组中是否是字符串值
+      const isStringArr = isStringArray(apiOptions);
+      return apiOptions.map((item) => ({
+        label: !isStringArr ? item[labelField] : item,
+        value: !isStringArr ? item[valueField] : item,
+        disabled: !isStringArr
+          ? item[disabledField]
+            ? !!item[disabledField]
+            : false
+          : false,
+      }));
     });
 
     //获取远程数据
@@ -101,6 +101,7 @@ export default defineComponent({
       loading,
       handleFetch,
       attrs,
+      state,
       getOptions,
     };
   },

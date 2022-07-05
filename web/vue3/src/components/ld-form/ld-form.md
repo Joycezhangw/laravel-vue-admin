@@ -223,7 +223,7 @@ export type ComponentType =
 
 ## ApiSelect 组件
 
-远程下拉加载组件
+远程下拉加载组件，其他`componentProps`可参见`el-select`配置
 
 注意：
 

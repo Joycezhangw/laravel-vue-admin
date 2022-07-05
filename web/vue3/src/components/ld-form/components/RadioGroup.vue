@@ -1,4 +1,4 @@
-<script lang="tsx">
+<script lang="jsx">
 import { defineComponent, computed } from "vue";
 import { isString } from "@/landao/utils/is";
 import { useAttrs } from "../hooks/useAttrs";

@@ -1,4 +1,4 @@
-<script lang="tsx">
+<script lang="jsx">
 import { defineComponent, computed, unref } from "vue";
 import { componentMap } from "../componentMap";
 import { upperFirst } from "lodash-es";

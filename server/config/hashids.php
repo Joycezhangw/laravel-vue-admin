@@ -50,7 +50,7 @@ return [
         ],
     ],
     'middleware' => [
-        'open' => true,
+        'open' => false,
         // 路由中需要被 decode 的 id
         'route_parameters' => [
             'id'

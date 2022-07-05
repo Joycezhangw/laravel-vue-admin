@@ -117,6 +117,9 @@ export default defineComponent({
 
       //组件是否是input
       const isInput = component && ["Input"].includes(component);
+      const isCheck =
+        component &&
+        ["Switch", "Checkbox", "CheckboxGroup"].includes(component);
       //获取组件对应的VNode
       const Comp = componentMap.get(component);
       //组件props
@@ -130,6 +133,11 @@ export default defineComponent({
         unref(getComponentsProps).placeholder ||
         createPlaceholderMessage(component);
       propsData.placeholder = placeholder;
+
+      //如果 "Switch", "Checkbox", "CheckboxGroup" 這些组件，需要重新赋值 formValues
+      if (isCheck) {
+        propsData.formValues = getValues.value;
+      }
 
       //设置监听事件
       const eventKey = isInput ? "onInput" : `on${upperFirst(changeEvent)}`;

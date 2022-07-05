@@ -8,11 +8,13 @@ import {
     ElCheckbox,
     ElDatePicker,
     ElTimeSelect,
-    ElTimePicker,
+    ElTimePicker
 } from 'element-plus'
 
-import RadioGroup from './components/RadioGroup.vue'
+import RadioGroup from './components/RadioGroup'
+import CheckboxGroup from './components/CheckboxGroup'
 import ApiSelect from './components/ApiSelect'
+import ApiTreeSelect from './components/ApiTreeSelect'
 
 const componentMap = new Map();
 componentMap.set('Input', ElInput);
@@ -25,11 +27,13 @@ componentMap.set('InputNumber', ElInputNumber);
 componentMap.set('Rate', ElRate);
 componentMap.set('Cascader', ElCascader);
 componentMap.set('Checkbox', ElCheckbox);
+componentMap.set('CheckboxGroup', CheckboxGroup);
 componentMap.set('DatePicker', ElDatePicker);
 componentMap.set('TimeSelect', ElTimeSelect);
 componentMap.set('TimePicker', ElTimePicker);
 
 componentMap.set('ApiSelect', ApiSelect);
+componentMap.set('ApiTreeSelect', ApiTreeSelect)
 
 /**
  * 添加组件

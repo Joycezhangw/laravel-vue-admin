@@ -1,6 +1,7 @@
 <script lang="jsx">
 import { defineComponent, computed } from "vue";
-import { isString } from "@/landao/utils/is";
+import VueTypes, { oneOf } from "vue-types";
+import { isStringArray } from "@/landao/utils/is";
 import { useAttrs } from "../hooks/useAttrs";
 import { useRuleFormItem } from "../hooks/useRuleFormItem";
 
@@ -10,22 +11,10 @@ export default defineComponent({
     value: {
       type: String,
     },
-    type: {
-      type: String,
-      default: "",
-    },
-    border: {
-      type: Boolean,
-      default: false,
-    },
-    size: {
-      type: String,
-      default: "",
-    },
-    options: {
-      type: Array,
-      default: () => [],
-    },
+    type: VueTypes.string.def(""),
+    border: VueTypes.bool.def(false),
+    size: oneOf(["", "large", "default", "small"]).def("default"), //用于控制该表单内组件的尺寸
+    options: VueTypes.array.def([]),
   },
   setup(props) {
     const attrs = useAttrs();
@@ -35,7 +24,7 @@ export default defineComponent({
     const getOptions = computed(() => {
       const { options } = props;
       if (!options || options?.length === 0) return [];
-      const isStringArr = options.some((item) => isString(item));
+      const isStringArr = isStringArray(options);
       if (!isStringArr) return options;
       return options.map((item) => ({ label: item, value: item }));
     });

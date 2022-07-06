@@ -15,6 +15,7 @@ import RadioGroup from './components/RadioGroup'
 import CheckboxGroup from './components/CheckboxGroup'
 import ApiSelect from './components/ApiSelect'
 import ApiTreeSelect from './components/ApiTreeSelect'
+import Select from './components/Select'
 
 const componentMap = new Map();
 componentMap.set('Input', ElInput);
@@ -34,6 +35,8 @@ componentMap.set('TimePicker', ElTimePicker);
 
 componentMap.set('ApiSelect', ApiSelect);
 componentMap.set('ApiTreeSelect', ApiTreeSelect)
+
+componentMap.set('Select',Select)
 
 /**
  * 添加组件

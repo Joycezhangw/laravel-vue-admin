@@ -220,6 +220,7 @@ export type ComponentType =
   | 'TimeSelect'
   | 'TimePicker'
   | 'ApiSelect'
+  | 'Select'
   | 'ApiTreeSelect'
 ```
 

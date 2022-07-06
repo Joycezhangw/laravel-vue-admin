@@ -1,7 +1,7 @@
 <script lang="jsx">
 import { defineComponent, computed, unref } from "vue";
 import { componentMap } from "../componentMap";
-import { upperFirst } from "lodash-es";
+import { upperFirst, cloneDeep } from "lodash-es";
 import { isFunction, isBoolean } from "@/landao/utils/is";
 import { createPlaceholderMessage, getSlot } from "../helper";
 
@@ -63,6 +63,52 @@ export default defineComponent({
         isShow = show(unref(getValues));
       }
       return { isIfShow, isShow };
+    }
+
+    //表单校验
+    function handleRules() {
+      const { rules: defRules = [], required, label, component } = props.schema;
+
+      let rules = cloneDeep(defRules);
+
+      //组件是否是input
+      const isInput = component && ["Input"].includes(component);
+      //如果是文本框，则设置 trigger 为 blur
+      const ruleTrigger = isInput ? "blur" : "change";
+
+      /**
+       * 1.若设置了 required 属性，又没有其他的 rules，就创建一个验证规则；
+       * 2.若设置了 required 属性，又设置了 rules，则在 rules 中部存在 required 属性时，才添加验证 required 的规则。
+       *   rules 中的 required，优先级大于 required
+       */
+      if ((!rules || rules.length === 0) && required) {
+        rules = [{ required, message: `${label}不为空`, trigger: ruleTrigger }];
+      } else {
+        //Reflect  反射。has 判断是否存在原型链上。 替代：Object.prototype.hasOwnProperty.call(myObject, 'foo')
+        const requiredIndex = rules.findIndex((rule) =>
+          Reflect.has(rule, "required")
+        );
+
+        if (requiredIndex === -1) {
+          rules.push({
+            required,
+            message: `${label}不为空`,
+            trigger: ruleTrigger,
+          });
+        }
+      }
+      //移除部希纳是的校验规则
+      const requiredRuleIndex = rules.findIndex(
+        (rule) =>
+          Reflect.has(rule, "required") || Reflect.has(rule, "validator")
+      );
+      if (requiredRuleIndex !== -1) {
+        const { isShow } = getShow();
+        if (!isShow) {
+          rules = [];
+        }
+      }
+      return rules;
     }
 
     //获取组件 props
@@ -196,6 +242,7 @@ export default defineComponent({
         <el-form-item
           v-slots={{ label: () => renderLabelHelpMessage() }} //Form Item label插槽
           prop={field}
+          rules={handleRules()}
           labelWidth={labelWidth}
         >
           {getContent()}

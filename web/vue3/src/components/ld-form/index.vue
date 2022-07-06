@@ -52,14 +52,6 @@ export default defineComponent({
     //处理表单配置和校验规则
     const getSchema = computed(() => {
       const schemas = unref(getProps).schemas;
-      const passRules = unref(getProps).rules;
-      for (const schema of schemas) {
-        const { field, rules = [] } = schema;
-        //处理表单校验规则
-        if (passRules) {
-          schema.rules = unref(getProps).rules[field] || rules;
-        }
-      }
       return schemas;
     });
 

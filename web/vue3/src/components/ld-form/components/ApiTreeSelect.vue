@@ -24,10 +24,11 @@ export default defineComponent({
     params: VueTypes.object.def({}),
     immediate: VueTypes.bool.def(true),
   },
+  emits: ["change"],
   setup(props, { attrs, emit }) {
-    const treeData = ref([]);
-    const isFirstLoaded = ref(false);
-    const loading = ref(false);
+    const treeData = ref([]); //树形数据
+    const isFirstLoaded = ref(false); //是否已经请求过接口
+    const loading = ref(false); //loading状态
 
     const getAttrs = computed(() => {
       return {
@@ -50,6 +51,7 @@ export default defineComponent({
       }
       loading.value = false;
       if (!result) return;
+      //是否自定义格式化数据。针对后端返回一维数组，和需要自己增加数据项
       if (formatData && isFunction(formatData)) {
         treeData.value = formatData(result.data);
       } else {

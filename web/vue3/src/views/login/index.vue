@@ -22,6 +22,7 @@
                   :model="loginForm"
                   :disabled="saving"
                   size="large"
+                  @submit.native.prevent
                 >
                   <el-form-item prop="username">
                     <el-input
@@ -75,6 +76,7 @@
                       style="width: 100%"
                       :loading="saving"
                       @click="doLogin"
+                      native-type="submit"
                       >登 录</el-button
                     >
                   </el-form-item>

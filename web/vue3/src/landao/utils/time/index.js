@@ -1,3 +1,5 @@
+import dayjs from "dayjs";
+
 /**
  * 时间日期转换
  * @param date 当前时间，new Date() 格式
@@ -134,4 +136,12 @@ export function formatAxis(param) {
     else if (hour < 19) return '傍晚好';
     else if (hour < 22) return '晚上好';
     else return '夜里好';
+}
+/**
+ * 格式化时间
+ */
+const DATE_FORMAT = 'YYYY-MM-DD'
+
+export const dateUtil = (date = null, formate = DATE_FORMAT) => {
+    return dayjs(new Date(date)).format(formate)
 }

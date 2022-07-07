@@ -8,7 +8,7 @@ module.exports = {
         {
             name: 'vue',
             var: 'Vue',
-            path: '//unpkg.com/vue@3.2.33/dist/vue.runtime.global.prod.js'
+            path: '//unpkg.com/vue@3.2.37/dist/vue.runtime.global.prod.js'
         },
         {
             name: 'vue-router',
@@ -23,7 +23,7 @@ module.exports = {
         {
             name: 'dayjs',
             var: 'dayjs',
-            path: '//unpkg.com/dayjs@1.11.2/dayjs.min.js'
+            path: '//unpkg.com/dayjs@1.11.3/dayjs.min.js'
         },
         {
             name: 'element-plus',

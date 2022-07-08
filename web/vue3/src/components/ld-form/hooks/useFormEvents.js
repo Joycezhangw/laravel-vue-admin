@@ -1,5 +1,7 @@
-import { cloneDeep, isFunction } from "lodash-es";
-import { unref, toRaw } from "vue";
+import { cloneDeep, uniqBy, isFunction, isObject, isArray } from "lodash-es";
+import { unref, toRaw, nextTick } from "vue";
+import { deepMerge } from "@/landao/utils"
+import { isNullOrUnDef } from "@/landao/utils/is"
 /**
  * 
  * @param {*} 
@@ -12,7 +14,7 @@ import { unref, toRaw } from "vue";
  * handleFormValues  处理表单值
  * @returns 
  */
-export function useFormEvents({ emit, getProps, formModel, getSchema, formElRef, defaultValueRef, handleFormValues }) {
+export function useFormEvents({ emit, getProps, formModel, getSchema, formElRef, schemaRef, defaultValueRef, handleFormValues }) {
 
 
     //表单校验
@@ -54,7 +56,7 @@ export function useFormEvents({ emit, getProps, formModel, getSchema, formElRef,
         // 默认值不需要重置
         Object.keys(formModel).forEach((key) => {
             const schema = unref(getSchema).find((item) => item.field === key);
-            const isInput = schema?.component && defaultValueComponents.includes(schema.component);
+            const isInput = schema?.component && ['Input'].includes(schema.component);
             const defaultValue = cloneDeep(defaultValueRef.value[key]);
             formModel[key] = isInput ? defaultValue || '' : defaultValue;
         });
@@ -96,5 +98,80 @@ export function useFormEvents({ emit, getProps, formModel, getSchema, formElRef,
         return handleFormValues(formModel)
     }
 
-    return { resetFields, handleSubmit, validate, getFieldsValue, clearValidate, validateField,scrollToField }
+
+    /**
+     * 数据回显，用于编辑表单
+     * @param {Object} values 
+     */
+    async function setFieldsValue(values) {
+
+    }
+
+    /**
+     * 更新表单
+     * @param {Object | Array} data 
+     * @returns 
+     */
+    async function updateSchema(data) {
+        let updateData = [];
+        if (isObject(data)) {
+            updateData.push(data)
+        }
+        if (isArray(data)) {
+            updateData = [...data]
+        }
+        console.log('updateSchema', updateData)
+        const hasField = updateData.every(
+            (item) => item.component === 'Divider' || (Reflect.has(item, 'field') && item.field),
+          );
+        console.log(hasField)
+        if (!hasField) {
+            console.error('需要更新的 Schema 数组表单，必须包含 field 字段')
+            return
+        }
+        const schema = [];
+        updateData.forEach((item) => {
+            unref(getSchema).forEach((val) => {
+                if (val.field === item.field) {
+                    const newSchema = deepMerge(val, item);
+                    schema.push(newSchema);
+                } else {
+                    schema.push(val);
+                }
+            });
+        })
+        _setDefaultValue(schema)
+        schemaRef.value = uniqBy(schema, 'field')
+        console.log('updateSchema',unref(schemaRef));
+    }
+
+    /**
+     * 私有方法，不对外，设置表单默认值
+     * @param {Object | Array} data 
+     */
+    function _setDefaultValue(data) {
+        let schemas = [];
+        if (isObject(data)) {
+            schemas.push(data);
+        }
+        if (isArray(data)) {
+            schemas = [...data];
+        }
+        const obj = {};
+        const currentFieldsValue = getFieldsValue();
+        schemas.forEach((item) => {
+            if (
+                item.component != 'Divider' &&
+                Reflect.has(item, 'field') &&
+                item.field &&
+                !isNullOrUnDef(item.defaultValue) &&
+                !(item.field in currentFieldsValue)
+            ) {
+                obj[item.field] = item.defaultValue;
+            }
+        });
+        setFieldsValue(obj);
+    }
+
+    return { resetFields, handleSubmit, validate, getFieldsValue, clearValidate, validateField, scrollToField, setFieldsValue, updateSchema }
 }

@@ -4,40 +4,187 @@
 
 ## 用法
 
-### template 方式
+### template ref 方式
 
 ```vue
 <template>
-  <div class="ld-form">
-    <ld-form label-position="right" label-width="150px" :schemas="schemas">
+  <div class="app-container">
+     <el-button type="primary" size="small" @click="dialogFormVisible = true"
+          >新增</el-button
+        >
+  </div>
+  <el-dialog title="新增菜单" v-model="dialogFormVisible">
+    <ld-form
+      ref="menuFormEl"
+      label-position="right"
+      label-width="150px"
+      :schemas="formSchemas"
+    >
+      <template #menuIconSlot="{ model, field }">
+        <IconForm v-model="model[field]"></IconForm>
+      </template>
     </ld-form>
+    <template #footer>
+      <span class="dialog-footer">
+        <el-button @click="resetForm">重 置</el-button>
+        <el-button type="primary" @click="handleSubmit">确 定</el-button>
+      </span>
+    </template>
+  </el-dialog>
 </template>
 <script>
-import { defineComponent, ref, reactive } from "vue";
-export default defineComponent({
-  components: { menuFile },
-  setup() {
-    const formRef = ref(null);
+import { MenuService } from "@/service";
+import { reactive, ref, unref } from "vue";
+import { deepTree } from "@/landao/utils";
+import IconForm from "@/views/system/components/IconForm";
 
-    const schemas = [
+export default {
+  name: "menuIndex",
+  components: {
+    IconForm,
+  },
+  setup() {
+    //表单
+    const menuFormEl = ref(null);
+    //弹窗
+    const dialogFormVisible = ref(false);
+
+
+    const serviceApi = MenuService.getList;
+    //菜单类型
+    const menuType = ref(["目录", "菜单", "权限"]);
+
+    //表单
+    const formSchemas = [
+      {
+        field: "menu_type",
+        component: "RadioGroup",
+        label: "节点类型",
+        colProps: {
+          // span: 8,
+        },
+        defaultValue: "0",
+        componentProps: {
+          options: [
+            { label: "目录", value: "0" },
+            { label: "菜单", value: "1" },
+            { label: "权限", value: "2" },
+          ],
+        },
+      },
       {
         field: "menu_title",
-        label: "菜单名称：",
+        label: "菜单名称",
         component: "Input",
         required: true,
+        defaultValue: "",
         colProps: {
-          span: 8,
+          // span: 8,
+        },
+        componentProps: {
+          placeholder: "请输入菜单名称",
+        },
+      },
+      {
+        field: "parent_id",
+        label: "上级节点",
+        required: true,
+        component: "ApiTreeSelect",
+        defaultValue: 0,
+        componentProps: {
+          placeholder: "请选择上级节点",
+          api: MenuService.getList,
+          filterable: true,
+          nodeKey: "menuId",
+          props: {
+            label: "title",
+            children: "children",
+          },
+          checkStrictly: true,
+          formatData: (treeData) => {
+            if (!treeData) return [];
+            let menuList = treeData.filter((item) => item.menuType != 2);
+            menuList.unshift({
+              title: "一级菜单",
+              menuId: 0,
+            });
+            return deepTree(menuList);
+          },
+        },
+      },
+      {
+        field: "keep_alive",
+        label: "是否开启缓存",
+        required: true,
+        component: "Switch",
+        defaultValue: true,
+        ifShow: ({ values }) => {
+          return parseInt(values.menu_type) === 1;
+        },
+      },
+      {
+        field: "menu_icon",
+        label: "节点图标",
+        required: true,
+        defaultValue: "",
+        slot: "menuIconSlot",
+        ifShow: ({ values }) => {
+          return parseInt(values.menu_type) !== 2;
+        },
+      },
+      {
+        field: "menu_order",
+        label: "排序",
+        component: "InputNumber",
+        defaultValue: 1,
+        componentProps: {
+          controlsPosition: "right",
+          min: 0,
         },
       },
     ];
+    //提交表单
+    async function handleSubmit() {
+      const formEl = unref(menuFormEl);
+      if (!formEl) return;
+      //验证表单
+      await formEl
+        .validate()
+        .then((res) => {
+          //验证通过
+          console.log("123", res);
+        })
+        .catch((error) => {
+          //校验不通过
+        });
+    }
+
+    //重置表单，
+    async function resetForm() {
+      const formEl = unref(menuFormEl);
+      if (!formEl) return;
+      await unref(menuFormEl).resetFields();
+    }
+
+   
 
     return {
-      formRef,
-      schemas,
+      tableConfig,
+      serviceApi,
+      filterData,
+      menuTableRef,
+      menuType,
+      handleDel,
+      menuFormEl,
+      dialogFormVisible,
+      formSchemas,
+      handleSubmit,
+      resetForm,
     };
   },
-});
+};
 </script>
+
 ```
 
 ## Props
@@ -78,6 +225,7 @@ export default defineComponent({
 | helpComponentProps | `Object` | - | - | 标签名右侧温馨提示组件 `props`, 部分继承 `el-tootip` 属性,见下方 `HelpComponentProps` |
 | ifShow | `boolean / ((renderCallbackParams) => boolean)` | `true` | - | 动态判断当前组件是否显示，js 控制，会删除 dom,见下方`renderCallbackParams` |
 | show | `boolean / ((renderCallbackParams) => boolean)` | `true` | - | 动态判断当前组件是否显示，css 控制，不会删除 dom,见下方`renderCallbackParams` |
+| formateValue | `String` | `日期：YYYY-MM-DD` | - | 格式化表单值 |
 
 **componentProps**
 

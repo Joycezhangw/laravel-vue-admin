@@ -34,6 +34,8 @@ import {
 import { basicProps } from "./props";
 import SchemaFormItem from "./components/SchemaFormItem";
 import { useFormValues } from "./hooks/useFormValues";
+import { useFormEvents } from "./hooks/useFormEvents";
+import { deepMerge } from "@/landao/utils";
 export default defineComponent({
   name: "ldForm",
   components: { SchemaFormItem },
@@ -43,6 +45,8 @@ export default defineComponent({
     const formElRef = ref(null); //表单ref
     const formModel = reactive({}); //表单model
     const propsRef = ref({}); //外部定义表单属性
+    const defaultValueRef = ref({}); //表单配置定义的默认值
+    const schemaRef = ref(null); //动态删除表单项
 
     //获取表单基础配置
     const getProps = computed(() => {
@@ -51,7 +55,15 @@ export default defineComponent({
 
     //处理表单配置和校验规则
     const getSchema = computed(() => {
-      const schemas = unref(getProps).schemas;
+      const schemas = unref(schemaRef) || unref(getProps).schemas;
+      const passRules = unref(getProps).rules;
+      for (const schema of schemas) {
+        const { field, rules = [] } = schema;
+        // 处理表单校验规则
+        if (passRules) {
+          schema.rules = unref(getProps).rules[field] || rules;
+        }
+      }
       return schemas;
     });
 
@@ -64,7 +76,11 @@ export default defineComponent({
     }
 
     //表单初始化，根据 schema 设置 formModel
-    const { initDefault } = useFormValues({ getSchema, formModel });
+    const { initDefault, handleFormValues } = useFormValues({
+      getSchema,
+      formModel,
+      defaultValueRef,
+    });
 
     // 监听 getSchema 属性 初始化
     watch(
@@ -77,6 +93,45 @@ export default defineComponent({
         }
       }
     );
+    //向外暴露的表单事件
+    const {
+      resetFields,
+      handleSubmit,
+      validate,
+      getFieldsValue,
+      clearValidate,
+      validateField,
+      scrollToField,
+      setFieldsValue,
+      updateSchema,
+    } = useFormEvents({
+      emit,
+      getProps,
+      formModel,
+      getSchema,
+      formElRef,
+      schemaRef,
+      defaultValueRef,
+      handleFormValues,
+    });
+
+    //通过外部函数设置表单参数
+    async function setProps(formProps) {
+      propsRef.value = deepMerge(unref(propsRef) || {}, formProps);
+    }
+    //向外暴露的表单事件
+    const formActionType = {
+      setProps,
+      validate,
+      resetFields,
+      handleSubmit,
+      getFieldsValue,
+      clearValidate,
+      validateField,
+      scrollToField,
+      setFieldsValue,
+      updateSchema,
+    };
     //初始表单
     onMounted(() => {
       initDefault();
@@ -87,6 +142,7 @@ export default defineComponent({
       getProps,
       getSchema,
       setFormModel,
+      ...formActionType,
     };
   },
 });

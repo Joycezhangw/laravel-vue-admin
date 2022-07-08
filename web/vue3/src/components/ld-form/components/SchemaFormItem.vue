@@ -165,7 +165,9 @@ export default defineComponent({
       const isInput = component && ["Input"].includes(component);
       const isCheck =
         component &&
-        ["Switch", "Checkbox", "CheckboxGroup"].includes(component);
+        ["Switch", "Checkbox", "CheckboxGroup", "RadioGroup"].includes(
+          component
+        );
       //获取组件对应的VNode
       const Comp = componentMap.get(component);
       //组件props

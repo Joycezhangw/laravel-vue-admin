@@ -1,6 +1,7 @@
 
 import CryptoJS from "./crypto";
 import storage from "./storage";
+import { isObject } from "lodash-es";
 export { CryptoJS, storage }
 /**
  * 跳转
@@ -178,10 +179,23 @@ export function deepTree(list, nodeKey = 'menuId', pKey = 'parentId', order = 'm
 }
 
 //深度合并
-export function deepMerge (src = {}, target = {}) {
+export function deepMerge(src = {}, target = {}) {
     let key = ''
     for (key in target) {
-      src[key] = isObject(src[key]) ? deepMerge(src[key], target[key]) : (src[key] = target[key])
+        src[key] = isObject(src[key]) ? deepMerge(src[key], target[key]) : (src[key] = target[key])
     }
     return src
-  }
+}
+/**
+ * 路径名称
+ * @param {*} path 路径
+ * @returns 
+ */
+export function basename(path) {
+    let index = path.lastIndexOf("/");
+    index = index > -1 ? index : path.lastIndexOf("\\");
+    if (index < 0) {
+        return path;
+    }
+    return path.substring(index + 1);
+}

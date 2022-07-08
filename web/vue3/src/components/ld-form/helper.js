@@ -1,4 +1,4 @@
-import { isFunction } from "lodash-es";
+import { isFunction, isNumber } from "lodash-es";
 
 /**
  * 生成 placeholder
@@ -51,3 +51,12 @@ export function getDynamicProps(props) {
     })
     return ret
 }
+
+export function handleInputNumberValue(component, val) {
+    if (!component) return val
+    if (['Input'].includes(component)) {
+        return val && isNumber(val) ? `${val}` : val
+    }
+    return val
+}
+

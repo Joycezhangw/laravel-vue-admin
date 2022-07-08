@@ -2,6 +2,7 @@ import { cloneDeep, uniqBy, isFunction, isObject, isArray } from "lodash-es";
 import { unref, toRaw, nextTick } from "vue";
 import { deepMerge } from "@/landao/utils"
 import { isNullOrUnDef } from "@/landao/utils/is"
+import { handleInputNumberValue } from "../helper";
 /**
  * 
  * @param {*} 
@@ -98,13 +99,51 @@ export function useFormEvents({ emit, getProps, formModel, getSchema, formElRef,
         return handleFormValues(formModel)
     }
 
+    /**
+     * 判断日期组件
+     * @param {String} key 组件名称
+     * @returns 
+     */
+    function itemIsDateType(key) {
+        return unref(getSchema).some((item) => {
+            return item.field === key ? ['DatePicker', 'TimeSelect', 'TimePicker'].includes(item.component) : false
+        })
+    }
 
     /**
      * 数据回显，用于编辑表单
      * @param {Object} values 
      */
     async function setFieldsValue(values) {
+        const fields = unref(getSchema).map((item) => item.field).filter(Boolean)
+        const validKeys = [];
 
+        Object.keys(values).forEach((key) => {
+            const schema = unref(getSchema).find((item) => item.field === key)
+            let value = values[key]
+            const hasKey = Reflect.has(values, key);
+
+            value = handleInputNumberValue(schema?.component, value)
+
+            if (hasKey && fields.includes(key)) {
+                //返显格式化时间范围
+                if (itemIsDateType(key)) {
+                    if (Array.isArray(value)) {
+                        const arr = []
+                        for (const ele of value) {
+                            arr.push(dateUtil(ele))
+                        }
+                        formModel[key] = arr
+                    } else {
+                        formModel[key] = dateUtil(value)
+                    }
+                } else {
+                    formModel[key] = value
+                }
+                validKeys.push(key)
+            }
+        })
+        validateField(validKeys);
     }
 
     /**
@@ -120,11 +159,9 @@ export function useFormEvents({ emit, getProps, formModel, getSchema, formElRef,
         if (isArray(data)) {
             updateData = [...data]
         }
-        console.log('updateSchema', updateData)
         const hasField = updateData.every(
             (item) => item.component === 'Divider' || (Reflect.has(item, 'field') && item.field),
-          );
-        console.log(hasField)
+        );
         if (!hasField) {
             console.error('需要更新的 Schema 数组表单，必须包含 field 字段')
             return
@@ -142,7 +179,6 @@ export function useFormEvents({ emit, getProps, formModel, getSchema, formElRef,
         })
         _setDefaultValue(schema)
         schemaRef.value = uniqBy(schema, 'field')
-        console.log('updateSchema',unref(schemaRef));
     }
 
     /**

@@ -1,6 +1,6 @@
 import { deepTree } from "@/landao/utils";
 import { MenuService } from "@/service";
-export function useMenuSchemas() {
+export function MenuSchemas() {
     //获取视图路径
     function getViewFilePath() {
         const files = import.meta.globEager("/**/views/**/*.{vue,tsx}");
@@ -209,7 +209,9 @@ export function useMenuSchemas() {
             },
         },
     ];
+    //菜单类型
+    const menuType = ["目录", "菜单", "权限"];
     return {
-        tableConfig, formSchemas
+        tableConfig, formSchemas, menuType
     }
 }

@@ -49,13 +49,20 @@
         }}</el-tag>
       </template>
       <template v-slot:handleSlot="{ scopeData }">
-        <el-button type="danger" size="small" @click="handleDel(scopeData.row)"
+        <el-button size="small" @click="handleEdit(scopeData.row)"
+          >编辑</el-button
+        >
+        <el-button
+          type="danger"
+          v-if="scopeData.row.children.length === 0"
+          size="small"
+          @click="handleDel(scopeData.row)"
           >删除</el-button
         >
       </template>
     </ld-table>
   </div>
-  <el-dialog title="新增菜单" v-model="dialogFormVisible">
+  <el-dialog :title="disologTitle" v-model="dialogFormVisible">
     <ld-form
       ref="menuFormEl"
       label-position="right"
@@ -89,9 +96,8 @@ import { ElMessage, ElMessageBox } from "element-plus";
 import { CloseBold, Select as selectIcon } from "@element-plus/icons-vue";
 import IconForm from "@/views/system/components/IconForm";
 import { useBaseStore } from "@/store";
-import { useMenuSchemas } from "@/views/system/schemas/MenuSchemas";
+import { MenuSchemas } from "@/views/system/schemas/MenuSchemas";
 import MenuTreeSelect from "../components/MenuTreeSelect.vue";
-// import { deepTree } from "@/landao/utils";
 
 export default {
   name: "menuIndex",
@@ -110,29 +116,19 @@ export default {
     const menuFormEl = ref(null);
     //弹窗
     const dialogFormVisible = ref(false);
+    const disologTitle = ref("新增菜单");
     //提交按钮loading
     const btnLoading = ref(false);
-
+    //上级菜单ref
     const menuTreeSelectRef = ref(false);
 
     //表格配置和表单配置
-    const { tableConfig, formSchemas } = useMenuSchemas();
+    const { tableConfig, formSchemas, menuType } = MenuSchemas();
+
+    const updateMenuId = ref(0);
 
     //表格数据接口
     const getMenuListApi = MenuService.getList;
-
-    // const menuTreeSelectData = ref([]);
-
-    // async function getMenuTree() {
-    //   await getMenuListApi().then((res) => {
-    //     let menuList = res.data.filter((item) => item.menuType != 2);
-    //     menuList.unshift({
-    //       title: "一级菜单",
-    //       menuId: 0,
-    //     });
-    //     menuTreeSelectData.value = deepTree(menuList);
-    //   });
-    // }
 
     async function setMenu() {
       unref(menuTableRef).refresh();
@@ -146,40 +142,10 @@ export default {
       await resetForm();
       const menuTreeSelectEl = unref(menuTreeSelectRef);
       if (menuTreeSelectEl) {
-        console.log('gengxin ')
         menuTreeSelectEl.refresh();
       }
-      // await updateMenuTreeSchema();
     }
 
-    // async function updateMenuTreeSchema() {
-    //   await getMenuTree();
-    //   nextTick(() => {
-    //     const formEl = unref(menuFormEl);
-    //     console.log("请求成功郭了吗", unref(menuTreeSelectData));
-    //     if (formEl) {
-    //       unref(menuFormEl)
-    //         .updateSchema({
-    //           field: "parent_id",
-    //           defaultValue: 0,
-    //           componentProps: {
-    //             data: unref(menuTreeSelectData),
-    //           },
-    //         })
-    //         .then((res) => {
-    //           console.log("updateSchema", res);
-    //         })
-    //         .catch((err) => {
-    //           console.log(err);
-    //         });
-    //     }
-    //   });
-    // }
-
-    async function openDialog() {
-      dialogFormVisible.value = true;
-      // await updateMenuTreeSchema();
-    }
     /**
      * 提交表单数据
      */
@@ -192,22 +158,43 @@ export default {
         .then((res) => {
           //验证通过
           btnLoading.value = true;
-          MenuService.doStore(res)
-            .then((result) => {
-              if (result.code === 200) {
-                setMenu();
-                dialogFormVisible.value = false;
-              }
-              btnLoading.value = false;
-            })
-            .catch((error) => {
-              ElMessage.error(error);
-              btnLoading.value = false;
-            });
+          if (unref(updateMenuId) > 0) {
+            MenuService.doUpdate(unref(updateMenuId), res)
+              .then((result) => {
+                if (result.code === 200) {
+                  setMenu();
+                  dialogFormVisible.value = false;
+                }
+                btnLoading.value = false;
+              })
+              .catch((error) => {
+                ElMessage.error(error);
+                btnLoading.value = false;
+              });
+          } else {
+            MenuService.doStore(res)
+              .then((result) => {
+                if (result.code === 200) {
+                  setMenu();
+                  dialogFormVisible.value = false;
+                }
+                btnLoading.value = false;
+              })
+              .catch((error) => {
+                ElMessage.error(error);
+                btnLoading.value = false;
+              });
+          }
         })
         .catch((error) => {
           //校验不通过
         });
+    }
+
+    function openDialog() {
+      updateMenuId.value = 0;
+      disologTitle.value = "新增菜单";
+      dialogFormVisible.value = true;
     }
 
     //重置表单
@@ -231,23 +218,43 @@ export default {
 
     //删除菜单
     const handleDel = (row) => {
-      ElMessageBox.confirm("此操作将永久删除选中数据，是否继续？", "提示", {
-        confirmButtonText: "确认",
-        cancelButtonText: "取消",
-        type: "warning",
-      })
-        .then(() => {
-          doDelMenu(row.menuId);
+      if (row.children.length === 0) {
+        ElMessageBox.confirm("此操作将永久删除选中数据，是否继续？", "提示", {
+          confirmButtonText: "确认",
+          cancelButtonText: "取消",
+          type: "warning",
         })
-        .catch(() => {});
+          .then(() => {
+            doDelMenu(row.menuId);
+          })
+          .catch(() => {});
+      } else {
+        ElMessage.info("请先删除子菜单");
+      }
     };
 
     const handleEdit = (row) => {
-      console.log("修改", row);
+      updateMenuId.value = row.menuId;
+      disologTitle.value = "编辑菜单";
+      dialogFormVisible.value = true;
+      nextTick(async () => {
+        const obj = {
+          menu_type: row.menuType.toString(),
+          menu_title: row.title,
+          menu_name: row.name,
+          parent_id: row.parentId,
+          keep_alive: row.meta.keepAlive,
+          is_show: row.isShow,
+          menu_component: row.component,
+          menu_icon: row.meta.icon,
+          api_path: row.apiPath,
+          menu_order: row.menuOrder,
+        };
+        const formEl = unref(menuFormEl);
+        if (!formEl) return;
+        await formEl.setFieldsValue(obj);
+      });
     };
-
-    //菜单类型
-    const menuType = ref(["目录", "菜单", "权限"]);
 
     return {
       tableConfig,
@@ -262,8 +269,10 @@ export default {
       handleSubmit,
       resetForm,
       btnLoading,
-      openDialog,
       menuTreeSelectRef,
+      handleEdit,
+      openDialog,
+      disologTitle,
     };
   },
 };

@@ -36,11 +36,7 @@ export default class MenuService {
      * @returns 
      */
     static doUpdate(menuId, data) {
-        return request({
-            url: `/v1/menu/update/${menuId}`,
-            method: 'put',
-            data
-        })
+        return request.put(`/v1/menu/update/${menuId}`, data)
     }
 
     /**

@@ -124,13 +124,15 @@ export default {
 
     //表格配置和表单配置
     const { tableConfig, formSchemas, menuType } = MenuSchemas();
-
+    //更新菜单id
     const updateMenuId = ref(0);
 
     //表格数据接口
     const getMenuListApi = MenuService.getList;
 
+    //新增，删除，更新数据后。进行重新拉去权限和菜单。并重置表单得上级树形数据
     async function setMenu() {
+      //更新表格数据
       unref(menuTableRef).refresh();
       const { user: userStore, menu: menuStore } = useBaseStore();
       // 获取用户信息
@@ -141,6 +143,7 @@ export default {
       //重置表单
       await resetForm();
       const menuTreeSelectEl = unref(menuTreeSelectRef);
+      //更新表单上级菜单数据
       if (menuTreeSelectEl) {
         menuTreeSelectEl.refresh();
       }
@@ -158,6 +161,7 @@ export default {
         .then((res) => {
           //验证通过
           btnLoading.value = true;
+          //更新数据
           if (unref(updateMenuId) > 0) {
             MenuService.doUpdate(unref(updateMenuId), res)
               .then((result) => {
@@ -172,6 +176,7 @@ export default {
                 btnLoading.value = false;
               });
           } else {
+            //新增数据
             MenuService.doStore(res)
               .then((result) => {
                 if (result.code === 200) {
@@ -195,6 +200,10 @@ export default {
       updateMenuId.value = 0;
       disologTitle.value = "新增菜单";
       dialogFormVisible.value = true;
+      nextTick(async () => {
+        //重置表单
+        await resetForm();
+      });
     }
 
     //重置表单

@@ -1,17 +1,16 @@
 <template>
   <div class="app-container">
-    <menu-form />
     <ld-table
       ref="menuTableRef"
-      :service-api="serviceApi"
+      :service-api="getMenuListApi"
       :table-config="tableConfig"
       :filter-data="filterData"
       :is-pagination="false"
     >
       <template #toolbar>
-        <el-button type="primary" size="small">新增</el-button>
-        <el-button type="primary" size="small">新增</el-button>
-        <el-button type="primary" size="small">新增</el-button>
+        <el-button type="primary" size="small" @click="openDialog()"
+          >新增</el-button
+        >
       </template>
       <template v-slot:titleSlot="{ scopeData }">
         <span>{{ scopeData.row.title }}</span>
@@ -40,7 +39,7 @@
           style="vertical-align: middle"
           :color="scopeData.row.meta.keepAlive ? '#67C23A' : '#F56C6C'"
         >
-          <Select v-if="scopeData.row.meta.keepAlive"></Select>
+          <selectIcon v-if="scopeData.row.meta.keepAlive"></selectIcon>
           <CloseBold v-else></CloseBold>
         </el-icon>
       </template>
@@ -56,127 +55,215 @@
       </template>
     </ld-table>
   </div>
+  <el-dialog title="新增菜单" v-model="dialogFormVisible">
+    <ld-form
+      ref="menuFormEl"
+      label-position="right"
+      label-width="150px"
+      :schemas="formSchemas"
+    >
+      <template #treeSelectSlot="{ model, field }">
+        <MenuTreeSelect
+          ref="menuTreeSelectRef"
+          v-model="model[field]"
+        ></MenuTreeSelect>
+      </template>
+      <template #menuIconSlot="{ model, field }">
+        <IconForm v-model="model[field]"></IconForm>
+      </template>
+    </ld-form>
+    <template #footer>
+      <span class="dialog-footer">
+        <el-button @click="resetForm">重 置</el-button>
+        <el-button type="primary" @click="handleSubmit" :loading="btnLoading"
+          >确 定</el-button
+        >
+      </span>
+    </template>
+  </el-dialog>
 </template>
 <script>
 import { MenuService } from "@/service";
-import { reactive, ref } from "vue";
-import { ElMessageBox } from "element-plus";
-import { CloseBold, Select } from "@element-plus/icons-vue";
-import { deepTree } from "@/landao/utils";
-import menuForm from "@/views/system/components/form/menuForm";
+import { nextTick, reactive, ref, unref } from "vue";
+import { ElMessage, ElMessageBox } from "element-plus";
+import { CloseBold, Select as selectIcon } from "@element-plus/icons-vue";
+import IconForm from "@/views/system/components/IconForm";
+import { useBaseStore } from "@/store";
+import { useMenuSchemas } from "@/views/system/schemas/MenuSchemas";
+import MenuTreeSelect from "../components/MenuTreeSelect.vue";
+// import { deepTree } from "@/landao/utils";
 
 export default {
   name: "menuIndex",
   components: {
     CloseBold,
-    Select,
-    menuForm,
+    selectIcon,
+    IconForm,
+    MenuTreeSelect,
   },
   setup() {
+    //表格搜索条件
     const filterData = reactive({ search_text: "" });
+    //表格
     const menuTableRef = ref();
-    const tableConfig = {
-      attrs: {
-        rowKey: "menuId", //表格索引
-        size: "small", //表格和搜索表单尺寸
-      },
-      formatData: deepTree, //格式化数据，一维数组转树形数组
-      columns: [
-        {
-          title: "名称",
-          width: 200,
-          align: "center",
-          customSlot: "titleSlot",
-        },
-        {
-          title: "图标",
-          width: 200,
-          align: "center",
-          customSlot: "iconSlot",
-        },
-        {
-          title: "类型",
-          width: 200,
-          align: "center",
-          customSlot: "menuTypeSlot",
-        },
-        {
-          title: "路由名",
-          width: 200,
-          align: "center",
-          key: "name",
-        },
-        {
-          title: "节点路由",
-          width: 180,
-          align: "center",
-          key: "path",
-        },
-        {
-          title: "路由缓存",
-          width: 100,
-          align: "center",
-          customSlot: "keepAliveSlot",
-        },
-        {
-          title: "文件路径",
-          width: 200,
-          align: "center",
-          key: "component",
-        },
-        {
-          title: "权限",
-          width: 200,
-          align: "center",
-          customSlot: "apiPathSlot",
-        },
-        {
-          title: "排序",
-          width: 90,
-          align: "center",
-          key: "menuOrder",
-        },
-        {
-          title: "更新时间",
-          width: 150,
-          align: "center",
-          key: "updatedAt",
-        },
-        {
-          title: "操作",
-          width: 200,
-          fixed: "right",
-          align: "center",
-          customSlot: "handleSlot",
-        },
-      ],
-    };
+    //表单
+    const menuFormEl = ref(null);
+    //弹窗
+    const dialogFormVisible = ref(false);
+    //提交按钮loading
+    const btnLoading = ref(false);
 
-    //删除日志
+    const menuTreeSelectRef = ref(false);
+
+    //表格配置和表单配置
+    const { tableConfig, formSchemas } = useMenuSchemas();
+
+    //表格数据接口
+    const getMenuListApi = MenuService.getList;
+
+    // const menuTreeSelectData = ref([]);
+
+    // async function getMenuTree() {
+    //   await getMenuListApi().then((res) => {
+    //     let menuList = res.data.filter((item) => item.menuType != 2);
+    //     menuList.unshift({
+    //       title: "一级菜单",
+    //       menuId: 0,
+    //     });
+    //     menuTreeSelectData.value = deepTree(menuList);
+    //   });
+    // }
+
+    async function setMenu() {
+      unref(menuTableRef).refresh();
+      const { user: userStore, menu: menuStore } = useBaseStore();
+      // 获取用户信息
+      await userStore.getUserInfo();
+
+      // 获取菜单权限
+      await menuStore.getPremRules();
+      //重置表单
+      await resetForm();
+      const menuTreeSelectEl = unref(menuTreeSelectRef);
+      if (menuTreeSelectEl) {
+        console.log('gengxin ')
+        menuTreeSelectEl.refresh();
+      }
+      // await updateMenuTreeSchema();
+    }
+
+    // async function updateMenuTreeSchema() {
+    //   await getMenuTree();
+    //   nextTick(() => {
+    //     const formEl = unref(menuFormEl);
+    //     console.log("请求成功郭了吗", unref(menuTreeSelectData));
+    //     if (formEl) {
+    //       unref(menuFormEl)
+    //         .updateSchema({
+    //           field: "parent_id",
+    //           defaultValue: 0,
+    //           componentProps: {
+    //             data: unref(menuTreeSelectData),
+    //           },
+    //         })
+    //         .then((res) => {
+    //           console.log("updateSchema", res);
+    //         })
+    //         .catch((err) => {
+    //           console.log(err);
+    //         });
+    //     }
+    //   });
+    // }
+
+    async function openDialog() {
+      dialogFormVisible.value = true;
+      // await updateMenuTreeSchema();
+    }
+    /**
+     * 提交表单数据
+     */
+    async function handleSubmit() {
+      const formEl = unref(menuFormEl);
+      if (!formEl) return;
+      //验证表单
+      await formEl
+        .validate()
+        .then((res) => {
+          //验证通过
+          btnLoading.value = true;
+          MenuService.doStore(res)
+            .then((result) => {
+              if (result.code === 200) {
+                setMenu();
+                dialogFormVisible.value = false;
+              }
+              btnLoading.value = false;
+            })
+            .catch((error) => {
+              ElMessage.error(error);
+              btnLoading.value = false;
+            });
+        })
+        .catch((error) => {
+          //校验不通过
+        });
+    }
+
+    //重置表单
+    async function resetForm() {
+      const formEl = unref(menuFormEl);
+      if (!formEl) return;
+      await unref(menuFormEl).resetFields();
+    }
+
+    //删除菜单
+    async function doDelMenu(id) {
+      await MenuService.doDelete(id)
+        .then((res) => {
+          ElMessage.success(res.message);
+          setMenu();
+        })
+        .catch((err) => {
+          ElMessage.error(err);
+        });
+    }
+
+    //删除菜单
     const handleDel = (row) => {
       ElMessageBox.confirm("此操作将永久删除选中数据，是否继续？", "提示", {
-        confirmButtonText: "OK",
-        cancelButtonText: "Cancel",
+        confirmButtonText: "确认",
+        cancelButtonText: "取消",
         type: "warning",
       })
-        .then(() => {})
+        .then(() => {
+          doDelMenu(row.menuId);
+        })
         .catch(() => {});
     };
+
     const handleEdit = (row) => {
       console.log("修改", row);
     };
 
-    const serviceApi = MenuService.getList;
     //菜单类型
     const menuType = ref(["目录", "菜单", "权限"]);
 
     return {
       tableConfig,
-      serviceApi,
+      getMenuListApi,
       filterData,
       menuTableRef,
       menuType,
       handleDel,
+      menuFormEl,
+      dialogFormVisible,
+      formSchemas,
+      handleSubmit,
+      resetForm,
+      btnLoading,
+      openDialog,
+      menuTreeSelectRef,
     };
   },
 };

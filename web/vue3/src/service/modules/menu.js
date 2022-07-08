@@ -58,9 +58,6 @@ export default class MenuService {
      * @returns 
      */
     static doDelete(menuId) {
-        return request({
-            url: `/v1/menu/delete/${menuId}`,
-            method: 'delete',
-        })
+        return request.delete(`/v1/menu/delete/${menuId}`)
     }
 }

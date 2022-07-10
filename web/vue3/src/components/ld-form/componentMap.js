@@ -9,7 +9,8 @@ import {
     ElDatePicker,
     ElTimeSelect,
     ElTimePicker,
-    ElTreeSelect
+    ElTreeSelect,
+    ElDivider
 } from 'element-plus'
 
 import RadioGroup from './components/RadioGroup'
@@ -39,6 +40,8 @@ componentMap.set('ApiTreeSelect', ApiTreeSelect)
 
 componentMap.set('Select', Select)
 componentMap.set('TreeSelect', ElTreeSelect)
+
+componentMap.set('Divider', ElDivider)
 
 /**
  * 添加组件

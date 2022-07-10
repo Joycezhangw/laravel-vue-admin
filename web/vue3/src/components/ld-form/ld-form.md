@@ -370,6 +370,7 @@ export type ComponentType =
   | 'ApiSelect'
   | 'Select'
   | 'ApiTreeSelect'
+  | 'Divider'
 ```
 
 ## ApiSelect 远程下拉组件

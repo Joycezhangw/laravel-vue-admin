@@ -29,7 +29,6 @@ export default defineComponent({
   emits: ["update:modelValue"],
   setup(props, { emit }) {
     const treeData = ref([]);
-    console.log("已选上级菜单", props.modelValue);
     //已选上级菜单
     const pid = ref(props.modelValue);
     async function refresh() {

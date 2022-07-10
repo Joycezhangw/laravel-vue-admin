@@ -103,7 +103,7 @@ export default defineComponent({
       validateField,
       scrollToField,
       setFieldsValue,
-      updateSchema,
+      updateSchema
     } = useFormEvents({
       emit,
       getProps,
@@ -131,6 +131,7 @@ export default defineComponent({
       scrollToField,
       setFieldsValue,
       updateSchema,
+      
     };
     //初始表单
     onMounted(() => {

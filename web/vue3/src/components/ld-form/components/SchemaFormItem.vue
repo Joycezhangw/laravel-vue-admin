@@ -115,12 +115,18 @@ export default defineComponent({
     const getComponentsProps = computed(() => {
       const { schema, formModel } = props;
       const { componentProps = {} } = schema;
-      if (!isFunction(componentProps)) {
-        //不是函数,直接返回配置
-        return componentProps;
+      //如果时，直接渲染函数
+      if (isFunction(componentProps)) {
+        componentProps = componentProps({ schema, formModel }) ?? {};
       }
-      //渲染函数
-      return componentProps({ schema, formModel });
+      //如果是分割线，单独处理
+      if (schema.component === "Divider") {
+        return Object.assign(
+          { direction: "horizontal", contentPosition: "left" },
+          componentProps
+        );
+      }
+      return componentProps;
     });
 
     //获取组件 disabled 属性
@@ -230,26 +236,36 @@ export default defineComponent({
 
     //渲染组件
     function renderFormItem() {
-      const { field, labelWidth, slot } = props.schema;
+      const { field, labelWidth, slot, component } = props.schema;
+      //如果是分割线，单独处理
+      if (component === "Divider") {
+        return (
+          <el-col span={24}>
+            <el-divider {...unref(getComponentsProps)}>
+              {renderLabelHelpMessage()}
+            </el-divider>
+          </el-col>
+        );
+      } else {
+        //获取组件内容
+        const getContent = () => {
+          //自定义插槽存在，则渲染插槽组件。否则渲染内置组件
+          return slot
+            ? getSlot(slots, slot, unref(getValues))
+            : renderFormItemComponent();
+        };
 
-      //获取组件内容
-      const getContent = () => {
-        //自定义插槽存在，则渲染插槽组件。否则渲染内置组件
-        return slot
-          ? getSlot(slots, slot, unref(getValues))
-          : renderFormItemComponent();
-      };
-
-      return (
-        <el-form-item
-          v-slots={{ label: () => renderLabelHelpMessage() }} //Form Item label插槽
-          prop={field}
-          rules={handleRules()}
-          labelWidth={labelWidth}
-        >
-          {getContent()}
-        </el-form-item>
-      );
+        return (
+          <el-form-item
+            v-slots={{ label: () => renderLabelHelpMessage() }} //Form Item label插槽
+            prop={field}
+            rules={handleRules()}
+            labelWidth={labelWidth}
+          >
+            {getContent()}
+          </el-form-item>
+        );
+      }
     }
 
     return () => {

@@ -124,6 +124,7 @@ export default {
 
     //表格配置和表单配置
     const { tableConfig, formSchemas, menuType } = MenuSchemas();
+
     //更新菜单id
     const updateMenuId = ref(0);
 

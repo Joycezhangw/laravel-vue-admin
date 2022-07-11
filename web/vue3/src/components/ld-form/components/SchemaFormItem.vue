@@ -13,19 +13,28 @@ export default defineComponent({
       default: () => {},
     },
     formProps: {
+      //表单配置
       type: Object,
       default: () => {},
     },
     formModel: {
+      //双向绑定
       type: Object,
       default: () => {},
     },
     formElRef: {
+      //表单ref
       type: Object,
     },
     setFormModel: {
+      //从schemas 提取，设置 表单 model 值，
       type: Function,
       default: null,
+    },
+    formActionType: {
+      //操作函数列
+      type: Object,
+      default: () => {},
     },
   },
   inheritAttrs: false,
@@ -113,15 +122,17 @@ export default defineComponent({
 
     //获取组件 props
     const getComponentsProps = computed(() => {
-      const { schema, formModel } = props;
-      const { componentProps = {} } = schema;
-      //如果时，直接渲染函数
+      const { schema, formModel, formActionType } = props;
+      let { componentProps = {} } = schema;
+      //如果是函数，直接渲染函数
+      //函数作用，可用于表单联动操作。A组件选值后，改变B组件的数据列
       if (isFunction(componentProps)) {
-        componentProps = componentProps({ schema, formModel }) ?? {};
+        componentProps =
+          componentProps({ schema, formModel, formActionType }) ?? {};
       }
       //如果是分割线，单独处理
       if (schema.component === "Divider") {
-        return Object.assign(
+        componentProps = Object.assign(
           { direction: "horizontal", contentPosition: "left" },
           componentProps
         );

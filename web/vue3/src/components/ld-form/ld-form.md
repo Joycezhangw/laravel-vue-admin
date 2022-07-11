@@ -4,7 +4,9 @@
 
 ## 用法
 
-### template ref 方式
+### refForm 方式
+
+例子：`laravel-vue-admin/web/vue3/src/views/system/menu/index.vue`
 
 ```vue
 <template>

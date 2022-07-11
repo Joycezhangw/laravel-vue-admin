@@ -12,6 +12,7 @@
           :formElRef="formElRef"
           :formModel="formModel"
           :setFormModel="setFormModel"
+          :formActionType="formActionType"
         >
           <template #[item]="data" v-for="item in Object.keys($slots)">
             <slot :name="item" v-bind="data"></slot>
@@ -103,7 +104,7 @@ export default defineComponent({
       validateField,
       scrollToField,
       setFieldsValue,
-      updateSchema
+      updateSchema,
     } = useFormEvents({
       emit,
       getProps,
@@ -131,7 +132,6 @@ export default defineComponent({
       scrollToField,
       setFieldsValue,
       updateSchema,
-      
     };
     //初始表单
     onMounted(() => {
@@ -143,6 +143,7 @@ export default defineComponent({
       getProps,
       getSchema,
       setFormModel,
+      formActionType,
       ...formActionType,
     };
   },

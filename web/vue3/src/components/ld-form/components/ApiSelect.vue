@@ -3,7 +3,7 @@
     :loading="loading"
     @visible-change="handleFetch"
     v-model:value="state"
-    v-bind="attrs"
+    v-bind="$attrs"
   >
     <el-option
       v-for="(item, index) in getOptions"

@@ -4,7 +4,6 @@
       ref="menuTableRef"
       :service-api="getMenuListApi"
       :table-config="tableConfig"
-      :filter-data="filterData"
       :is-pagination="false"
     >
       <template #toolbar>
@@ -91,12 +90,12 @@
 </template>
 <script>
 import { MenuService } from "@/service";
-import { nextTick, reactive, ref, unref } from "vue";
+import { nextTick, ref, unref } from "vue";
 import { ElMessage, ElMessageBox } from "element-plus";
 import { CloseBold, Select as selectIcon } from "@element-plus/icons-vue";
 import IconForm from "@/views/system/components/IconForm";
 import { useBaseStore } from "@/store";
-import { MenuSchemas } from "@/views/system/schemas/MenuSchemas";
+import MenuSchemas from "@/views/system/schemas/MenuSchemas";
 import MenuTreeSelect from "../components/MenuTreeSelect.vue";
 
 export default {
@@ -108,8 +107,6 @@ export default {
     MenuTreeSelect,
   },
   setup() {
-    //表格搜索条件
-    const filterData = reactive({ search_text: "" });
     //表格
     const menuTableRef = ref();
     //表单
@@ -269,7 +266,6 @@ export default {
     return {
       tableConfig,
       getMenuListApi,
-      filterData,
       menuTableRef,
       menuType,
       handleDel,

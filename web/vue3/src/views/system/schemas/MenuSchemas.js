@@ -1,6 +1,6 @@
 import { deepTree } from "@/landao/utils";
 import { MenuService } from "@/service";
-export function MenuSchemas() {
+export default function MenuSchemas() {
     //获取视图路径
     function getViewFilePath() {
         const files = import.meta.globEager("/**/views/**/*.{vue,tsx}");

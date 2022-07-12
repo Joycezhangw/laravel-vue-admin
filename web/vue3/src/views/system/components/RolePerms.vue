@@ -52,7 +52,7 @@ export default defineComponent({
       let ids = [];
       function fn(list) {
         list.forEach((ele) => {
-          if (ele.children) {
+          if (ele.children.length > 0) {
             fn(ele.children);
           } else {
             ids.push(Number(ele.menuId));
@@ -60,7 +60,8 @@ export default defineComponent({
         });
       }
       fn(unref(menuList));
-      checked.value = ids.filter((menuId) => (val || []).includes(menuId));
+      checked.value = ids.filter((id) => (val || []).includes(id));
+      unref(treeRef).setCheckedKeys(unref(checked))
     };
 
     //刷新列表
@@ -77,7 +78,7 @@ export default defineComponent({
     //搜索过滤节点
     const filterNode = (val, data) => {
       if (!val) return true;
-        return data.title.includes(val);
+      return data.title.includes(val);
     };
 
     //复选框点击时触发

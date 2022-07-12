@@ -19,6 +19,7 @@
           </template>
         </schema-form-item>
       </template>
+      <FormAction v-bind="{ ...getProps }"></FormAction>
     </el-row>
   </el-form>
 </template>
@@ -37,11 +38,13 @@ import SchemaFormItem from "./components/SchemaFormItem";
 import { useFormValues } from "./hooks/useFormValues";
 import { useFormEvents } from "./hooks/useFormEvents";
 import { deepMerge } from "@/landao/utils";
+import FormAction from "./components/FormAction.vue";
+import { createFormContext } from "./hooks/useFormContext";
 export default defineComponent({
   name: "ldForm",
-  components: { SchemaFormItem },
+  components: { SchemaFormItem, FormAction },
   props: basicProps,
-  emits: ["submit", "reset"],
+  emits: ["submit", "reset", "register"],
   setup(props, { emit }) {
     const formElRef = ref(null); //表单ref
     const formModel = reactive({}); //表单model
@@ -83,17 +86,6 @@ export default defineComponent({
       defaultValueRef,
     });
 
-    // 监听 getSchema 属性 初始化
-    watch(
-      () => {
-        getSchema.value;
-      },
-      (schema) => {
-        if (schema.length >= 0) {
-          initDefault();
-        }
-      }
-    );
     //向外暴露的表单事件
     const {
       resetFields,
@@ -133,8 +125,40 @@ export default defineComponent({
       setFieldsValue,
       updateSchema,
     };
+
+    // 注册事件
+    createFormContext({
+      resetAction: resetFields,
+      submitAction: handleSubmit,
+    });
+
+    // 监听 formModel 属性用于数据回显
+    watch(
+      () => unref(getProps).model,
+      () => {
+        const { model } = unref(getProps);
+        if (!model) return;
+        setFieldsValue(model);
+      },
+      {
+        immediate: true,
+      }
+    );
+
+    // 监听 getSchema 属性 初始化
+    watch(
+      () => {
+        getSchema.value;
+      },
+      (schema) => {
+        if (schema.length >= 0) {
+          initDefault();
+        }
+      }
+    );
     //初始表单
     onMounted(() => {
+      emit("register", formActionType);
       initDefault();
     });
     return {

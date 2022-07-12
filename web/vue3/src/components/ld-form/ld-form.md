@@ -199,11 +199,36 @@ export default {
 
 | 属性 | 类型 | 默认值 | 可选值 | 说明 | 版本 |
 | --- | --- | --- | --- | --- | -- |
-| schemas | `Schema[]` | - | - | 表单配置，见下方 `FormSchema` 配置 |  |
+| schemas | `FormSchema[]` | - | - | 表单配置，见下方 `FormSchema` 配置 |  |
 | labelPosition | `string` | - | `'right', 'left', 'top'` | 表单域标签的位置 |  |
 | labelWidth | `number , string` | - | - | 扩展 form 组件，增加 label 宽度，表单内所有组件适用，可以单独在某个项覆盖或者禁用 |  |
 | size | `string` | `default` | `'large', 'default', 'small'` | 向表单内所有组件传递 size 参数,自定义组件需自行实现 size 接收 |  |
 | disabled | `boolean` | `false` | `'false', 'true'` | 向表单内所有组件传递 disabled 属性，自定义组件需自行实现 disabled 接收 |  |
+| showActionButtonGroup | `boolean` | `true` | `'false', 'true'` | 是否显示操作按钮(重置/提交) |  |
+| actionColOptions | `Object` | `true` | `'false', 'true'` | 操作按钮外层 `ElCol` 组件配置，如果开启 `showAdvancedButton`，则不用设置，具体见下方 `actionColOptions` |  |
+| showSubmitButton | `boolean` | `true` | `'false', 'true'` | 确认按钮配置见下方 ActionButtonOption |  |
+| submitButtonOptions | `Object` | |  | 确认按钮配置见下方 ActionButtonOption |  |
+| showResetButton | `boolean` |  `true` | `'false', 'true'` | 确认按钮配置见下方 ActionButtonOption |  |
+| resetButtonOptions | `Object` | |  | 确认按钮配置见下方 ActionButtonOption |  |
+
+**actionColOptions**
+
+默认按钮居右显示
+col为24
+
+```js
+actionColOptions:{
+  style:{textAlign:'right'},
+  span:24
+}
+
+**resetButtonOptions**
+
+{
+  label:'提交',
+}
+
+```
 
 ### ColEx
 

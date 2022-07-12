@@ -17,11 +17,9 @@ import { handleInputNumberValue } from "../helper";
  */
 export function useFormEvents({ emit, getProps, formModel, getSchema, formElRef, schemaRef, defaultValueRef, handleFormValues }) {
 
-
     //表单校验
     async function validate() {
-        const valid = await unref(formElRef).validate();
-        return valid ? handleFormValues(formModel) : false
+        return await unref(formElRef).validate()
     }
 
     /**
@@ -78,19 +76,17 @@ export function useFormEvents({ emit, getProps, formModel, getSchema, formElRef,
         const formEl = unref(formElRef)
         if (!formEl) return
         try {
-            const isAdopt = await validate()
-            if (isAdopt) {
+            await validate().then(valid => {
                 const res = handleFormValues(formModel)
-                console.log(emit)
                 emit('submit', res)
-            }
+            })
         } catch (error) {
             console.error('LdForm.handleSubmit', error)
         }
     }
 
     /**
-     * 获取表达那值
+     * 获取表单值
      * @returns 
      */
     function getFieldsValue() {

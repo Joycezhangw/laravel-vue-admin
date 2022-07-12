@@ -67,6 +67,7 @@
       label-position="right"
       label-width="150px"
       :schemas="formSchemas"
+      :showActionButtonGroup="false"
     >
       <template #treeSelectSlot="{ model, field }">
         <MenuTreeSelect
@@ -153,45 +154,51 @@ export default {
     async function handleSubmit() {
       const formEl = unref(menuFormEl);
       if (!formEl) return;
-      //验证表单
-      await formEl
-        .validate()
-        .then((res) => {
-          //验证通过
-          btnLoading.value = true;
-          //更新数据
-          if (unref(updateMenuId) > 0) {
-            MenuService.doUpdate(unref(updateMenuId), res)
-              .then((result) => {
-                if (result.code === 200) {
-                  setMenu();
-                  dialogFormVisible.value = false;
-                }
-                btnLoading.value = false;
-              })
-              .catch((error) => {
-                ElMessage.error(error);
-                btnLoading.value = false;
-              });
-          } else {
-            //新增数据
-            MenuService.doStore(res)
-              .then((result) => {
-                if (result.code === 200) {
-                  setMenu();
-                  dialogFormVisible.value = false;
-                }
-                btnLoading.value = false;
-              })
-              .catch((error) => {
-                ElMessage.error(error);
-                btnLoading.value = false;
-              });
-          }
-        })
-        .catch((error) => {
-          //校验不通过
-        });
+      await nextTick();
+
+      try {
+        //验证表单
+        await formEl
+          .validate()
+          .then((res) => {
+            const params= formEl.getFieldsValue();
+            //验证通过
+            btnLoading.value = true;
+            //更新数据
+            if (unref(updateMenuId) > 0) {
+              MenuService.doUpdate(unref(updateMenuId), params)
+                .then((result) => {
+                  if (result.code === 200) {
+                    setMenu();
+                    dialogFormVisible.value = false;
+                  }
+                  btnLoading.value = false;
+                })
+                .catch((error) => {
+                  ElMessage.error(error);
+                  btnLoading.value = false;
+                });
+            } else {
+              //新增数据
+              MenuService.doStore(params)
+                .then((result) => {
+                  if (result.code === 200) {
+                    setMenu();
+                    dialogFormVisible.value = false;
+                  }
+                  btnLoading.value = false;
+                })
+                .catch((error) => {
+                  ElMessage.error(error);
+                  btnLoading.value = false;
+                });
+            }
+          })
+          .catch((error) => {
+            //校验不通过
+            console.log("校验不通过");
+          });
+      } catch (error) {}
     }
 
     function openDialog() {

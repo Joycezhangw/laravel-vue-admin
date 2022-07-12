@@ -24,7 +24,7 @@
         </el-form-item>
       </template>
       <template v-slot:handleSlot="{ scopeData }">
-        <template v-if="scopeData.is_default === 0">
+        <template v-if="scopeData.row.is_default === 0">
           <el-button size="small" @click="handleEdit(scopeData.row)"
             >编辑</el-button
           >
@@ -39,14 +39,26 @@
       </template>
     </ld-table>
   </div>
- 
+  <el-dialog
+    :title="disologTitle"
+    v-model="dialogFormVisible"
+    @close="closeDialog()"
+  >
+    <ld-form ref="roleFormEl" @register="register" @submit="onSubmit">
+      <template #treeMenuPermSlot="{ model, field }">
+        <RolePerms ref="menuTreePermRef" v-model="model[field]"></RolePerms>
+      </template>
+    </ld-form>
+  </el-dialog>
 </template>
 <script>
-import { defineComponent, ref, reactive } from "vue";
+import { defineComponent, ref, reactive, unref, nextTick } from "vue";
 import { RoleService } from "@/service";
 import RoleSchemas from "@/views/system/schemas/RoleSchemas";
-import { useBoolean, useToggle } from "@/landao/hooks";
+import { useToggle } from "@/landao/hooks";
 import RolePerms from "../components/RolePerms.vue";
+import { useForm } from "@/components/ld-form";
+import { ElMessage } from "element-plus";
 
 export default defineComponent({
   name: "RoleList",
@@ -57,11 +69,10 @@ export default defineComponent({
     const roleTableRef = ref(null);
     const roleFormEl = ref(null);
     const menuTreePermRef = ref(null);
+    //弹窗
+    const dialogFormVisible = ref(false);
     //表格搜索条件
     const filterData = reactive({ search_text: "" });
-    //弹窗
-    const { state: dialogFormVisible, toggle: setDialogVisible } =
-      useBoolean(false);
     //弹窗标题
     const {
       state: disologTitle,
@@ -74,21 +85,66 @@ export default defineComponent({
     function openDialog() {
       setUpdateRoleId(0);
       setLeft();
-      setDialogVisible(true);
+      dialogFormVisible.value = true;
     }
+    //关闭弹窗
     function closeDialog() {
-      setDialogVisible(false);
+      resetFields();
+      dialogFormVisible.value = false;
     }
     //编辑角色
-    const handleEdit = (row) => {
+    const handleEdit = async (row) => {
       setUpdateRoleId(row.role_id);
       setRight();
-      setDialogVisible(true);
+      dialogFormVisible.value = true;
+      await RoleService.read(unref(updateRoleId)).then((res) => {
+        nextTick(async () => {
+          await setFieldsValue({
+            role_name: row.role_name,
+            role_desc: row.role_desc,
+            menus: res.data.menus,
+          });
+        });
+      });
     };
     //表格配置和表单配置
     const { tableConfig, formSchemas } = RoleSchemas();
 
+    //注册表单
+    const [register, { resetFields, setProps, setFieldsValue }] = useForm({
+      labelPosition: "right",
+      labelWidth: "150px",
+      schemas: formSchemas,
+    });
 
+    function clearTableForm() {
+      resetFields();
+      unref(roleTableRef).refresh();
+      closeDialog();
+    }
+
+    //提交数据
+    const onSubmit = async (data) => {
+      setProps({ submitButtonOptions: { loading: true, label: "提交中..." } });
+      if (unref(updateRoleId) > 0) {
+        await RoleService.doUpdate(unref(updateRoleId), data)
+          .then((res) => {
+            clearTableForm();
+          })
+          .catch((err) => {
+            ElMessage.error(err);
+          });
+      } else {
+        await RoleService.doStore(data)
+          .then((res) => {
+            clearTableForm();
+          })
+          .catch((err) => {
+            ElMessage.error(err);
+          });
+      }
+      setProps({ submitButtonOptions: { loading: false, label: "提 交" } });
+    };
 
     return {
       roleTableRef,
@@ -102,6 +158,8 @@ export default defineComponent({
       handleEdit,
       roleFormEl,
       menuTreePermRef,
+      register,
+      onSubmit,
     };
   },
 });

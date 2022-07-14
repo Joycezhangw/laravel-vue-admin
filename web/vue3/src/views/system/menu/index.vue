@@ -1,65 +1,57 @@
 <template>
   <div class="app-container">
-    <ld-table
+    <LdTable
+      :api="getMenuListApi"
       ref="menuTableRef"
-      :service-api="getMenuListApi"
-      :table-config="tableConfig"
-      :is-pagination="false"
+      :pagination="false"
+      :columns="tableColumns"
+      :afterFetch="afterTableFetch"
+      row-key="menuId"
     >
-      <template #toolbar>
-        <el-button type="primary" size="small" @click="openDialog()"
-          >新增</el-button
+      <template #expand="scope">
+        {{ scope.row }}
+      </template>
+      <template #titleSlot="{ row }">
+        <span>{{ row.title }}</span>
+        <el-tag size="small" effect="dark" type="danger" v-if="!row.isShow"
+          >隐藏</el-tag
         >
       </template>
-      <template v-slot:titleSlot="{ scopeData }">
-        <span>{{ scopeData.row.title }}</span>
-        <el-tag
-          size="small"
-          effect="dark"
-          type="danger"
-          v-if="!scopeData.row.isShow"
-          >隐藏</el-tag
-        ></template
-      >
-      <template v-slot:iconSlot="{ scopeData }">
+      <template v-slot:iconSlot="{ row }">
         <icon-svg
-          :name="scopeData.row.meta.icon"
+          :name="row.meta.icon"
           size="16px"
           style="margin-top: 5px"
         ></icon-svg>
       </template>
-      <template v-slot:menuTypeSlot="{ scopeData }">
-        <el-tag size="small" effect="dark">{{
-          menuType[scopeData.row.menuType]
-        }}</el-tag>
+      <template v-slot:menuTypeSlot="{ row }">
+        <el-tag size="small" effect="dark">{{ menuType[row.menuType] }}</el-tag>
       </template>
-      <template v-slot:keepAliveSlot="{ scopeData }">
+      <template v-slot:keepAliveSlot="{ row }">
         <el-icon
           style="vertical-align: middle"
-          :color="scopeData.row.meta.keepAlive ? '#67C23A' : '#F56C6C'"
+          :color="row.meta.keepAlive ? '#67C23A' : '#F56C6C'"
         >
-          <selectIcon v-if="scopeData.row.meta.keepAlive"></selectIcon>
+          <selectIcon v-if="row.meta.keepAlive"></selectIcon>
           <CloseBold v-else></CloseBold>
         </el-icon>
       </template>
-      <template v-slot:apiPathSlot="{ scopeData }">
-        <el-tag effect="dark" size="small" v-if="scopeData.row.apiPath">{{
-          scopeData.row.apiPath
+      <template v-slot:apiPathSlot="{ row }">
+        <el-tag effect="dark" size="small" v-if="row.apiPath">{{
+          row.apiPath
         }}</el-tag>
       </template>
-      <template v-slot:handleSlot="{ scopeData }">
-        <el-button size="small" @click="handleEdit(scopeData.row)"
-          >编辑</el-button
-        >
+      <template v-slot:handleSlot="{ row }">
+        <el-button size="small" @click="handleEdit(row)">编辑</el-button>
         <el-button
           type="danger"
-          v-if="scopeData.row.children.length === 0"
+          v-if="row.children.length === 0"
           size="small"
-          @click="handleDel(scopeData.row)"
+          @click="handleDel(row)"
           >删除</el-button
         >
       </template>
-    </ld-table>
+    </LdTable>
   </div>
   <el-dialog :title="disologTitle" v-model="dialogFormVisible">
     <ld-form
@@ -98,6 +90,7 @@ import IconForm from "@/views/system/components/IconForm";
 import { useBaseStore } from "@/store";
 import MenuSchemas from "@/views/system/schemas/MenuSchemas";
 import MenuTreeSelect from "../components/MenuTreeSelect.vue";
+import { deepTree } from "@/landao/utils";
 
 export default {
   name: "menuIndex",
@@ -121,13 +114,10 @@ export default {
     const menuTreeSelectRef = ref(false);
 
     //表格配置和表单配置
-    const { tableConfig, formSchemas, menuType } = MenuSchemas();
+    const { tableColumns, formSchemas, menuType } = MenuSchemas();
 
     //更新菜单id
     const updateMenuId = ref(0);
-
-    //表格数据接口
-    const getMenuListApi = MenuService.getList;
 
     //新增，删除，更新数据后。进行重新拉去权限和菜单。并重置表单得上级树形数据
     async function setMenu() {
@@ -161,7 +151,7 @@ export default {
         await formEl
           .validate()
           .then((res) => {
-            const params= formEl.getFieldsValue();
+            const params = formEl.getFieldsValue();
             //验证通过
             btnLoading.value = true;
             //更新数据
@@ -269,10 +259,12 @@ export default {
         await formEl.setFieldsValue(obj);
       });
     };
-
+    function afterTableFetch(data) {
+      return deepTree(data);
+    }
     return {
-      tableConfig,
-      getMenuListApi,
+      tableColumns,
+      getMenuListApi: MenuService.getList,
       menuTableRef,
       menuType,
       handleDel,
@@ -286,6 +278,7 @@ export default {
       handleEdit,
       openDialog,
       disologTitle,
+      afterTableFetch
     };
   },
 };

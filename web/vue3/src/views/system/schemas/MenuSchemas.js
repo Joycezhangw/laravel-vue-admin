@@ -1,4 +1,4 @@
-import { deepTree } from "@/landao/utils";
+
 import { MenuService } from "@/service";
 export default function MenuSchemas() {
     //获取视图路径
@@ -18,82 +18,74 @@ export default function MenuSchemas() {
         return list;
     }
     //表格
-    const tableConfig = {
-        attrs: {
-            rowKey: "menuId", //表格索引
-            size: "small", //表格和搜索表单尺寸
-        },
-        formatData: deepTree, //格式化数据，一维数组转树形数组
-        columns: [
-            {
-                title: "名称",
-                width: 200,
-                align: "center",
-                customSlot: "titleSlot",
-            },
-            {
-                title: "图标",
-                width: 200,
-                align: "center",
-                customSlot: "iconSlot",
-            },
-            {
-                title: "类型",
-                width: 200,
-                align: "center",
-                customSlot: "menuTypeSlot",
-            },
-            {
-                title: "路由名",
-                width: 200,
-                align: "center",
-                key: "name",
-            },
-            {
-                title: "节点路由",
-                width: 180,
-                align: "center",
-                key: "path",
-            },
-            {
-                title: "路由缓存",
-                width: 100,
-                align: "center",
-                customSlot: "keepAliveSlot",
-            },
-            {
-                title: "文件路径",
-                width: 200,
-                align: "center",
-                key: "component",
-            },
-            {
-                title: "权限",
-                width: 200,
-                align: "center",
-                customSlot: "apiPathSlot",
-            },
-            {
-                title: "排序",
-                width: 90,
-                align: "center",
-                key: "menuOrder",
-            },
-            {
-                title: "更新时间",
-                width: 150,
-                align: "center",
-                key: "updatedAt",
-            },
-            {
-                title: "操作",
-                width: 200,
-                fixed: "right",
-                align: "center",
-                customSlot: "handleSlot",
-            },
-        ],
-    };
+    const tableColumns = [
+    {
+        label: "名称",
+        width: 200,
+        align: "center",
+        slot: "titleSlot",
+    },
+    {
+        label: "图标",
+        width: 200,
+        align: "center",
+        slot: "iconSlot",
+    },
+    {
+        label: "类型",
+        width: 200,
+        align: "center",
+        slot: "menuTypeSlot",
+    },
+    {
+        label: "路由名",
+        width: 200,
+        align: "center",
+        prop: "name",
+    },
+    {
+        label: "节点路由",
+        width: 180,
+        align: "center",
+        prop: "path",
+    },
+    {
+        label: "路由缓存",
+        width: 100,
+        align: "center",
+        slot: "keepAliveSlot",
+    },
+    {
+        label: "文件路径",
+        width: 200,
+        align: "center",
+        prop: "component",
+    },
+    {
+        label: "权限",
+        width: 200,
+        align: "center",
+        slot: "apiPathSlot",
+    },
+    {
+        label: "排序",
+        width: 90,
+        align: "center",
+        prop: "menuOrder",
+    },
+    {
+        label: "更新时间",
+        width: 150,
+        align: "center",
+        prop: "updatedAt",
+    },
+    {
+        label: "操作",
+        width: 200,
+        fixed: "right",
+        align: "center",
+        slot: "handleSlot",
+    }];
     //表单
     const formSchemas = [
         {
@@ -212,6 +204,6 @@ export default function MenuSchemas() {
     //菜单类型
     const menuType = ["目录", "菜单", "权限"];
     return {
-        tableConfig, formSchemas, menuType
+        tableColumns, formSchemas, menuType
     }
 }

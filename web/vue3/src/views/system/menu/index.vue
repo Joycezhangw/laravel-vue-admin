@@ -3,11 +3,17 @@
     <LdTable
       :api="getMenuListApi"
       ref="menuTableRef"
+      :actionButtons="['refresh']"
       :pagination="false"
       :columns="tableColumns"
       :afterFetch="afterTableFetch"
       row-key="menuId"
     >
+      <template #toolbar>
+        <el-button v-auth="'manage.menu.store'" type="primary" size="small" @click="openDialog()"
+          >新增</el-button
+        ></template
+      >
       <template #expand="scope">
         {{ scope.row }}
       </template>
@@ -27,29 +33,28 @@
       <template v-slot:menuTypeSlot="{ row }">
         <el-tag size="small" effect="dark">{{ menuType[row.menuType] }}</el-tag>
       </template>
-      <template v-slot:keepAliveSlot="{ row }">
-        <el-icon
-          style="vertical-align: middle"
-          :color="row.meta.keepAlive ? '#67C23A' : '#F56C6C'"
-        >
-          <selectIcon v-if="row.meta.keepAlive"></selectIcon>
-          <CloseBold v-else></CloseBold>
-        </el-icon>
-      </template>
       <template v-slot:apiPathSlot="{ row }">
         <el-tag effect="dark" size="small" v-if="row.apiPath">{{
           row.apiPath
         }}</el-tag>
       </template>
       <template v-slot:handleSlot="{ row }">
-        <el-button size="small" @click="handleEdit(row)">编辑</el-button>
-        <el-button
-          type="danger"
-          v-if="row.children.length === 0"
-          size="small"
-          @click="handleDel(row)"
-          >删除</el-button
-        >
+        <TableAction
+          :actions="[
+            {
+              label: '编辑',
+              auth: ['manage.menu.update'],
+              onClick: handleEdit.bind(null, row),
+            },
+            {
+              label: '删除',
+              type: 'danger',
+              auth: 'manage.menu.destroy',
+              ifShow: row.children.length === 0,
+              onClick: handleDel.bind(null, row),
+            },
+          ]"
+        ></TableAction>
       </template>
     </LdTable>
   </div>
@@ -91,6 +96,7 @@ import { useBaseStore } from "@/store";
 import MenuSchemas from "@/views/system/schemas/MenuSchemas";
 import MenuTreeSelect from "../components/MenuTreeSelect.vue";
 import { deepTree } from "@/landao/utils";
+import { TableAction } from "@/components/LdTable";
 
 export default {
   name: "menuIndex",
@@ -99,6 +105,7 @@ export default {
     selectIcon,
     IconForm,
     MenuTreeSelect,
+    TableAction,
   },
   setup() {
     //表格
@@ -262,6 +269,7 @@ export default {
     function afterTableFetch(data) {
       return deepTree(data);
     }
+
     return {
       tableColumns,
       getMenuListApi: MenuService.getList,
@@ -278,7 +286,7 @@ export default {
       handleEdit,
       openDialog,
       disologTitle,
-      afterTableFetch
+      afterTableFetch,
     };
   },
 };

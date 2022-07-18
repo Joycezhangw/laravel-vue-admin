@@ -1,6 +1,15 @@
 <template>
-  <el-row type="flex"> </el-row>
-  <el-row type="flex">
+  <el-row type="flex" class="ld-table-header">
+    <TableHeader
+      v-bind="getToolbarProps"
+      :tableAction="tableAction"
+    >
+      <template v-if="$slots.toolbar" #toolbar="{}">
+        <slot name="toolbar"></slot>
+      </template>
+    </TableHeader>
+  </el-row>
+  <el-row type="flex" class="ld-table-body">
     <el-table
       ref="tableRef"
       :max-height="maxHeight"
@@ -20,7 +29,7 @@
       </template>
     </el-table>
   </el-row>
-  <el-row type="flex" v-if="pagination">
+  <el-row type="flex" v-if="pagination" class="ld-table-footer">
     <div class="flex1"></div>
     <el-pagination
       @size-change="handlePageSize"
@@ -45,29 +54,34 @@ import { useLoading } from "./hooks/useLoading";
 import { usePagination } from "./hooks/usePagination";
 import TableColumns from "./components/TableColumns";
 import { useDataSource } from "./hooks/useDataSource";
+import TableHeader from "./components/TableHeader";
 
 export default defineComponent({
   name: "LdTable",
   props: basicProps,
   components: {
     TableColumns,
+    TableHeader,
   },
-  setup(props, { slots, attrs }) {
+  setup(props, { slots, attrs, emit }) {
     const tableRef = ref(null);
     //表格最大高度
     const { maxHeight, updateHeight } = useTableHeight(
       tableRef,
       props.deductHeight
     );
-
-    console.log("LdTable", slots);
-
     const getProps = computed(() => {
       return { ...props };
     });
 
     const getColumn = computed(() => {
       return unref(getProps).columns;
+    });
+
+    //TableHeader props
+    const getToolbarProps = computed(() => {
+      const { actionButtons: buttons = [] } = props;
+      return { buttons };
     });
 
     //表格loading
@@ -98,12 +112,19 @@ export default defineComponent({
       setPaginationPageSize(val);
     };
 
-    const { getDataSourceRef, getDataSource, fetch } = useDataSource(getProps, {
-      setLoading,
-      setPaginationTotal,
-    });
+    const { getDataSourceRef, getDataSource, fetch, reload } = useDataSource(
+      getProps,
+      {
+        setLoading,
+        setPaginationTotal,
+        getPaginationInfo,
+      }
+    );
 
-    console.log(getDataSourceRef);
+    const tableAction = {
+      reload,
+      fetch,
+    };
 
     onMounted(() => {
       nextTick(async () => {
@@ -120,6 +141,8 @@ export default defineComponent({
       handlePageCurrentChange,
       getColumn,
       getDataSourceRef,
+      getToolbarProps,
+      tableAction
     };
   },
 });

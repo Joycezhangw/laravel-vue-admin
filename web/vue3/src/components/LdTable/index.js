@@ -1,0 +1,1 @@
+export { default as TableAction } from './components/TableAction.vue'

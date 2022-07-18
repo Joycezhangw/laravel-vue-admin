@@ -1,9 +1,11 @@
 import { isFunction } from "@/landao/utils/is";
+import { isBoolean } from "lodash-es";
 import { ref, unref, onMounted, computed } from "vue";
 
 export function useDataSource(propsRef, {
     setLoading,
-    setPaginationTotal
+    setPaginationTotal,
+    getPaginationInfo
 }) {
     //数据源
     const dataSourceRef = ref([])
@@ -27,11 +29,19 @@ export function useDataSource(propsRef, {
     async function fetch(params = {}) {
         const { api, afterFetch, pagination } = unref(propsRef)
         if (!api || !isFunction(api)) return;
+        let pageParams = {};
+        const { currentPage = 1, pageSize = 20 } = unref(getPaginationInfo);
+        //如果没有分页，不传分页参数
+        if ((isBoolean(pagination) && pagination) || isBoolean(getPaginationInfo)) {
+            pageParams['page'] = (params && params.page) || currentPage;
+            pageParams['page_size'] = pageSize;
+        }
+
 
         try {
             setLoading(true)
             //请求
-            const res = await api(params);
+            const res = await api({ ...pageParams, ...params });
             const isArrayResult = Array.isArray(res.data);
             let resultItem = [];
             if (isArrayResult) {
@@ -56,6 +66,12 @@ export function useDataSource(propsRef, {
         }
     }
 
+    //刷新表格
+    async function reload(params) {
+        return await fetch(params)
+    }
+
+    //获取数据
     function getDataSource() {
         return getDataSource.value || []
     }
@@ -67,6 +83,7 @@ export function useDataSource(propsRef, {
     return {
         getDataSourceRef,
         getDataSource,
-        fetch
+        fetch,
+        reload
     }
 }

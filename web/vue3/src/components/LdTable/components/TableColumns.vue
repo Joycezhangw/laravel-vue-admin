@@ -17,7 +17,11 @@ export default defineComponent({
         ...{ reserveSelection: type === "selection" },
       };
       //omit 排除掉不需要的属性
-      return createVNode(ElTableColumn, omit(attrs, ["slot"]), slots.default);
+      return createVNode(
+        ElTableColumn,
+        omit(attrs, ["slot", "show"]),
+        slots.default
+      );
     };
   },
 });

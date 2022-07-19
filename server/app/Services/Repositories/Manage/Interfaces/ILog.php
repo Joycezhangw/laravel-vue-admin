@@ -25,11 +25,18 @@ interface ILog extends BaseInterface
 
     /**
      * 后台用户请求日志
-     * @param array $params  搜索参数
+     * @param array $params 搜索参数
      * @param string $orderBy 排序
      * @param string $sort 排序方式
      * @return array
      */
     public function getList(array $params, string $orderBy = 'created_at', string $sort = 'desc'): array;
+
+    /**
+     * 批量删除
+     * @param array $logIds
+     * @return array
+     */
+    public function deleteBatchById(array $logIds): bool ;
 
 }

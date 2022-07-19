@@ -51,7 +51,7 @@ class LogRepo extends BaseRepository implements ILog
 
     /**
      * 后台用户请求日志
-     * @param array $params  搜索参数
+     * @param array $params 搜索参数
      * @param string $orderBy 排序
      * @param string $sort 排序方式
      * @return array
@@ -66,6 +66,18 @@ class LogRepo extends BaseRepository implements ILog
             ->orderBy($orderBy, $sort)
             ->paginate(isset($params['page_size']) ? $params['page_size'] : config('laraveladmin.paginate.page_size'));
         return $lists->toArray();
+    }
+
+    /**
+     * 批量删除
+     * @param array $logIds
+     * @return array
+     */
+    public function deleteBatchById(array $logIds): bool
+    {
+        if (!$logIds) return false;
+        $ret = $this->model->whereIn('log_id', $logIds)->delete();
+        return $ret ? true : false;
     }
 
 

@@ -52,6 +52,7 @@ Route::group([
             //请求日志
             $router->get('/log', 'Log@index')->name('manage.log.index');//请求日志
             $router->delete('/log/delete/{id}', 'Log@destroy')->name('manage.log.destroy');//删除
+            $router->post('/log/delete/batch','Log@batchDel')->name('manage.log.batchDel');//批量删除
             //前台用户
 //        $router->get('/member', 'Member@index')->name('manage.member.index');//前台用户列表
         });
